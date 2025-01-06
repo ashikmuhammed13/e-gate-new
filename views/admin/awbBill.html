@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Air Waybill 176-73317996</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            font-size: 11px;
+            line-height: 1.2;
+            background: white;
+        }
+
+        .awb-wrapper {
+            width: 210mm;
+            margin: 0 auto;
+            background: white;
+            position: relative;
+        }
+
+        .awb-container {
+            border: 1.5px solid #000;
+            width: 100%;
+            position: relative;
+        }
+
+        .awb-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 15px;
+            border-bottom: 1.5px solid #000;
+        }
+
+        .awb-number {
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .top-section {
+            display: grid;
+            grid-template-columns: 65% 35%;
+            border-bottom: 1.5px solid #000;
+        }
+
+        .left-column {
+            padding: 10px;
+            border-right: 1.5px solid #000;
+        }
+
+        .right-column {
+            padding: 10px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 11px;
+        }
+
+        .address-content {
+            line-height: 1.4;
+        }
+
+        .agent-section {
+            padding: 10px;
+            border-bottom: 1.5px solid #000;
+        }
+
+        .routing-section {
+            display: grid;
+            grid-template-columns: 25% 15% 15% 15% 15% 15%;
+            border-bottom: 1.5px solid #000;
+        }
+
+        .routing-cell {
+            padding: 8px 4px;
+            text-align: center;
+            border-right: 1.5px solid #000;
+            font-size: 10px;
+        }
+
+        .routing-cell:last-child {
+            border-right: none;
+        }
+
+        .dangerous-goods {
+            padding: 8px;
+            border-bottom: 1.5px solid #000;
+        }
+
+        .shipping-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
+        }
+
+        .shipping-table th,
+        .shipping-table td {
+            border: 1.5px solid #000;
+            padding: 6px 4px;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .shipping-table th {
+            font-weight: bold;
+            background-color: white;
+        }
+
+        .charges-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            border-top: 1.5px solid #000;
+        }
+
+        .charge-cell {
+            position: relative;
+            border-right: 1.5px solid #000;
+            border-bottom: 1.5px solid #000;
+            height: 45px;
+            padding: 4px;
+        }
+
+        .diagonal-container {
+            position: relative;
+            height: 100%;
+        }
+
+        .diagonal-line {
+            position: absolute;
+            width: 141.4%;
+            height: 1.5px;
+            background: #000;
+            top: 0;
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: top left;
+        }
+
+        .top-text {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-size: 10px;
+        }
+
+        .bottom-text {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            font-size: 10px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            border-top: 1.5px solid #000;
+        }
+
+        .footer-left {
+            padding: 10px;
+            border-right: 1.5px solid #000;
+        }
+
+        .footer-right {
+            padding: 10px;
+            position: relative;
+        }
+
+        .signature-line {
+            border-top: 1px dashed #000;
+            margin: 15px 0;
+            padding-top: 5px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .original-text {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="awb-wrapper">
+        <div class="awb-container">
+            <!-- AWB Header -->
+            <div class="awb-header">
+                <span class="awb-number">176-73317996</span>
+                <span class="awb-number">176-73317996</span>
+            </div>
+
+            <!-- Shipper Section -->
+            <div class="top-section">
+                <div class="left-column">
+                    <div class="section-title">Shipper's Name and Address</div>
+                    <div class="address-content">
+                        SAUDI ARABIAN OIL COMPANY ( ARAMCO )<br>
+                        MATERIAL SUPPORT SECTION<br>
+                        AVIATION DEPARTMENT<br>
+                        SAUDI ARABIA<br>
+                        PHONE: +966138775333
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div style="text-align: right;">Issued by: EK</div>
+                    <div style="font-size: 8px; margin-top: 10px;">
+                        Copies 1, 2 and 3 of this Air Waybill are originals and have the same validity.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consignee Section -->
+            <div class="top-section">
+                <div class="left-column">
+                    <div class="section-title">Consignee's Name and Address</div>
+                    <div class="address-content">
+                        DEXTRANS WORLDWIDE KOREA CO., LTD.<br>
+                        RM 2201, 90, CENTUMJUNGANG-RO<br>
+                        HAEUNDAE-GU, BUSAN, 48059, KOREA<br>
+                        TEL: +82708311566, BRN: 6728602689<br>
+                        EMAIL: GWEN.CHO@DEXTRANSGROUP.COM
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="section-title">Accounting Information</div>
+                    <div>FREIGHT PREPAID</div>
+                </div>
+            </div>
+
+            <!-- Agent Section -->
+            <div class="agent-section">
+                <div class="section-title">Issuing Carrier's Agent Name and City</div>
+                <div>
+                    SMSA EXPRESS TRANSPORTATION CO., LTD<br>
+                    <strong>Agent's IATA Code:</strong> 7145089
+                </div>
+            </div>
+
+            <!-- Routing Section -->
+            <div class="routing-section">
+                <div class="routing-cell">DMM - SAUDI ARABIA</div>
+                <div class="routing-cell">DXB</div>
+                <div class="routing-cell">EK</div>
+                <div class="routing-cell">ICN</div>
+                <div class="routing-cell">EK</div>
+                <div class="routing-cell">SAR PP X X</div>
+            </div>
+
+            <!-- Dangerous Goods -->
+            <div class="dangerous-goods">
+                DANGEROUS GOODS AS PER ASSOCIATED SHIPPER'S DECLARATION
+            </div>
+
+            <!-- Main Shipping Table -->
+            <table class="shipping-table">
+                <tr>
+                    <th>No. of Pieces RCP</th>
+                    <th>Gross Weight</th>
+                    <th>Rate Class</th>
+                    <th>Chargeable Weight</th>
+                    <th>Rate Charge</th>
+                    <th>Total</th>
+                    <th>Nature and Quantity of Goods</th>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>7171.00</td>
+                    <td>K G</td>
+                    <td>7171.00</td>
+                    <td>5.57</td>
+                    <td>40000.00</td>
+                    <td rowspan="2" style="text-align: left;">
+                        CONSOLIDATED<br><br>
+                        DIM 120 X 120 X 107 @ 10
+                    </td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>7171.00</td>
+                    <td>K G</td>
+                    <td></td>
+                    <td></td>
+                    <td>40000.00</td>
+                </tr>
+            </table>
+
+            <!-- Charges Section -->
+            <div class="charges-grid">
+                <div class="charge-cell">
+                    <div class="diagonal-container">
+                        <span class="top-text">Prepaid</span>
+                        <div class="diagonal-line"></div>
+                        <span class="bottom-text">40000.00</span>
+                    </div>
+                </div>
+                <div class="charge-cell">
+                    <div class="diagonal-container">
+                        <span class="top-text">Weight Charge</span>
+                        <div class="diagonal-line"></div>
+                        <span class="bottom-text">Collect</span>
+                    </div>
+                </div>
+                <div class="charge-cell">Other Charges</div>
+                <div class="charge-cell"></div>
+                <div class="charge-cell">Total: 40000.00</div>
+            </div>
+
+            <!-- Footer Section -->
+            <div class="footer-grid">
+                <div class="footer-left">
+                    <div class="footer-text">
+                        Currency Conversion Rates<br>
+                        CC Charges in Dest. Currency<br>
+                        Charges at Destination
+                    </div>
+                </div>
+                <div class="footer-right">
+                    <div class="signature-line">
+                        SMSA EXPRESS TRANSPORTATION CO., LTD
+                    </div>
+                    <div class="footer-text">
+                        03/11/2024 DMM SMSA EXPRESS TRANSPORTATION CO., LTD
+                    </div>
+                    <div class="awb-number" style="text-align: right;">176-73317996</div>
+                    <div class="original-text">ORIGINAL 3 (FOR SHIPPER)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
