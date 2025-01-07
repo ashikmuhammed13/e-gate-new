@@ -1,3 +1,33 @@
+// const express = require('express'); 
+// const connectDB = require('./config/db');
+// const path = require('path');
+// require('dotenv').config();
+// const cookieParser = require('cookie-parser'); // for handling cookies
+
+// const app = express();
+// connectDB();
+
+// const user = require("./routes/user")
+// const admin = require("./routes/admin")
+
+
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true })); // For form submissions
+// app.use(cookieParser()); // Use cookie-parser to handle cookies
+// app.set('view engine', 'hbs');
+// app.set('views', path.join(__dirname, 'views'));
+// app.use(express.static(path.join(__dirname, 'public')));
+
+
+// app.use("/",user)
+// app.use("/admin",admin)
+
+
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -47,7 +77,9 @@ app.post('/generate-mawb', async (req, res) => {
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
         const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-       // Helper function for text drawing with more precise control
+      // Helper function for text drawing with more precise control
+      // Helper function
+// Helper function remains the same
 const drawText = (text, x, y, options = {}) => {
     const {
         font = helveticaFont,
@@ -66,46 +98,60 @@ const drawText = (text, x, y, options = {}) => {
     });
 };
 
-// AWB Numbers
-drawText('176-73317996', 85, 820, { size: 14, font: helveticaBold });
-drawText('176-73317996', 485, 820, { size: 14, font: helveticaBold });
+// 1. Purple Box - Shipper's Name and Address
+// Starting higher in the box at 760 and moving down with consistent spacing
+drawText('SAUDI ARABIAN OIL COMPANY ( ARAMCO )', 65, 760, { size: 8 });
+drawText('MATERIAL SUPPORT SECTION', 65, 748, { size: 8 });
+drawText('AVIATION DEPARTMENT', 65, 736, { size: 8 });
+drawText('SAUDI ARABIA', 65, 724, { size: 8 });
+drawText('PHONE : +966138775333', 65, 712, { size: 8 });
 
-// Shipper Section
-drawText('SAUDI ARABIAN OIL COMPANY ( ARAMCO )', 45, 760, { size: 9 });
-drawText('MATERIAL SUPPORT SECTION', 45, 750, { size: 9 });
-drawText('AVIATION DEPARTMENT', 45, 740, { size: 9 });
-drawText('SAUDI ARABIA', 45, 730, { size: 9 });
-drawText('PHONE : +966138775333', 45, 720, { size: 9 });
+// 2. Pink Box - Consignee's Name and Address
+// Starting at 680 for this section
+drawText('DEXTRANS WORLDWIDE KOREA CO., LTD.', 65, 680, { size: 8 });
+drawText('RM 2201, 90, CENTUMJUNGANG-RO,', 65, 668, { size: 8 });
+drawText('HAEUNDAE-GU, BUSAN, 48059, KOREA', 65, 656, { size: 8 });
+drawText('TEL: +827088311566, BRN: 6728602689', 65, 644, { size: 8 });
+drawText('EMAIL: GWEN.CHO@DEXTRANSGROUP.COM', 65, 632, { size: 8 });
 
-// Consignee Section
-drawText('DEXTRANS WORLDWIDE KOREA CO., LTD.', 45, 670, { size: 9 });
-drawText('RM 2201, 90, CENTUMJUNGANG-RO,', 45, 660, { size: 9 });
-drawText('HAEUNDAE-GU, BUSAN, 48059, KOREA', 45, 650, { size: 9 });
-drawText('TEL: +827088311566, BRN: 6728602689', 45, 640, { size: 9 });
-drawText('EMAIL: GWEN.CHO@DEXTRANSGROUP.COM', 45, 630, { size: 9 });
+// 3. Mint Green Box - Issuing Carrier's Agent
+drawText('SMSA EXPRESS TRANSPORTATION CO., LTD', 65, 600, { size: 8 });
 
-// Carrier and Route Information
-drawText('EK', 180, 580, { size: 10 });
-drawText('DMM – SAUDI ARABIA', 45, 520, { size: 9 });
-drawText('ICN – SOUTH KOREA', 45, 480, { size: 9 });
+// 4. Yellow Box - Airport of Departure
+drawText('DMM – SAUDI ARABIA', 65, 560, { size: 8 });
+drawText('4564654', 65, 450, { size: 8 });
+drawText('DXB', 65, 430, { size: 8 });    // Orange section
+drawText('EK', 140, 430, { size: 8 });     // Green section
 
-// Weight and Dimensions
-drawText('10', 45, 400, { size: 10 });
-drawText('7171.00', 90, 400, { size: 10 });
-drawText('120 X 120 X 107 @ 10', 380, 400, { size: 9 });
+// Airport of Destination (Red box)
+drawText('ICN – SOUTH KOREA', 65, 410, { size: 8 });
+// 5. Cargo Details
+const cargoY = 460;  // Starting Y position for cargo section
+drawText('DANGEROUS GOODS AS PER ASSOCIATED', 90, cargoY, { size: 9 });
+drawText("SHIPPER'S DECLARATION", 90, cargoY - 12, { size: 9 });
+drawText('10', 90, cargoY - 30, { size: 9 });
+drawText('7171.00 KG', 120, cargoY - 30, { size: 9 });
+drawText('7171.00', 250, cargoY - 30, { size: 9 });
+drawText('5.57', 350, cargoY - 30, { size: 9 });
+drawText('40000.00', 450, cargoY - 30, { size: 9 });
+drawText('CONSOLIDATED', 90, cargoY - 45, { size: 9 });
+drawText('DIM 120 X 120 X 107 @ 10', 90, cargoY - 60, { size: 9 });
 
-// Handling Information
-drawText('DANGEROUS GOODS AS PER ASSOCIATED', 45, 340, { size: 8 });
-drawText("SHIPPER'S DECLARATION", 45, 330, { size: 8 });
+// 6. Bottom Section
+const bottomY = 200;  // Starting Y position for bottom section
+drawText('FREIGHT PREPAID', 270, 510, { size: 8 });
+drawText('ORIGINAL 3 (FOR SHIPPER)', 90, bottomY - 15, { size: 9 });
+drawText('7145089', 90, bottomY - 30, { size: 9 });
 
-// Charges
-drawText('40000.00', 45, 280, { size: 10 });
-drawText('40000.00', 320, 280, { size: 10 });
+// 7. Final Line
+const finalY = 150;  // Starting Y position for final line
+drawText('03/11/2024', 90, finalY, { size: 9 });
+drawText('DMM', 170, finalY, { size: 9 });
+drawText('SMSA EXPRESS TRANSPORTATION CO., LTD', 250, finalY, { size: 9 });
 
-// Bottom Section
-drawText('03/11/2024', 45, 120, { size: 9 });
-drawText('DMM', 200, 120, { size: 9 });
-drawText('SMSA EXPRESS TRANSPORTATION CO., LTD', 320, 120, { size: 8 });
+// 8. Charges at bottom
+drawText('40000.00', 450, finalY - 20, { size: 9 });
+drawText('40000.00', 450, finalY - 35, { size: 9 });
 
         // Save the PDF
         const pdfBytes = await pdfDoc.save();
