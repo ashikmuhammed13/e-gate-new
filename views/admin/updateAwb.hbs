@@ -432,56 +432,28 @@
     </div>
 
     <script>
-      // Modify the locations array to include delivered and signed status
-let locations = [
-    {
-        id: 1,
-        name: 'EGATE SHIPPING',
-        address: 'DAMMAM, SA',
-        status: 'shipped',
-        isCompleted: true,
-        timestamp: '12/8/24 7:01 AM'
-    },
-    {
-        id: 2,
-        name: 'Distribution Center',
-        address: 'DAMMAM SA',
-        status: 'in-transit',
-        isCompleted: false,
-        timestamp: '12/9/24 5:04 PM'
-    },
-    {
-        id: 3,
-        name: 'FedEx Facility',
-        address: 'MANGALORE IN',
-        status: 'in-transit',
-        isCompleted: false,
-        timestamp: '12/12/24 3:45 PM'
-    },
-    {
-        id: 4,
-        name: 'Delivery Location',
-        address: 'MANGALORE IN',
-        status: 'delivered',
-        isCompleted: false,
-        timestamp: '12/13/24 2:30 PM',
-        signedBy: 'Ashique'
-    }
-];
+ // Global variable to store the AWB number
+let currentAwbNumber = '123456789'; // Replace this with actual AWB number from your page
 
-// Update the select options in your form
-document.getElementById('newLocationStatus').innerHTML = `
-    <option value="">Select Status</option>
-    <option value="shipped">Shipped</option>
-    <option value="in-transit">In Transit</option>
-    <option value="out-for-delivery">Out for Delivery</option>
-    <option value="delivered">Delivered</option>
-    <option value="signed">Signed</option>
-`;
+// Function to format timestamp
+function formatTimestamp(timestamp) {
+    return new Date(timestamp).toLocaleString();
+}
 
-// Modify the createTimelineItem function
-function createTimelineItem(location, index) {
-    const statusClass = location.isCompleted ? 'completed' : (index === getActiveIndex() ? 'active' : '');
+// Function to get icon based on status
+function getStatusIcon(status) {
+    const iconMap = {
+        'shipped': 'box-seam',
+        'in-transit': 'truck',
+        'out-for-delivery': 'bicycle',
+        'delivered': 'house-check'
+    };
+    return iconMap[status.toLowerCase()] || 'circle';
+}
+
+// Function to create timeline item HTML
+function createTimelineItem(location, index, totalLocations) {
+    const statusClass = location.isCompleted ? 'completed' : (index === totalLocations - 1 ? 'active' : '');
     const signatureField = location.status === 'delivered' ? `
         <div class="signature-field mt-3">
             <strong>Signed by:</strong> ${location.signedBy || 'Pending'}
@@ -489,16 +461,13 @@ function createTimelineItem(location, index) {
     ` : '';
 
     return `
-        <div class="timeline-item" data-id="${location.id}">
-            <div class="timeline-marker ${statusClass}" onclick="toggleStatus(${location.id})">
+        <div class="timeline-item" data-id="${location._id}">
+            <div class="timeline-marker ${statusClass}">
                 <i class="fas fa-check"></i>
             </div>
             <div class="timeline-content ${statusClass}">
                 <div class="action-buttons">
-                    <button class="btn-icon edit" onclick="editLocation(${location.id})">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn-icon delete" onclick="deleteLocation(${location.id})">
+                    <button class="btn-icon delete" onclick="deleteLocation('${location._id}')">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -506,8 +475,8 @@ function createTimelineItem(location, index) {
                     <h5>${location.name}</h5>
                     <p class="location-address mb-2">${location.address}</p>
                     <div class="d-flex align-items-center">
-                        <span class="location-timestamp">${location.timestamp}</span>
-                        <span class="status-badge ${location.isCompleted ? 'bg-success' : 'bg-primary'} ms-2">
+                        <span class="location-timestamp">${formatTimestamp(location.timestamp)}</span>
+                        <span class="status-badge ${statusClass ? 'bg-success' : 'bg-primary'} ms-2">
                             ${location.status.replace('-', ' ')}
                         </span>
                     </div>
@@ -518,123 +487,83 @@ function createTimelineItem(location, index) {
     `;
 }
 
-// Add this at the end of your timeline container
-document.querySelector('.tracking-container').insertAdjacentHTML('beforeend', `
-    <div class="download-section">
-        <button class="btn btn-download" onclick="downloadStatusPDF()">
-            <i class="fas fa-download"></i>
-            Download Status PDF
-        </button>
-    </div>
-`);
-
-// Add the download function
-function downloadStatusPDF() {
-    // Implement PDF generation and download logic here
-    alert('Downloading status PDF...');
-    // You would typically generate a PDF using a library like jsPDF
-    // and include all the tracking information
+// Function to update timeline display
+function updateTimelineDisplay(locations) {
+    const timelineContainer = document.getElementById('timelineItems');
+    timelineContainer.innerHTML = locations.map((location, index) => 
+        createTimelineItem(location, index, locations.length)
+    ).join('');
+    updateProgressLine(locations);
 }
 
-        function getActiveIndex() {
-            return locations.findIndex(l => !l.isCompleted);
-        }
+// Function to update progress line
+function updateProgressLine(locations) {
+    const progressLine = document.getElementById('progressLine');
+    const completedCount = locations.filter(l => l.isCompleted).length;
+    const progressHeight = (completedCount / locations.length) * 100;
+    progressLine.style.height = `${progressHeight}%`;
+}
 
-        function updateTimeline() {
-            const container = document.getElementById('timelineItems');
-            container.innerHTML = locations.map((location, index) => createTimelineItem(location, index)).join('');
-            updateProgressLine();
-        }
+// Function to fetch and display timeline
+async function fetchTimeline() {
+    try {
+        const response = await fetch(`/api/timeline/${currentAwbNumber}`);
+        if (!response.ok) throw new Error('Failed to fetch timeline');
+        const timeline = await response.json();
+        updateTimelineDisplay(timeline.locations);
+    } catch (error) {
+        console.error('Error fetching timeline:', error);
+    }
+}
 
-        function updateProgressLine() {
-            const progressLine = document.getElementById('progressLine');
-            const completedCount = locations.filter(l => l.isCompleted).length;
-            const progressHeight = (completedCount / locations.length) * 100;
-            progressLine.style.height = `${progressHeight}%`;
-            progressLine.style.background = completedCount === locations.length ? '#198754' : '#0d6efd';
-        }
+// Function to delete location
+async function deleteLocation(locationId) {
+    if (!confirm('Are you sure you want to delete this location?')) return;
 
-        function toggleStatus(id) {
-            const index = locations.findIndex(l => l.id === id);
-            if (index > -1) {
-                // Toggle current location
-                locations[index].isCompleted = !locations[index].isCompleted;
-                
-                // Update previous locations
-                if (locations[index].isCompleted) {
-                    for (let i = 0; i < index; i++) {
-                        locations[i].isCompleted = true;
-                    }
-                }
-                
-                // Update next locations
-                if (!locations[index].isCompleted) {
-                    for (let i = index + 1; i < locations.length; i++) {
-                        locations[i].isCompleted = false;
-                    }
-                }
-                
-                updateTimeline();
-            }
-        }
+    try {
+        const response = await fetch(`/api/timeline/${currentAwbNumber}/location/${locationId}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) throw new Error('Failed to delete location');
+        await fetchTimeline(); // Refresh timeline after deletion
+    } catch (error) {
+        console.error('Error deleting location:', error);
+    }
+}
 
-        function editLocation(id) {
-            document.querySelectorAll('.edit-form').forEach(form => form.style.display = 'none');
-            document.querySelectorAll('.location-info').forEach(info => info.style.display = 'block');
-            
-            const editForm = document.getElementById(`edit-${id}`);
-            const locationInfo = editForm.previousElementSibling;
-            
-            editForm.style.display = 'block';
-            locationInfo.style.display = 'none';
-        }
+// Add location form submission handler
+document.getElementById('addLocationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        awbNumber: currentAwbNumber,
+        name: document.getElementById('newLocationName').value,
+        address: document.getElementById('newLocationAddress').value,
+        status: document.getElementById('newLocationStatus').value
+    };
 
-        function cancelEdit(id) {
-            const editForm = document.getElementById(`edit-${id}`);
-            const locationInfo = editForm.previousElementSibling;
-            
-            editForm.style.display = 'none';
-            locationInfo.style.display = 'block';
-        }
-
-        function updateLocation(event, id) {
-            event.preventDefault();
-            const form = event.target;
-            const location = locations.find(l => l.id === id);
-            
-            if (location) {
-                location.name = form.name.value;
-                location.address = form.address.value;
-                location.status = form.status.value;
-                updateTimeline();
-                cancelEdit(id);
-            }
-        }
-
-        function deleteLocation(id) {
-            if (confirm('Are you sure you want to delete this location?')) {
-                locations = locations.filter(l => l.id !== id);
-                updateTimeline();
-            }
-        }
-
-        document.getElementById('addLocationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const newLocation = {
-                id: Date.now(),
-                name: document.getElementById('newLocationName').value,
-                address: document.getElementById('newLocationAddress').value,
-                status: document.getElementById('newLocationStatus').value,
-                isCompleted: false,
-                timestamp: new Date().toLocaleString()
-            };
-            
-            locations.push(newLocation);
-            updateTimeline();
-            this.reset();
+    try {
+        const response = await fetch('/api/timeline/addLocation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
         });
 
-        document.addEventListener('DOMContentLoaded', updateTimeline);
+        if (!response.ok) throw new Error('Failed to add location');
+        
+        await fetchTimeline(); // Refresh timeline after adding location
+        this.reset(); // Reset form
+    } catch (error) {
+        console.error('Error adding location:', error);
+    }
+});
+
+// Initialize timeline on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchTimeline();
+});
     </script>
 </body>
 </html>

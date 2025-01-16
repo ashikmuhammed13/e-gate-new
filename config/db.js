@@ -27,9 +27,13 @@ const db = mongoose.connection;
 
 // Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => console.log('Connected to Mongoose'));
+mongoose.connection.on('open', () => {
+  console.log(`Connected to database: ${mongoose.connection.name}`);
+});
+
 db.on('disconnected', () => {
   console.log('Mongoose Disconnected');
 });
 
 module.exports = db;
+

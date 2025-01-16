@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Package Tracking Timeline</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script>
+    console.log('Shipment:', {{{json shipment}}});
+</script>
+    <style>
+  /* Modern Sidebar Variables */
+  :root {
+    --sidebar-width: 280px;
+    --sidebar-bg: rgba(15, 23, 42, 0.95);
+    --sidebar-hover: rgba(30, 41, 59, 0.8);
+    --neon-accent: #0ea5e9;
+    --neon-glow: 0 0 10px rgba(14, 165, 233, 0.5);
+    --glass-effect: blur(10px);
+}
+.tracking-timeline {
+    margin-top: 20px;
+}
+
+.timeline-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    margin-bottom: 15px;
+}
+
+.timeline-date {
+    color: #666;
+    font-size: 14px;
+}
+
+.timeline-event {
+    color: #333;
+}
+.address-box {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.address-box p {
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.badge-custom {
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+.tracking-timeline {
+    margin-top: 2rem;
+    border-left: 2px solid #e5e7eb;
+    padding-left: 2rem;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.3rem;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #6366f1;
+    border: 2px solid white;
+}
+
+/* Sidebar Base Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--glass-effect);
+    -webkit-backdrop-filter: var(--glass-effect);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    height: 100vh;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+/* Logo Section */
+.sidebar .logo {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.95)
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .logo h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(120deg, #fff, var(--neon-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation Links */
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem 1.5rem;
+    margin: 0.3rem 0.8rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link i {
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+/* Active Link Styles */
+.sidebar .nav-link.active-nav-link {
+    background: rgba(14, 165, 233, 0.15);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link.active-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: var(--neon-accent);
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--neon-glow);
+}
+
+/* Hover Effects */
+.sidebar .nav-link:hover i {
+    transform: translateX(3px);
+    color: var(--neon-accent);
+}
+
+/* Navigation Group */
+.nav.flex-column {
+    padding: 1rem 0;
+}
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* Navbar Styles */
+        .top-navbar {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+        }
+
+        .search-bar {
+            max-width: 400px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .tracking-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin: 2rem auto;
+            max-width: 1000px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .order-number {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .order-number span {
+            color: #6366f1;
+        }
+
+        .expected-arrival {
+            text-align: right;
+        }
+
+        .tracking-number {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .timeline-container {
+            position: relative;
+            padding: 0 1rem;
+        }
+
+        .timeline-track {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 24px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+
+        .progress-line-filled {
+            position: absolute;
+            top: 24px;
+            left: 0;
+            height: 3px;
+            background: #6366f1;
+            transition: width 0.5s ease;
+            z-index: 2;
+        }
+
+        .timeline-point {
+            position: relative;
+            z-index: 3;
+            width: 25%;
+            text-align: center;
+        }
+
+        .point-marker {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 3px solid #e5e7eb;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .point-marker.completed {
+            background: #6366f1;
+            border-color: #6366f1;
+            color: white;
+        }
+
+        .point-label {
+            font-weight: 500;
+            margin-top: 0.5rem;
+            color: #4b5563;
+        }
+
+     .tracking-history {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.tracking-events {
+    position: relative;
+}
+
+.tracking-event-item {
+    display: flex;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.tracking-event-item:last-child {
+    border-bottom: none;
+}
+
+.tracking-event-item:hover {
+    background: #f8fafc;
+}
+
+.event-date {
+    min-width: 120px;
+}
+
+.date-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.event-details {
+    flex: 1;
+}
+
+.event-description {
+    color: #1e293b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Optional: Add animation for items */
+.tracking-event-item {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .tracking-event-item {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .event-date {
+        min-width: auto;
+    }
+}
+
+/* Package Details Styling */
+.details-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.details-grid div:nth-child(odd) {
+    font-weight: 600;
+    color: #2c3e50;
+    min-width: 150px;
+}
+
+.badge-custom {
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+/* Enhanced Timeline Styling */
+.tracking-timeline {
+    margin-top: 2rem;
+    border-left: 2px solid #e5e7eb;
+    padding-left: 2rem;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.3rem;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #6366f1;
+    border: 2px solid white;
+}
+
+.timeline-date {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.timeline-event {
+    color: #1f2937;
+    line-height: 1.5;
+}
+
+        @media (max-width: 768px) {
+            .tracking-card {
+                padding: 1rem;
+                margin: 1rem;
+            }
+
+            .order-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .expected-arrival {
+                text-align: center;
+            }
+
+            .timeline-track {
+                margin-bottom: 2rem;
+            }
+
+            .point-marker {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .point-label {
+                font-size: 0.8rem;
+            }
+        }
+        .tracking-card {
+            max-width: 800px;
+            margin: 30px auto;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 25px;
+        }
+
+        .logo {
+            
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .logo span {
+            color: #FF6600;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .details-grid div:nth-child(odd) {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .badge-custom {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+
+        .tracking-timeline {
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            margin-bottom: 15px;
+        }
+
+        .timeline-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .timeline-event {
+            color: #333;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        /* AWB Search Styles */
+.search-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.search-wrapper {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.search-wrapper h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+.search-box-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-input {
+    height: 60px;
+    font-size: 1.1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 10px 0 0 10px !important;
+    padding: 0 20px;
+}
+
+.search-input:focus {
+    border-color: #6366f1;
+    box-shadow: none;
+}
+
+.search-btn {
+    min-width: 120px;
+    background: #6366f1;
+    border: none;
+    font-size: 1.1rem;
+    border-radius: 0 10px 10px 0 !important;
+    height: 60px;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+}
+
+.example-text {
+    color: #6b7280;
+}
+
+.recent-searches {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.recent-search-items {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.search-item {
+    background: #f3f4f6;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-item:hover {
+    background: #e5e7eb;
+    transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .search-wrapper {
+        padding: 1.5rem;
+    }
+
+    .search-wrapper h2 {
+        font-size: 1.5rem;
+    }
+
+    .search-input {
+        height: 50px;
+        font-size: 1rem;
+    }
+
+    .search-btn {
+        height: 50px;
+        font-size: 1rem;
+        min-width: 100px;
+    }
+}
+    </style>
+</head>
+<body class="bg-light">
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
+            </div>
+            <div class="nav flex-column">
+                <a href="/admin/track"class="nav-link active-nav-link">
+                    <i class="bi bi-truck"></i> 
+                    Tracking
+                </a>
+
+               <a href="/admin/createAwb"class="nav-link">
+                    <i class="bi bi-files"></i>
+                    Create AWB
+                </a>
+                <a href="/awbCreate" class="nav-link ">
+                    <i class="bi bi-file-text"></i> 
+                    House AWB
+                </a>
+                <a href="/awbCreate" class="nav-link ">
+                    <i class="bi bi-file-earmark-break"></i> 
+                    Master AWB
+                </a>
+
+                <a href="/updateAwb" class="nav-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Update AWB
+                </a>
+                <a href="/allShipment" class="nav-link ">
+                    <i class="bi bi-boxes"></i>
+                    All Shipments
+                </a>
+                <a href="/admin/profile"class="nav-link">
+                    <i class="bi bi-gear"></i>
+                    Admin Profile
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="top-navbar">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="search-bar">
+                                <input type="search" class="form-control" placeholder="Search...">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="admin-profile">
+                                <img src="https://via.placeholder.com/40" alt="Admin">
+                                <div class="admin-info">
+                                    <div class="fw-bold">Admin Name</div>
+                                    <small class="text-muted">Administrator</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+           <!-- Add this after your top navbar in the main-content section -->
+
+           {{!-- views/tracking/index.hbs --}}
+
+           <div class="container-fluid search-container py-5">
+               <div class="row justify-content-center">
+                   <div class="col-12 col-md-10 col-lg-8">
+                       <div class="search-wrapper">
+                           <h2 class="text-center mb-4">Track Your Shipment</h2>
+                           <div class="search-box-container">
+                               <form action=" /admin/track" method="POST" class="input-group">
+                                   <input type="text" 
+                                          class="form-control search-input" 
+                                          name="awbNumber"
+                                          placeholder="Enter AWB Number" 
+                                          value="{{searchedAwb}}"
+                                          required>
+                                   <button class="btn btn-primary search-btn" type="submit">
+                                       <i class="bi bi-search me-2"></i>Track
+                                   </button>
+                               </form>
+                           </div>
+           
+                           {{#if recentSearches}}
+                           <div class="recent-searches mt-4">
+                               <h6 class="text-muted mb-3">Recent Searches</h6>
+                               <div class="recent-search-items">
+                                   {{#each recentSearches}}
+                                   <span class="search-item">{{this.awbNumber}}</span>
+                                   {{/each}}
+                               </div>
+                           </div>
+                           {{/if}}
+                       </div>
+                   </div>
+               </div>
+           </div>
+           
+            <div class="timeline-container">
+                   <div class="progress-line"></div>
+                   <div class="progress-line-filled" style="width: {{progress}}%"></div>
+                   
+                   <div class="timeline-track">
+                       {{#each statusOrder}}
+  <div class="timeline-point">
+    <div class="point-marker {{#if (lessThanOrEqual @index ../currentStatusIndex)}}completed{{/if}}">
+      <i class="bi {{#if (lessThanOrEqual @index ../currentStatusIndex)}}bi-check-lg{{else}}bi-circle{{/if}}"></i>
+    </div>
+    <div class="point-label">{{this}}</div>
+  </div>
+{{/each}}
+
+                   </div>
+               </div>
+
+          {{#if shipment}}
+<div class="tracking-card">
+    <div class="order-header">
+        <div class="order-number">
+            ORDER <span>#{{shipment.awbNumber}}</span>
+        </div>
+        <div class="expected-arrival">
+            <div>Expected Delivery: {{formatDate shipment.estimatedDeliveryDate}}</div>
+            <div class="tracking-number">{{shipment.serviceType}} {{shipment.awbNumber}}</div>
+        </div>
+    </div>
+
+    <!-- Package Details Section -->
+    <div class="package-details mt-4">
+        <h5 class="mb-3">Package Details</h5>
+        
+        <div class="details-grid">
+            <div>Service Type</div>
+            <div>{{shipment.serviceType}}</div>
+
+            <div>Total Packages</div>
+            <div>{{shipment.totalPackages}}</div>
+
+            <div>Total Weight</div>
+            <div>{{shipment.totalWeight}} kg</div>
+
+            <div>Origin</div>
+            <div><span class="badge-custom">{{shipment.sender.addressDetails.city}}, {{shipment.sender.addressDetails.country}}</span></div>
+
+            <div>Destination</div>
+            <div><span class="badge-custom">{{shipment.receiver.addressDetails.city}}, {{shipment.receiver.addressDetails.country}}</span></div>
+
+            <div>Status</div>
+            <div><span class="badge-custom">{{shipment.status}}</span></div>
+
+            <div>Shipping Date</div>
+            <div>{{formatDate shipment.shipmentDate}}</div>
+        </div>
+
+        <!-- Address Details -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h6 class="mb-3">Sender Details</h6>
+                <div class="address-box p-3 bg-light rounded">
+                    <p class="mb-1"><strong>{{shipment.sender.addressDetails.contactName}}</strong></p>
+                    <p class="mb-1">{{shipment.sender.addressDetails.streetAddress}}</p>
+                    <p class="mb-1">{{shipment.sender.addressDetails.city}}, {{shipment.sender.addressDetails.state}} {{shipment.sender.addressDetails.postalCode}}</p>
+                    <p class="mb-1">{{shipment.sender.addressDetails.country}}</p>
+                    <p class="mb-0">{{shipment.sender.addressDetails.phoneNumber}}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6 class="mb-3">Receiver Details</h6>
+                <div class="address-box p-3 bg-light rounded">
+                    <p class="mb-1"><strong>{{shipment.receiver.addressDetails.contactName}}</strong></p>
+                    <p class="mb-1">{{shipment.receiver.addressDetails.streetAddress}}</p>
+                    <p class="mb-1">{{shipment.receiver.addressDetails.city}}, {{shipment.receiver.addressDetails.state}} {{shipment.receiver.addressDetails.postalCode}}</p>
+                    <p class="mb-1">{{shipment.receiver.addressDetails.country}}</p>
+                    <p class="mb-0">{{shipment.receiver.addressDetails.phoneNumber}}</p>
+                </div>
+            </div>
+        </div>
+
+ <div class="tracking-history mt-5">
+    <h5 class="mb-4">Tracking History</h5>
+    <div class="tracking-events">
+        {{#each shipment.timeline}}
+            <div class="tracking-event-item">
+                <div class="event-date">
+                    <span class="date-badge">
+                        {{formatDate this.date}}
+                    </span>
+                </div>
+                <div class="event-details">
+                    <div class="event-description">{{this.event}}</div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+{{/if}}
+
+    <script>
+        // Set the progress line width based on completed steps
+        document.addEventListener('DOMContentLoaded', function() {
+            const completedSteps = document.querySelectorAll('.point-marker.completed').length;
+            const totalSteps = document.querySelectorAll('.point-marker').length;
+            const progressPercentage = ((completedSteps - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressLine').style.width = `${progressPercentage}%`;
+        });
+
+        // Optional: Add animation when markers are completed
+        document.querySelectorAll('.point-marker').forEach((marker, index) => {
+            if (marker.classList.contains('completed')) {
+                marker.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    marker.style.transform = 'scale(1)';
+                }, 200);
+            }
+        });
+
+
+        // Add this to your existing script section
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle recent search items click
+    document.querySelectorAll('.search-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const searchInput = document.querySelector('.search-input');
+            searchInput.value = this.textContent;
+            searchInput.focus();
+        });
+    });
+
+    // Handle search button click
+    document.querySelector('.search-btn').addEventListener('click', function() {
+        const searchValue = document.querySelector('.search-input').value.trim();
+        if (searchValue) {
+            // Add your search functionality here
+            console.log('Searching for:', searchValue);
+        }
+    });
+
+    // Handle enter key press
+    document.querySelector('.search-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const searchValue = this.value.trim();
+            if (searchValue) {
+                // Add your search functionality here
+                console.log('Searching for:', searchValue);
+            }
+        }
+    });
+});
+
+
+// Add this to your template or a separate JS file
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,726 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E Gate Shipping Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+    --sidebar-width: 280px;
+    --sidebar-bg: rgba(15, 23, 42, 0.95);
+    --sidebar-hover: rgba(30, 41, 59, 0.8);
+    --neon-accent: #0ea5e9;
+    --neon-glow: 0 0 10px rgba(14, 165, 233, 0.5);
+    --glass-effect: blur(10px);
+}
+
+
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+        .help-icon {
+            color: #0d6efd;
+            cursor: pointer;
+        }
+        .section-header i {
+            margin-right: 10px;
+            color: #28a745;
+        }
+
+.address-result {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.address-result:hover {
+    background-color: #f8f9fa;
+}
+.address-result {
+    transition: background-color 0.2s ease;
+}
+
+.address-result:hover {
+    background-color: #f8f9fa;
+}
+
+.search-box {
+    position: relative;
+}
+
+#senderSearchResults,
+#receiverSearchResults {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-results {
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+}
+
+/* Add these styles in your existing <style> section */
+    .btn-create-shipment {
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-create-shipment:hover {
+    background: linear-gradient(45deg, #3498db, #2c3e50);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    color: white;
+}
+
+.btn-cancel {
+    border-radius: 25px;
+    padding: 12px 30px;
+}
+        .required-field:after {
+            content: "*";
+            color: red;
+            margin-left: 4px;
+        }
+        /* Sidebar Styles */
+         /* Modern Sidebar Variables */
+
+/* Sidebar Base Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--glass-effect);
+    -webkit-backdrop-filter: var(--glass-effect);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    height: 100vh;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+/* Logo Section */
+.sidebar .logo {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.95)
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .logo h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(120deg, #fff, var(--neon-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation Links */
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem 1.5rem;
+    margin: 0.3rem 0.8rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link i {
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+/* Active Link Styles */
+.sidebar .nav-link.active-nav-link {
+    background: rgba(14, 165, 233, 0.15);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link.active-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: var(--neon-accent);
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--neon-glow);
+}
+
+/* Hover Effects */
+.sidebar .nav-link:hover i {
+    transform: translateX(3px);
+    color: var(--neon-accent);
+}
+
+/* Navigation Group */
+.nav.flex-column {
+    padding: 1rem 0;
+}
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* Navbar Styles */
+        .top-navbar {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+        }
+
+        .search-bar {
+            max-width: 400px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Form Section Styles */
+        .content-wrapper {
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .active-nav-link {
+            background: #34495e;
+            color: #3498db !important;
+        }
+        .package-form {
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.remove-package {
+    z-index: 1;
+}
+
+.package-summary {
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+}
+.package-form {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.package-form:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.package-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.package-title {
+    color: #2c3e50;
+    margin: 0;
+    font-weight: 500;
+}
+
+.btn-add-package {
+    background: linear-gradient(45deg, #3498db, #2ecc71);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-add-package:hover {
+    background: linear-gradient(45deg, #2ecc71, #3498db);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    color: white;
+}
+
+.btn-delete-package {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #fff;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-delete-package:hover {
+    background: #dc3545;
+    color: white;
+    transform: rotate(90deg);
+}
+
+.package-summary {
+    background: linear-gradient(45deg, #f8f9fa, #ffffff);
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.package-summary h6 {
+    color: #2c3e50;
+}
+
+.package-summary .text-primary {
+    font-weight: 600;
+}
+.form-section input[type="date"] {
+    height: 38px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0.375rem 0.75rem;
+}
+
+.form-section input[type="date"]:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+    </style>
+    
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
+            </div>
+             <div class="nav flex-column">
+                <a href="/admin/track"class="nav-link">
+                    <i class="bi bi-truck"></i> 
+                    Tracking
+                </a>
+
+               <a href="/admin/createAwb"class="nav-link active-nav-link">
+                    <i class="bi bi-files"></i>
+                    Create AWB
+                </a>
+                <a href="/awbCreate" class="nav-link ">
+                    <i class="bi bi-file-text"></i> 
+                    House AWB
+                </a>
+                <a href="/awbCreate" class="nav-link ">
+                    <i class="bi bi-file-earmark-break"></i> 
+                    Master AWB
+                </a>
+
+                <a href="/updateAwb" class="nav-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Update AWB
+                </a>
+                <a href="/allShipment" class="nav-link ">
+                    <i class="bi bi-boxes"></i>
+                    All Shipments
+                </a>
+                <a href="/admin/profile"class="nav-link">
+                    <i class="bi bi-gear"></i>
+                    Admin Profile
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="top-navbar">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="search-bar">
+                                <input type="search" class="form-control" placeholder="Search...">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="admin-profile">
+                                <img src="https://via.placeholder.com/40" alt="Admin">
+                                <div class="admin-info">
+                                    <div class="fw-bold">Admin Name</div>
+                                    <small class="text-muted">Administrator</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Content Area -->
+            <div class="content-wrapper">
+                <form id="shipment-form">
+                <div class="container-fluid">
+    <h4 class="mb-4">Sender Receiver Details</h4>
+    <div class="row">
+        <!-- Ship From Section -->
+        <div class="col-md-6">
+            <div class="form-section">
+                <h5 class="mb-4"><i class="bi bi-box-arrow-up me-2"></i>Ship From</h5>
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <h4>Ship from</h4>
+                    </div>
+                
+                   <div class="search-box mb-3">
+    <div class="input-group">
+        <input type="text" 
+               class="form-control" 
+               name="senderSearchInput"
+               placeholder="SEARCH IN ADDRESS BOOK"
+               oninput="searchAddresses('sender')">
+        <button class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+    <div id="senderSearchResults" class="position-absolute bg-white w-100 shadow-sm" 
+         style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+    </div>
+</div>
+                
+                    <div class="row">
+                        <!-- Contact Details -->
+                        <div class="col-md-6">
+                            <h5>Contact details</h5>
+                            <div class="mb-3">
+                                <label class="form-label required-field">CONTACT NAME</label>
+                                <input type="text" class="form-control" name="senderContact" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">COMPANY</label>
+                                <input type="text" class="form-control" name="senderCompany">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required-field">PHONE NUMBER</label>
+                                <input type="tel" class="form-control" name="senderPhone" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">EMAIL</label>
+                                <input type="email" class="form-control" name="senderEmail">
+                            </div>
+                        </div>
+                
+                        <!-- Address -->
+                        <div class="col-md-6">
+                            <h5>Address</h5>
+                            <div class="mb-3">
+                                <label class="form-label required-field">COUNTRY/TERRITORY</label>
+                                <input type="text" class="form-control" name="senderCountry" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required-field">ADDRESS LINE 1</label>
+                                <input type="text" class="form-control" name="senderAddress1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">ADDRESS LINE 2</label>
+                                <input type="text" class="form-control" name="senderAddress2">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">ADDRESS LINE 3</label>
+                                <input type="text" class="form-control" name="senderAddress3">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">POSTAL CODE</label>
+                                <input type="text" class="form-control" name="senderPostal">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required-field">CITY</label>
+                                <input type="text" class="form-control" name="senderCity" required>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" name="senderIsResidential" id="senderResidentialCheck">
+                        <label class="form-check-label" for="senderResidentialCheck">
+                            This is a residential address
+                        </label>
+                    </div>
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" id="senderSaveAddressCheck">
+                        <label class="form-check-label" for="senderSaveAddressCheck">
+                            Save address
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivery To Section -->
+        <div class="col-md-6">
+            <div class="form-section">
+                <h5 class="mb-4"><i class="bi bi-box-arrow-down me-2"></i>Deliver To</h5>
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <h4>Deliver To</h4>
+                    </div>
+                
+                   <div class="search-box mb-3">
+    <div class="input-group">
+        <input type="text" 
+               class="form-control" 
+               name="receiverSearchInput"
+               placeholder="SEARCH IN ADDRESS BOOK"
+               oninput="searchAddresses('receiver')">
+        <button class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+    <div id="receiverSearchResults" class="position-absolute bg-white w-100 shadow-sm" 
+         style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+    </div>
+</div>
+                
+                    <div class="row">
+                        <!-- Contact Details -->
+                        <div class="col-md-6">
+                            <h5>Contact details</h5>
+                            <div class="mb-3">
+                                <label class="form-label required-field">CONTACT NAME</label>
+                                <input type="text" class="form-control" name="receiverContact" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">COMPANY</label>
+                                <input type="text" class="form-control" name="receiverCompany">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required-field">PHONE NUMBER</label>
+                                <input type="tel" class="form-control" name="receiverPhone" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">EMAIL</label>
+                                <input type="email" class="form-control" name="receiverEmail">
+                            </div>
+                        </div>
+                
+                        <!-- Address -->
+                        <div class="col-md-6">
+                            <h5>Address</h5>
+                            <div class="mb-3">
+                                <label class="form-label required-field">COUNTRY/TERRITORY</label>
+                                <input type="text" class="form-control" name="receiverCountry" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required-field">ADDRESS LINE 1</label>
+                                <input type="text" class="form-control" name="receiverAddress1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">ADDRESS LINE 2</label>
+                                <input type="text" class="form-control" name="receiverAddress2">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">ADDRESS LINE 3</label>
+                                <input type="text" class="form-control" name="receiverAddress3">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">POSTAL CODE</label>
+                                <input type="text" class="form-control" name="receiverPostal">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required-field">CITY</label>
+                                <input type="text" class="form-control" name="receiverCity" required>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" name="receiverIsResidential" id="receiverResidentialCheck">
+                        <label class="form-check-label" for="receiverResidentialCheck">
+                            This is a residential address
+                        </label>
+                    </div>
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" id="receiverSaveAddressCheck">
+                        <label class="form-check-label" for="receiverSaveAddressCheck">
+                            Save address
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipment Date Section -->
+    <div class="form-section mb-4">
+        <div class="section-header">
+            <i class="bi bi-calendar"></i>
+            <h4>Shipment Date</h4>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label required-field">Shipment Date</label>
+                    <input type="date" class="form-control" name="shipmentDate" id="shipmentDate" required>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Package Details Section -->
+    <div class="form-section mb-4">
+        <div class="section-header">
+            <i class="bi bi-box"></i>
+            <h4>Package Details</h4>
+        </div>
+        <!-- Package container -->
+        <div id="packages-container">
+            <!-- Initial package form -->
+            <div class="package-form mb-4">
+                <div class="package-header">
+                    <h6 class="package-title">Package #1</h6>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label required-field">Package Type</label>
+                        <select class="form-select package-type" name="packageType" required>
+                            <option value="">Select Package Type</option>
+                            <option value="Document">Document</option>
+                            <option value="Parcel">Parcel</option>
+                            <option value="Heavy Cargo">Heavy Cargo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label required-field">Weight (kg)</label>
+                        <input type="number" class="form-control package-weight" name="packageWeight" step="0.1" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Dimensions (L × W × H) cm</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" name="packageLength" placeholder="Length">
+                            <span class="input-group-text">×</span>
+                            <input type="number" class="form-control" name="packageWidth" placeholder="Width">
+                            <span class="input-group-text">×</span>
+                            <input type="number" class="form-control" name="packageHeight" placeholder="Height">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Package Button -->
+        <div class="text-center mb-4">
+            <button id="add-package" class="btn btn-add-package">
+                <i class="bi bi-plus-circle-fill me-2"></i>Add Another Package
+            </button>
+        </div>
+
+        <!-- Package Summary -->
+        <div class="package-summary">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-box-seam text-primary me-2"></i>
+                        <h6 class="mb-0">Total Packages: <span id="total-packages" class="text-primary">1</span></h6>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-weight text-primary me-2"></i>
+                        <h6 class="mb-0">Total Weight: <span id="total-weight" class="text-primary">0</span> kg</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Buttons -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+        <button class="btn btn-light btn-cancel me-md-2" type="button">Cancel</button>
+        <button class="btn btn-create-shipment" type="submit">
+            <i class="bi bi-box-seam me-2"></i>Create Shipment
+        </button>
+    </div>
+</div>
+                </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+</body>
+</html>

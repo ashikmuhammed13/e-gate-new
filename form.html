@@ -3,49 +3,358 @@
 <head>
     <title>Air Waybill Generator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .form-control { margin-bottom: 15px; }
-        .awb-number { font-size: 20px; font-weight: bold; }
-        .border-box { border: 1px solid #000; padding: 15px; margin-bottom: 15px; }
-        .small-text { font-size: 12px; }
-        .section-header { 
-            background-color: #f8f9fa;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-weight: bold;
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>:root {
+        --sidebar-width: 250px;
+        --primary-color: #3498db;
+        --secondary-color: #2980b9;
+        --dark-color: #2c3e50;
+        --light-color: #f8f9fa;
+    }
+    
+    /* General Styles */
+    .form-control { 
+        margin-bottom: 15px; 
+    }
+    
+    .awb-number { 
+        font-size: 20px; 
+        font-weight: bold; 
+    }
+    
+    .border-box { 
+        border: 1px solid #000; 
+        padding: 15px; 
+        margin-bottom: 15px; 
+    }
+    
+    .small-text { 
+        font-size: 12px; 
+    }
+    
+    /* Layout Structure */
+    .wrapper {
+        display: flex;
+        min-height: 100vh;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+        width: var(--sidebar-width);
+        background: #2c3e50;
+        color: white;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 1000;
+    }
+    
+    .sidebar .logo {
+        padding: 20px;
+        background: #243342;
+        margin-bottom: 20px;
+    }
+    
+    .sidebar .nav-link {
+        color: #ecf0f1 !important;
+        padding: 15px 20px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+    
+    .sidebar .nav-link:hover {
+        background: #34495e;
+        color: #3498db !important;
+    }
+    
+    .sidebar .nav-link.active {
+        background: #34495e;
+        color: #3498db !important;
+    }
+    
+    .sidebar .nav-link i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+    
+    /* Main Content Area */
+    .main-content {
+        margin-left: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+        padding: 2rem;
+        background-color: #f8f9fa;
+    }
+    
+    /* Section Styles */
+    .section-header { 
+        background-color: #f8f9fa;
+        padding: 10px;
+        margin-bottom: 15px;
+        font-weight: bold;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    .form-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    /* Search Functionality */
+    .search-container {
+        position: relative;
+        margin-bottom: 15px;
+    }
+    
+    .search-results {
+        position: absolute;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        width: 100%;
+        z-index: 1000;
+        display: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .search-result-item {
+        padding: 8px 15px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .search-result-item:hover {
+        background-color: #f5f5f5;
+    }
+    
+    /* Select2 Customization */
+    .select2-container {
+        width: 100% !important;
+    }
+    
+    .select2-selection {
+        height: 38px !important;
+        border: 1px solid #ced4da !important;
+    }
+    
+    .select2-selection__rendered {
+        line-height: 36px !important;
+    }
+    
+    .select2-selection__arrow {
+        height: 36px !important;
+    }
+    
+    /* Form Elements */
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    /* Button Styles */
+    .btn-custom-primary {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+    
+    .btn-custom-primary:hover {
+        background: var(--secondary-color);
+        color: white;
+    }
+    
+    /* Status Badges */
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+    }
+    
+    .status-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+    
+    .status-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 60px;
+            overflow: hidden;
         }
-        .form-label {
-            font-weight: bold;
-            margin-bottom: 5px;
+    
+        .sidebar .logo h4 {
+            display: none;
         }
+    
+        .sidebar .nav-link span {
+            display: none;
+        }
+    
+        .main-content {
+            margin-left: 60px;
+            width: calc(100% - 60px);
+        }
+    
+        .sidebar .nav-link i {
+            margin-right: 0;
+        }
+    }
+    
+    /* Form Group Spacing */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Custom Checkbox Style */
+    .form-check {
+        padding-left: 1.8rem;
+    }
+    
+    .form-check-input {
+        margin-left: -1.8rem;
+    }
+    
+    /* Table Styles */
+    .admin-table {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .admin-table th {
+        background: var(--light-color);
+        font-weight: 600;
+        padding: 1rem;
+    }
+    
+    /* Card Styles */
+    .admin-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    /* Animation */
+    .fade-enter {
+        opacity: 0;
+    }
+    
+    .fade-enter-active {
+        opacity: 1;
+        transition: opacity 200ms ease-in;
+    }
+    
+    .fade-exit {
+        opacity: 1;
+    }
+    
+    .fade-exit-active {
+        opacity: 0;
+        transition: opacity 200ms ease-in;
+    }
     </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Air Waybill Generator</h2>
-        
-        <form id="mawbForm" action="/generate-mawb" method="POST">
-            <div class="row mb-3">
-                <div class="col-6">
-                    <label class="form-label">AWB Number</label>
-                    <input name="awbNumber" type="text" class="form-control" value="176-73317996" readonly>
-                </div>
+    <div class="wrapper">
+        <!-- Sidebar stays the same -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
             </div>
-
+            <div class="nav flex-column">
+                <a href="/track" class="nav-link">
+                    <i class="bi bi-search"></i>
+                    Tracking
+                </a>
+                <a href="/awbCreate" class="nav-link active">
+                    <i class="bi bi-plus-circle"></i>
+                    Create AWB
+                </a>
+                <a href="/updateAwb" class="nav-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Update AWB
+                </a>
+                <a href="/allShipment" class="nav-link">
+                    <i class="bi bi-box-seam"></i>
+                    All Shipments
+                </a>
+                <a href="/admin" class="nav-link">
+                    <i class="bi bi-person-circle"></i>
+                    Admin Profile
+                </a>
+            </div>
+        </nav>
+    
+        <!-- Wrap the main content -->
+        <div class="main-content">
+            <div class="container">
+                <h2 class="text-center mb-4">Air Waybill Generator</h2>
+            <form id="mawbForm" action="/generate-mawb" method="POST">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label">AWB Number</label>
+                        <select name="awbNumber" id="awbNumber" class="form-control" required>
+                            <option value="">Select AWB Number</option>
+                            <option value="176-73317996">176-73317996</option>
+                            <option value="176-73317997">176-73317997</option>
+                            <option value="176-73317998">176-73317998</option>
+                            <option value="176-73317999">176-73317999</option>
+                        </select>
+                    </div>
+                </div>
+    
             <div class="section-header">Shipper Information</div>
-            <textarea name="shipperName" class="form-control" rows="5" required>SAUDI ARABIAN OIL COMPANY ( ARAMCO )
+            <div class="search-container">
+                <input type="text" class="form-control" id="shipperSearch" placeholder="Search saved shipper addresses...">
+                <div class="search-results" id="shipperSearchResults"></div>
+            </div>
+            <textarea name="shipperName" id="shipperName" class="form-control" rows="5" required>SAUDI ARABIAN OIL COMPANY ( ARAMCO )
 MATERIAL SUPPORT SECTION
 AVIATION DEPARTMENT
 SAUDI ARABIA
 PHONE : +966138775333</textarea>
-
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="saveShipperAddress">
+                <label class="form-check-label" for="saveShipperAddress">
+                    Save this shipper address
+                </label>
+            </div>
+    
             <div class="section-header">Consignee Information</div>
-            <textarea name="consigneeName" class="form-control" rows="5" required>DEXTRANS WORLDWIDE KOREA CO., LTD.
+            <div class="search-container">
+                <input type="text" class="form-control" id="consigneeSearch" placeholder="Search saved consignee addresses...">
+                <div class="search-results" id="consigneeSearchResults"></div>
+            </div>
+            <textarea name="consigneeName" id="consigneeName" class="form-control" rows="5" required>DEXTRANS WORLDWIDE KOREA CO., LTD.
 RM 2201, 90, CENTUMJUNGANG-RO,
 HAEUNDAE-GU, BUSAN, 48059, KOREA
 TEL: +827088311566, BRN: 6728602689
 EMAIL: GWEN.CHO@DEXTRANSGROUP.COM</textarea>
 
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="saveConsigneeAddress">
+                <label class="form-check-label" for="saveConsigneeAddress">
+                    Save this consignee address
+                </label>
+            </div>
+    
             <div class="section-header">Flight Details</div>
             <div class="row">
                 <div class="col-md-6">
@@ -53,18 +362,22 @@ EMAIL: GWEN.CHO@DEXTRANSGROUP.COM</textarea>
                     <input name="carrierCode" type="text" class="form-control" value="EK" required>
                 </div>
                 <div class="col-md-6">
+                    <label class="form-label">Freight</label>
+                    <input name="frieght" type="text" class="form-control" value="FREIGHT PREPAID" required>
+                </div>
+                <div class="col-md-6">
                     <label class="form-label">Gross Weight (kg)</label>
                     <input name="grossWeight" type="text" class="form-control" value="7171.00" required>
                 </div>
             </div>
-
+    
             <div class="row">
                 <div class="col-md-12">
                     <label class="form-label">Dimensions</label>
                     <input name="dimensions" type="text" class="form-control" value="120 X 120 X 107 @ 10" required>
                 </div>
             </div>
-
+    
             <div class="row">
                 <div class="col-md-6">
                     <label class="form-label">Airport of Departure</label>
@@ -75,10 +388,10 @@ EMAIL: GWEN.CHO@DEXTRANSGROUP.COM</textarea>
                     <input name="destination" type="text" class="form-control" value="ICN – SOUTH KOREA" required>
                 </div>
             </div>
-
+    
             <div class="section-header">Handling Information</div>
             <textarea name="handlingInformation" class="form-control" rows="3" required>DANGEROUS GOODS AS PER ASSOCIATED SHIPPER'S DECLARATION</textarea>
-
+    
             <div class="section-header">Charges</div>
             <div class="row">
                 <div class="col-md-6">
@@ -90,7 +403,7 @@ EMAIL: GWEN.CHO@DEXTRANSGROUP.COM</textarea>
                     <input name="totalChargesCarrier" type="text" class="form-control" value="40000.00" required>
                 </div>
             </div>
-
+    
             <div class="section-header">Execution Details</div>
             <div class="row">
                 <div class="col-md-4">
@@ -106,13 +419,151 @@ EMAIL: GWEN.CHO@DEXTRANSGROUP.COM</textarea>
                     <input name="signature" type="text" class="form-control" value="SMSA EXPRESS TRANSPORTATION CO., LTD" required>
                 </div>
             </div>
-
+    
             <div class="text-center mt-4 mb-4">
                 <button type="submit" class="btn btn-primary btn-lg">Generate MAWB PDF</button>
             </div>
         </form>
     </div>
+    </div>
+    
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        // Initialize stored addresses from localStorage
+        let savedShipperAddresses = JSON.parse(localStorage.getItem('shipperAddresses') || '[]');
+        let savedConsigneeAddresses = JSON.parse(localStorage.getItem('consigneeAddresses') || '[]');
+
+        // Function to save address
+        function saveAddress(type, address) {
+            if (type === 'shipper') {
+                if (!savedShipperAddresses.includes(address)) {
+                    savedShipperAddresses.push(address);
+                    localStorage.setItem('shipperAddresses', JSON.stringify(savedShipperAddresses));
+                }
+            } else {
+                if (!savedConsigneeAddresses.includes(address)) {
+                    savedConsigneeAddresses.push(address);
+                    localStorage.setItem('consigneeAddresses', JSON.stringify(savedConsigneeAddresses));
+                }
+            }
+        }
+
+        // Function to filter addresses
+        function filterAddresses(searchText, addresses) {
+            return addresses.filter(address => 
+                address.toLowerCase().includes(searchText.toLowerCase())
+            );
+        }
+
+        // Function to show search results
+        function showSearchResults(searchResults, resultsList, targetTextarea) {
+            resultsList.innerHTML = '';
+            resultsList.style.display = searchResults.length ? 'block' : 'none';
+            
+            searchResults.forEach(address => {
+                const div = document.createElement('div');
+                div.className = 'search-result-item';
+                div.textContent = address;
+                div.onclick = () => {
+                    targetTextarea.value = address;
+                    resultsList.style.display = 'none';
+                };
+                resultsList.appendChild(div);
+            });
+        }
+
+        // Setup event listeners for shipper search
+        document.getElementById('shipperSearch').addEventListener('input', (e) => {
+            const searchResults = filterAddresses(e.target.value, savedShipperAddresses);
+            showSearchResults(
+                searchResults,
+                document.getElementById('shipperSearchResults'),
+                document.getElementById('shipperName')
+            );
+        });
+
+        // Setup event listeners for consignee search
+        document.getElementById('consigneeSearch').addEventListener('input', (e) => {
+            const searchResults = filterAddresses(e.target.value, savedConsigneeAddresses);
+            showSearchResults(
+                searchResults,
+                document.getElementById('consigneeSearchResults'),
+                document.getElementById('consigneeName')
+            );
+        });
+
+        // Save address checkbox handlers
+        document.getElementById('saveShipperAddress').addEventListener('change', (e) => {
+            if (e.target.checked) {
+                const address = document.getElementById('shipperName').value;
+                saveAddress('shipper', address);
+            }
+        });
+
+        document.getElementById('saveConsigneeAddress').addEventListener('change', (e) => {
+            if (e.target.checked) {
+                const address = document.getElementById('consigneeName').value;
+                saveAddress('consignee', address);
+            }
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) {
+                document.querySelectorAll('.search-results').forEach(el => {
+                    el.style.display = 'none';
+                });
+            }
+        });
+
+
+        $(document).ready(function() {
+            $('#awbNumber').select2({
+                placeholder: "Select AWB Number",
+                allowClear: true
+            });
+        });
+
+        // If you want to load AWB numbers from an API/database, you can use this structure:
+        function loadAWBNumbers() {
+            // This is where you would normally fetch from your backend
+            // Example of the expected data structure:
+            const awbNumbers = [
+                { id: '176-73317996', text: '176-73317996' },
+                { id: '176-73317997', text: '176-73317997' },
+                { id: '176-73317998', text: '176-73317998' },
+                { id: '176-73317999', text: '176-73317999' }
+            ];
+
+            $('#awbNumber').select2({
+                data: awbNumbers,
+                placeholder: "Select AWB Number",
+                allowClear: true
+            });
+        }
+
+        // If you want to load from API:
+        /*
+        async function loadAWBNumbersFromAPI() {
+            try {
+                const response = await fetch('your-api-endpoint');
+                const awbNumbers = await response.json();
+                
+                $('#awbNumber').select2({
+                    data: awbNumbers.map(awb => ({
+                        id: awb.number,
+                        text: awb.number
+                    })),
+                    placeholder: "Select AWB Number",
+                    allowClear: true
+                });
+            } catch (error) {
+                console.error('Error loading AWB numbers:', error);
+            }
+        }
+    </script>
 </body>
 </html>
