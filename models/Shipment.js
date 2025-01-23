@@ -23,7 +23,8 @@ const timelineEventSchema = new mongoose.Schema({
   status: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
   description: String,
-  updatedBy: String
+  updatedBy: String,
+  isCompleted: { type: Boolean, default: false } // Add this new field
 });
 
 // Package Schema (for individual packages within shipment)

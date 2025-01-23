@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Shipment Tracking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+ /* Modern Sidebar Variables */
+  :root {
+    --sidebar-width: 280px;
+    --sidebar-bg: rgba(15, 23, 42, 0.95);
+    --sidebar-hover: rgba(30, 41, 59, 0.8);
+    --neon-accent: #0ea5e9;
+    --neon-glow: 0 0 10px rgba(14, 165, 233, 0.5);
+    --glass-effect: blur(10px);
+}
+/* Sidebar Base Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--glass-effect);
+    -webkit-backdrop-filter: var(--glass-effect);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    height: 100vh;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+/* Logo Section */
+.sidebar .logo {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.95)
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .logo h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(120deg, #fff, var(--neon-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation Links */
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem 1.5rem;
+    margin: 0.3rem 0.8rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link i {
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+/* Active Link Styles */
+.sidebar .nav-link.active-nav-link {
+    background: rgba(14, 165, 233, 0.15);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link.active-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: var(--neon-accent);
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--neon-glow);
+}
+
+/* Hover Effects */
+.sidebar .nav-link:hover i {
+    transform: translateX(3px);
+    color: var(--neon-accent);
+}
+
+/* Navigation Group */
+.nav.flex-column {
+    padding: 1rem 0;
+}
+
+  .container {
+            max-width: 1440px;
+            padding: 0 1.5rem;
+            position: relative;
+    z-index: 1;
+        }
+
+        /* Improved Scrollbar for Sidebar */
+        .sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-accent) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: var(--neon-accent);
+            border-radius: 20px;
+        }
+
+        /* Navigation Link Improvements */
+        .sidebar .nav-link {
+            font-size: 0.95rem;
+            white-space: nowrap;
+            margin: 0.4rem 1rem;
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Adjust box shadow and transitions */
+        .awb-box {
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .awb-box:hover {
+            box-shadow: 0 8px 32px 0 rgba(var(--neon-accent), 0.2);
+        }
+
+  .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+           margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    overflow-x: hidden;
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: #0a0a0f;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0a0a0f;
+            color: #fff;
+        }
+
+        .page-title {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+
+        .awb-box {
+            padding: 35px;
+            border-radius: 24px;
+            margin-bottom: 25px;
+            min-height: 280px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+    flex-direction: column;
+      height: 100%;
+        }
+
+        .awb-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 2px;
+            background: var(--gradient);
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.7;
+        }
+
+        .awb-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .box-1 { --gradient: linear-gradient(135deg, #ff61d5 0%, #9f61ff 100%); }
+        .box-2 { --gradient: linear-gradient(135deg, #61ffce 0%, #61a8ff 100%); }
+        .box-3 { --gradient: linear-gradient(135deg, #ff9361 0%, #ff61b3 100%); }
+        .box-4 { --gradient: linear-gradient(135deg, #61faff 0%, #6161ff 100%); }
+
+        .awb-number {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 0 0 auto;
+        }
+
+        .address {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+        }
+
+        .location {
+            font-size: 0.95rem;
+            padding: 12px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 0 0 auto;
+    margin-top: auto;
+        }
+        .address, .location {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.05);
+             flex: 0 0 auto;
+        }
+
+        .status[data-status="Created"] { color: #61ffce; }
+        .status[data-status="Pickup Scheduled"] { color: #61a8ff; }
+        .status[data-status="Picked Up"] { color: #9f61ff; }
+        .status[data-status="In Transit"] { color: #ff61d5; }
+        .status[data-status="Out for Delivery"] { color: #ff9361; }
+        .status[data-status="Delivered"] { color: #61faff; }
+        .status[data-status="Failed Delivery"] { color: #ff6161; }
+        .status[data-status="Cancelled"] { color: #ff6161; }
+
+        .status::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: currentColor;
+            box-shadow: 0 0 10px currentColor;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+         /* Responsive Adjustments */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
+            </div>
+            <div class="nav flex-column">
+                <a href="/admin/track"class="nav-link ">
+                    <i class="bi bi-truck"></i> 
+                    Tracking
+                </a>
+
+               <a href="/admin/createAwb"class="nav-link">
+                    <i class="bi bi-files"></i>
+                    Create AWB
+                </a>
+                 <a href="/admin/hawb" class="nav-link ">
+                    <i class="bi bi-file-text"></i> 
+                    House AWB
+                </a>
+                <a href="/admin/mawb" class="nav-link">
+                    <i class="bi bi-file-earmark-break"></i> 
+                    Master AWB
+                </a>
+ 
+                <a href="/admin/fetchShipment" class="nav-link active-nav-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Update AWB
+                </a>
+               <a href="/admin/getShipment" class="nav-link ">
+                    <i class="bi bi-boxes"></i>
+                    All Shipments
+                </a>
+                <a href="/admin/profile"class="nav-link">
+                    <i class="bi bi-gear"></i>
+                    Admin Profile
+                </a>
+            </div>
+        </nav>
+   <div class="main-content">
+        <div class="container mt-5">
+            <h1 class="page-title">Shipment Tracking</h1>
+            <div class="row g-4">
+                {{#each shipments}}
+                <div class="col-lg-4 col-md-6">  <!-- Changed from col-lg-3 to col-lg-4 -->
+                    <div class="awb-box box-{{@index}}">
+                    <div class="awb-number">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18-.21 0-.41-.06-.57-.18l-7.9-4.44A.991.991 0 013 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18.21 0 .41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9zM12 4.15L6.04 7.5 12 10.85l5.96-3.35L12 4.15z"/>
+                        </svg>
+                        {{awbNumber}}
+                    </div>
+                    <div class="address">
+                        <strong>From:</strong> {{sender.addressDetails.city}}, {{sender.addressDetails.country}}<br>
+                        <strong>To:</strong> {{receiver.addressDetails.city}}, {{receiver.addressDetails.country}}
+                    </div>
+                    <div class="location">
+                        <strong>Current Location:</strong> 
+                        {{#if timeline.[0]}}
+                        {{timeline.[0].location}}
+                        {{else}}
+                        Not Available
+                        {{/if}}
+                    </div>
+                    <div class="status" data-status="{{status}}">{{status}}</div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const boxes = document.querySelectorAll(".awb-box");
+
+        boxes.forEach(box => {
+            box.addEventListener("click", () => {
+                const awbNumber = box.querySelector(".awb-number").textContent.trim();
+                // Redirect to the tracking page with the AWB number
+                window.location.href = `/admin/tracking-details?awbNumber=${encodeURIComponent(awbNumber)}`;
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

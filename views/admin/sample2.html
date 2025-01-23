@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>AWB Management System</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+   <style>
+       body {
+           background: #f8f9fa;
+       }
+
+       .airline-header {
+           background: #fff;
+           padding: 20px;
+           border-radius: 10px;
+           margin-bottom: 20px;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+       }
+
+       .airline-logo {
+           max-height: 60px;
+       }
+
+       .recent-awb {
+           background: #fff;
+           padding: 15px;
+           border-radius: 8px;
+           margin-bottom: 20px;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+       }
+
+       .table-container {
+           background: #fff;
+           padding: 20px;
+           border-radius: 10px;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+       }
+
+       .status-badge {
+           padding: 5px 10px;
+           border-radius: 15px;
+           font-size: 12px;
+       }
+
+       .active { background: #d1fae5; color: #065f46; }
+       .inactive { background: #fee2e2; color: #991b1b; }
+       .used { background: #e0e7ff; color: #3730a3; }
+       .unused { background: #f3e8ff; color: #6b21a8; }
+
+       .action-btn {
+           padding: 5px;
+           margin: 2px;
+           border-radius: 4px;
+       }
+
+       .create-btn {
+           background: #4f46e5;
+           color: white;
+           border: none;
+           padding: 10px 20px;
+           border-radius: 8px;
+           margin-bottom: 20px;
+       }
+   </style>
+</head>
+<body>
+   <div class="container py-4">
+       <!-- Airline Header -->
+       <div class="airline-header d-flex justify-content-between align-items-center">
+           <img src="https://logos-download.com/wp-content/uploads/2016/03/Emirates_Airlines_logotype_logo_emblem_2.png" alt="Emirates Logo" class="airline-logo">
+           <button class="create-btn">
+               <i class="fas fa-plus me-2"></i>Create AWB Number
+           </button>
+       </div>
+
+       <!-- Recent AWB Usage -->
+       <div class="recent-awb">
+           <h5>Recently Used AWB</h5>
+           <div class="table-responsive">
+               <table class="table">
+                   <thead>
+                       <tr>
+                           <th>AWB Number</th>
+                           <th>From</th>
+                           <th>To</th>
+                           <th>Date</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr>
+                           <td>176-12345678</td>
+                           <td>Dubai, UAE</td>
+                           <td>London, UK</td>
+                           <td>2025-01-22</td>
+                       </tr>
+                       <tr>
+                           <td>176-87654321</td>
+                           <td>Mumbai, India</td>
+                           <td>New York, USA</td>
+                           <td>2025-01-21</td>
+                       </tr>
+                   </tbody>
+               </table>
+           </div>
+       </div>
+
+       <!-- Main AWB Table -->
+       <div class="table-container">
+           <div class="table-responsive">
+               <table class="table">
+                   <thead>
+                       <tr>
+                           <th>AWB Number</th>
+                           <th>Status</th>
+                           <th>Usage</th>
+                           <th>Region</th>
+                           <th>Country</th>
+                           <th>Actions</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr>
+                           <td>176-00000001</td>
+                           <td><span class="status-badge active">Active</span></td>
+                           <td><span class="status-badge unused">Unused</span></td>
+                           <td>Middle East</td>
+                           <td>UAE</td>
+                           <td>
+                               <button class="btn btn-sm btn-primary action-btn">
+                                   <i class="fas fa-edit"></i>
+                               </button>
+                               <button class="btn btn-sm btn-danger action-btn">
+                                   <i class="fas fa-trash"></i>
+                               </button>
+                           </td>
+                       </tr>
+                       <tr>
+                           <td>176-00000002</td>
+                           <td><span class="status-badge inactive">Inactive</span></td>
+                           <td><span class="status-badge used">Used</span></td>
+                           <td>Europe</td>
+                           <td>UK</td>
+                           <td>
+                               <button class="btn btn-sm btn-primary action-btn">
+                                   <i class="fas fa-edit"></i>
+                               </button>
+                               <button class="btn btn-sm btn-danger action-btn">
+                                   <i class="fas fa-trash"></i>
+                               </button>
+                           </td>
+                       </tr>
+                       <!-- Add more rows as needed -->
+                   </tbody>
+               </table>
+           </div>
+       </div>
+   </div>
+
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

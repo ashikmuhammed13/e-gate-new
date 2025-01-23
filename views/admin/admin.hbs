@@ -350,10 +350,13 @@ body {
     </style>
 </head>
 <body>
-  <div class="wrapper">
+   <div class="wrapper">
         <!-- Sidebar -->
         <nav class="sidebar">
-             <div class="nav flex-column">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
+            </div>
+            <div class="nav flex-column">
                 <a href="/admin/track"class="nav-link ">
                     <i class="bi bi-truck"></i> 
                     Tracking
@@ -367,16 +370,16 @@ body {
                     <i class="bi bi-file-text"></i> 
                     House AWB
                 </a>
-                <a href="/awbCreate" class="nav-link ">
+               <a href="/admin/mawb" class="nav-link ">
                     <i class="bi bi-file-earmark-break"></i> 
                     Master AWB
                 </a>
 
-                <a href="/updateAwb" class="nav-link">
+                <a href="/admin/fetchShipment" class="nav-link">
                     <i class="bi bi-pencil-square"></i>
                     Update AWB
                 </a>
-                <a href="/allShipment" class="nav-link ">
+                <a href="/admin/getShipment" class="nav-link ">
                     <i class="bi bi-boxes"></i>
                     All Shipments
                 </a>
@@ -400,10 +403,13 @@ body {
                 </div>
                 {{#if isSuperAdmin}}
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-custom-primary" data-bs-toggle="modal" data-bs-target="#newAdminModal">
-                        <i class="fas fa-plus me-2"></i>Add New Admin
-                    </button>
-                </div>
+    <button class="btn btn-custom-primary me-2" data-bs-toggle="modal" data-bs-target="#newAwbModal">
+        <i class="fas fa-plus me-2"></i>Add New AWB
+    </button>
+    <button class="btn btn-custom-primary" data-bs-toggle="modal" data-bs-target="#newAdminModal">
+        <i class="fas fa-plus me-2"></i>Add New Admin
+    </button>
+</div>
                 {{/if}}
             </div>
         </div>
@@ -502,6 +508,72 @@ body {
             </div>
         </div>
         {{/if}}
+        {{#if isSuperAdmin}}
+<!-- New AWB Modal -->
+<div class="modal fade" id="newAwbModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content modal-custom">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Airway Bill Number</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="newAwbForm" action="/admin/addAwb">
+                    <div class="row">
+                        <!-- AWB Number -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">AWB Number</label>
+                            <input type="text" class="form-control" name="awbNumber" placeholder="Enter AWB number" required>
+                        </div>
+                        <!-- AWB Type -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">AWB Type</label>
+                            <select class="form-select" name="awbType" required>
+                                <option value="">Select Type</option>
+                                <option value="master">Master AWB</option>
+                                <option value="house">House AWB</option>
+                            </select>
+                        </div>
+                        <!-- Origin -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Origin</label>
+                            <input type="text" class="form-control" name="origin" placeholder="Enter origin" required>
+                        </div>
+                        <!-- Destination -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Destination</label>
+                            <input type="text" class="form-control" name="destination" placeholder="Enter destination" required>
+                        </div>
+                        <!-- Carrier -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Carrier</label>
+                            <input type="text" class="form-control" name="carrier" placeholder="Enter carrier name">
+                        </div>
+                        <!-- Status -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <!-- Notes -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" name="notes" rows="3" placeholder="Enter any additional notes"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="newAwbForm" class="btn btn-custom-primary">Add AWB</button>
+            </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{{/if}}
 
         {{#if isSuperAdmin}}
         <!-- New Admin Modal - Only for Super Admin -->

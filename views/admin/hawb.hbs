@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Futuristic MAWB Form</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+       <style>
+        :root {
+            /* Core colors */
+            --primary: #6C63FF;
+            --secondary: #2A2D3E;
+            --accent: #00F5FF;
+            --background: #0A0C1B;
+            --sidebar-bg: rgba(15, 23, 42, 0.95);
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            
+            /* Component colors */
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #FFFFFF;
+            --text-muted: #B4B7C5;
+            
+            /* Effects */
+            --neon-glow: 0 0 10px rgba(108, 99, 255, 0.5);
+            --glass-effect: blur(10px);
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 245, 255, 0.1) 0%, transparent 20%);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            width: 100%;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            backdrop-filter: var(--glass-effect);
+            -webkit-backdrop-filter: var(--glass-effect);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            height: 100vh;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            scrollbar-width: none;
+            z-index: 2;
+            left: 0;
+            top: 0;
+        }
+        
+        .sidebar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            max-width: calc(100% - var(--sidebar-width));
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+            background: var(--background);
+            min-height: 100vh;
+            width: 100%;
+            flex: 1;
+        }
+        
+        /* Logo Section */
+        .sidebar .logo {
+            padding: 2rem 1.5rem;
+            background: linear-gradient(
+                to bottom,
+                rgba(15, 23, 42, 0.98),
+                rgba(15, 23, 42, 0.95)
+            );
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .sidebar .logo h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(120deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        /* Navigation Links */
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            padding: 1rem 1.5rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            position: relative;
+            text-decoration: none;
+        }
+        
+        .sidebar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+            box-shadow: var(--neon-glow);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 1rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar .nav-link.active-nav-link {
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--accent);
+            box-shadow: var(--neon-glow);
+        }
+        
+        .nav.flex-column {
+            padding: 1rem 0;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.2) 0%, rgba(0, 245, 255, 0.2) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1));
+            pointer-events: none;
+        }
+        
+        .page-header h1 {
+            color: var(--text);
+            font-weight: 700;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
+        }
+        
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .form-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--neon-glow);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .section-title i {
+            color: var(--accent);
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--accent);
+        }
+        
+        .section-title h3 {
+            color: var(--text);
+            font-weight: 600;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.2);
+            color: var(--text);
+        }
+        
+        .search-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: var(--text);
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            padding: 1rem 3rem;
+            font-weight: 600;
+            border-radius: 12px;
+            color: white;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(108, 99, 255, 0.5);
+        }
+        
+        .form-check-input {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--border);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-wrapper {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 2rem;
+            }
+        
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        
+            .form-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    </head>
+    <body>
+        <div class="wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
+            </div>
+            <div class="nav flex-column">
+                <a href="/admin/track"class="nav-link ">
+                    <i class="bi bi-truck"></i> 
+                    Tracking
+                </a>
+
+               <a href="/admin/createAwb"class="nav-link">
+                    <i class="bi bi-files"></i>
+                    Create AWB
+                </a>
+                <a href="/admin/hawb"  class="nav-link active-nav-link ">
+                    <i class="bi bi-file-text"></i> 
+                    House AWB
+                </a>
+                <a href="/admin/mawb" class="nav-link ">
+                    <i class="bi bi-file-earmark-break"></i> 
+                    Master AWB
+                </a>
+
+                <a href="/admin/fetchShipment" class="nav-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Update AWB
+                </a>
+               <a href="/admin/getShipment" class="nav-link ">
+                    <i class="bi bi-boxes"></i>
+                    All Shipments
+                </a>
+                <a href="/admin/profile"class="nav-link">
+                    <i class="bi bi-gear"></i>
+                    Admin Profile
+                </a>
+            </div>
+        </nav>
+        <div class="main-wrapper">
+            <div class="page-header">
+                <h1>Next-Gen HAWB</h1>
+                <p>Digital Air Cargo Management System</p>
+            </div>
+
+           <form id="mawbForm" action="/admin/generate-hawb" method="POST">
+                <!-- AWB Details -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-file-earmark-text"></i>
+                        AWB Details
+                    </h3>
+                    <div class="row g-4">
+                       <div class="col-md-4">
+  <label class="form-label">AWB Number</label>
+  <select class="form-select" name="awbNumber">
+    <option value="" selected disabled>Select AWB Number</option>
+    {{#each awbNumbers}}
+      <option value="{{this.awbNumber}}">{{this.awbNumber}}</option>
+    {{/each}}
+  </select>
+</div>
+                        <div class="col-md-4">
+                            <label class="form-label">IATA Code</label>
+                            <input type="text" class="form-control" name="iataCode">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Carrier Code</label>
+                            <input type="text" class="form-control" name="carrierCode">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipper & Consignee -->
+               <!-- Shipper & Consignee -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-people-fill"></i>
+                        Shipper & Consignee Information
+                    </h3>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <input type="text" class="search-input" placeholder="Search shipper in address book">
+                            </div>
+                            <label class="form-label required-field">Shipper Details</label>
+                            <textarea class="form-control"  name="shipperName"required 
+                                    placeholder="Enter complete shipper information"></textarea>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="saveShipperAddress">
+                                <label class="form-check-label" for="saveShipperAddress">
+                                    Save to address book
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <input type="text" class="search-input" placeholder="Search consignee in address book">
+                            </div>
+                            <label class="form-label required-field">Consignee Details</label>
+                            <textarea class="form-control" name="consigneeName" required 
+                                    placeholder="Enter complete consignee information"></textarea>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="saveConsigneeAddress">
+                                <label class="form-check-label" for="saveConsigneeAddress">
+                                    Save to address book
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Routing Information -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        Routing Information
+                    </h3>
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <label class="form-label">Departure</label>
+                            <input type="text" class="form-control" name="departure">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Destination</label>
+                            <input type="text" class="form-control" name="destination">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Routing TO1</label>
+                            <input type="text" class="form-control" name="routingTO1">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">ICN</label>
+                            <input type="text" class="form-control" name="ICN">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cargo Details -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-box-seam"></i>
+                        Cargo Details
+                    </h3>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label class="form-label">Gross Weight</label>
+                            <input type="text" class="form-control" name="grossWeight">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kilo Gram</label>
+                            <input type="text" class="form-control" name="kiloGram">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Dimensions</label>
+                            <input type="text" class="form-control" name="dimensions">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Handling Information</label>
+                            <textarea class="form-control" name="handlingInformation" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charges -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-currency-dollar"></i>
+                        Charges & Payment
+                    </h3>
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <label class="form-label">Prepaid</label>
+                            <input type="text" class="form-control" name="prepaid">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Rate Charge</label>
+                            <input type="text" class="form-control" name="RATECHARGE">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Total Charges Carrier</label>
+                            <input type="text" class="form-control" name="totalChargesCarrier">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Freight</label>
+                            <input type="text" class="form-control" name="frieght">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Total QTY</label>
+                            <input type="text" class="form-control" name="totalQTY">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">QTY</label>
+                            <input type="text" class="form-control" name="QTY">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-info-circle"></i>
+                        Additional Information
+                    </h3>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label class="form-label">SAR</label>
+                            <input type="text" class="form-control" name="SAR">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">PP</label>
+                            <input type="text" class="form-control" name="PP">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Consolidated</label>
+                            <input type="text" class="form-control" name="consolidated">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">COLUMN1</label>
+                            <input type="text" class="form-control" name="COLUMN1">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">COLUMN2</label>
+                            <input type="text" class="form-control" name="COLUMN2">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">NVD</label>
+                            <input type="text" class="form-control" name="NVD">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">NCV</label>
+                            <input type="text" class="form-control" name="NCV">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signature Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-pen"></i>
+                        Signature & Date
+                    </h3>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label class="form-label">Signature</label>
+                            <input type="text" class="form-control" name="signature">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control" name="date">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Place</label>
+                            <input type="text" class="form-control" name="place">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-submit btn-lg text-white">
+                        <i class="bi bi-file-earmark-pdf-fill me-2"></i>
+                        Generate HAWB
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Form validation and interaction enhancements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form validation
+            const form = document.getElementById('mawbForm');
+            
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+
+            // Add floating labels behavior
+            const inputs = document.querySelectorAll('.form-control, .form-select');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.classList.add('focused');
+                });
+                input.addEventListener('blur', () => {
+                    if (!input.value) {
+                        input.parentElement.classList.remove('focused');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

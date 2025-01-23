@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Admin = require('../models/Admin');
+const AWB = require("../models/AwbNumb")
  // Ensure correct path to Admin model
 const bcrypt = require('bcrypt');
 require('dotenv').config(); // Load environment variables from .env file
@@ -115,18 +116,52 @@ const addAdmin = async (req, res) => {
         });
 
         await newAdmin.save();
-        res.redirect('/admin/admin'); // Adjust route as per your setup
+        res.redirect('/admin/profile')
     } catch (error) {
         console.error('Error adding admin:', error);
         res.status(500).send('Server error.');
-    }
+    }},
+    addAwb = async (req, res) => {
+        try {
+          const { awbNumber, awbType, origin, destination, carrier, status, notes } = req.body;
+      
+          // Check if the AWB number already exists and has been used
+          const existingAwb = await AWB.findOne({ awbNumber });
+          if (existingAwb) {
+            if (existingAwb.used) {
+              return res.status(400).send("This AWB number has already been used and cannot be reused.");
+            } else {
+              return res.status(400).send("This AWB number already exists.");
+            }
+          }
+      
+          // Create a new AWB document
+          const newAwb = new AWB({
+            awbNumber,
+            awbType,
+            origin,
+            destination,
+            carrier,
+            status,
+            notes,
+          });
+      
+          await newAwb.save();
+      
+          res.redirect('/admin/profile')
+        } catch (error) {
+          console.error("Error adding AWB:", error);
+          res.status(500).send("Internal Server Error");
+        }
 };
+
+
 
 
 
 module.exports = {
     fetchAdminProfile,
-    addAdmin, login ,createSuperAdmin,
+    addAdmin, login ,createSuperAdmin,addAwb
 };
 
 

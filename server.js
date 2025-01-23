@@ -28,6 +28,8 @@ app.use(express.static('public'));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
+// In app.js
+global.appRoot = __dirname;
 
 // Session setup
 const store = new mongoDbStore({
@@ -58,6 +60,18 @@ const moment = require('moment');  // Import moment.js
 // Register the moment helper
 hbs.registerHelper('moment', function(date, format) {
     return moment(date).format(format);
+});
+hbs.registerHelper('statusBadgeClass', function(status) {
+    switch(status) {
+        case 'Delivered': return 'status-delivered';
+        case 'In Transit': return 'status-in-transit';
+        case 'Failed Delivery':
+        case 'Cancelled': return 'status-exception';
+        default: return 'status-in-transit';
+    }
+});
+hbs.registerHelper('last', function(array) {
+    return array[array.length - 1];
 });
 
 // Register the custom helper for less than or equal
@@ -125,6 +139,30 @@ hbs.registerHelper('formatDate', function(date) {
 });
 hbs.registerHelper('json', function(context) {
     return JSON.stringify(context);
+});
+
+
+
+// Helper to format time
+hbs.registerHelper('formatTime', function(date) {
+    return new Date(date).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+});
+
+// Helper to get appropriate icon based on status
+hbs.registerHelper('getStatusIcon', function(status) {
+    const icons = {
+        'Created': 'bi-box-seam',
+        'Picked Up': 'bi-truck',
+        'In Transit': 'bi-truck',
+        'Out for Delivery': 'bi-bicycle',
+        'Delivered': 'bi-house-check',
+        'Failed Delivery': 'bi-x-circle',
+        'Cancelled': 'bi-x-octagon'
+    };
+    return icons[status] || 'bi-circle';
 });
 // Start the server
 const PORT = process.env.PORT || 3000;

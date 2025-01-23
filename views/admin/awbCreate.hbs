@@ -357,6 +357,32 @@
     border-color: #86b7fe;
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
+.search-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-box #receiverSearchResults,
+.search-box #senderSearchResults {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 0 0 4px 4px;
+    z-index: 1050;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.address-result {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.address-result:last-child {
+    border-bottom: none;
+}
     </style>
     
 </head>
@@ -377,20 +403,20 @@
                     <i class="bi bi-files"></i>
                     Create AWB
                 </a>
-                <a href="/awbCreate" class="nav-link ">
+                <a href="/admin/hawb" class="nav-link ">
                     <i class="bi bi-file-text"></i> 
                     House AWB
                 </a>
-                <a href="/awbCreate" class="nav-link ">
+                <a href="/admin/mawb" class="nav-link ">
                     <i class="bi bi-file-earmark-break"></i> 
                     Master AWB
                 </a>
 
-                <a href="/updateAwb" class="nav-link">
+                <a href="/admin/fetchShipment" class="nav-link">
                     <i class="bi bi-pencil-square"></i>
                     Update AWB
                 </a>
-                <a href="/allShipment" class="nav-link ">
+                <a href="/admin/getShipment" class="nav-link ">
                     <i class="bi bi-boxes"></i>
                     All Shipments
                 </a>
@@ -441,13 +467,15 @@
                         <h4>Ship from</h4>
                     </div>
                 
-                   <div class="search-box mb-3">
+           
+ <div class="search-box mb-3">
     <div class="input-group">
         <input type="text" 
+               id="senderSearchInput"
                class="form-control" 
                name="senderSearchInput"
                placeholder="SEARCH IN ADDRESS BOOK"
-               oninput="searchAddresses('sender')">
+               autocomplete="off">
         <button class="btn btn-outline-secondary" type="button">
             <i class="bi bi-search"></i>
         </button>
@@ -456,6 +484,7 @@
          style="z-index: 1000; max-height: 200px; overflow-y: auto;">
     </div>
 </div>
+
                 
                     <div class="row">
                         <!-- Contact Details -->
@@ -535,19 +564,21 @@
                         <h4>Deliver To</h4>
                     </div>
                 
-                   <div class="search-box mb-3">
+                 <!-- Replace the current receiver search input with this -->
+<div class="search-box mb-3">
     <div class="input-group">
         <input type="text" 
+               id="receiverSearchInput"
                class="form-control" 
                name="receiverSearchInput"
                placeholder="SEARCH IN ADDRESS BOOK"
-               oninput="searchAddresses('receiver')">
+               autocomplete="off">
         <button class="btn btn-outline-secondary" type="button">
             <i class="bi bi-search"></i>
         </button>
     </div>
     <div id="receiverSearchResults" class="position-absolute bg-white w-100 shadow-sm" 
-         style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+         style="z-index: 1000; max-height: 200px; overflow-y: auto; display: none;">
     </div>
 </div>
                 
@@ -721,6 +752,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="/js/main.js"></script>
+<script src="/js/addressSearch.js"></script>
 
 </body>
 </html>

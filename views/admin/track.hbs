@@ -660,20 +660,20 @@
                     <i class="bi bi-files"></i>
                     Create AWB
                 </a>
-                <a href="/awbCreate" class="nav-link ">
+                 <a href="/admin/hawb" class="nav-link ">
                     <i class="bi bi-file-text"></i> 
                     House AWB
                 </a>
-                <a href="/awbCreate" class="nav-link ">
+              <a href="/admin/mawb" class="nav-link ">
                     <i class="bi bi-file-earmark-break"></i> 
                     Master AWB
                 </a>
 
-                <a href="/updateAwb" class="nav-link">
+               <a href="/admin/fetchShipment" class="nav-link">
                     <i class="bi bi-pencil-square"></i>
                     Update AWB
                 </a>
-                <a href="/allShipment" class="nav-link ">
+               <a href="/admin/getShipment" class="nav-link ">
                     <i class="bi bi-boxes"></i>
                     All Shipments
                 </a>
@@ -826,18 +826,18 @@
             </div>
         </div>
 
- <div class="tracking-history mt-5">
+<div class="tracking-history mt-5">
     <h5 class="mb-4">Tracking History</h5>
     <div class="tracking-events">
         {{#each shipment.timeline}}
             <div class="tracking-event-item">
                 <div class="event-date">
                     <span class="date-badge">
-                        {{formatDate this.date}}
+                        {{formatDate this.timestamp}} <!-- Use "timestamp" instead of "date" -->
                     </span>
                 </div>
                 <div class="event-details">
-                    <div class="event-description">{{this.event}}</div>
+                    <div class="event-description">{{this.status}} - {{this.description}}</div>
                 </div>
             </div>
         {{/each}}

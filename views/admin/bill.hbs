@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modern Shipping Label</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        @page {
+            size: 4in 6in;
+            margin: 0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fff;
+            -webkit-print-color-adjust: exact;
+        }
+        
+        .label-container {
+            width: 4in;
+            min-height: 6in;
+            border: 3px solid #000;
+            background: #fff;
+            position: relative;
+        }
+        
+        .header {
+            display: grid;
+            grid-template-columns: 1fr 100px;
+            padding: 12px;
+            border-bottom: 2.5px solid #000;
+            background: #000;
+            color: #fff;
+        }
+        
+        .logo-section {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .header-right {
+            text-align: right;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .tracking-block {
+            padding: 15px;
+            border-bottom: 2.5px solid #000;
+            background: #f8f8f8;
+        }
+        
+        .order-id {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #000;
+        }
+        
+        .tracking-number {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #000;
+            text-align: center;
+            font-family: monospace;
+        }
+        
+        .primary-barcode {
+            padding: 15px;
+            border-bottom: 2.5px solid #000;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+        }
+        
+        .barcode-placeholder {
+            width: 95%;
+            height: 70px;
+            border: 2px solid #000;
+            background: #fff;
+        }
+        
+        .address-section {
+            border-bottom: 2.5px solid #000;
+        }
+        
+        .address-block {
+            padding: 12px 15px;
+            border-bottom: 1.5px solid #000;
+        }
+        
+        .address-block:last-child {
+            border-bottom: none;
+        }
+        
+        .address-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            color: #000;
+        }
+        
+        .address-content {
+            font-size: 13px;
+            line-height: 1.4;
+            color: #000;
+            font-weight: 500;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 130px 1fr;
+            border-bottom: 2.5px solid #000;
+        }
+        
+        .qr-section {
+            padding: 15px;
+            border-right: 2.5px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f8f8;
+        }
+        
+        .qr-placeholder {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #000;
+            background: #fff;
+        }
+        
+        .shipment-details {
+            padding: 15px;
+            background: #f8f8f8;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #000;
+        }
+        
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .footer {
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2.5px solid #000;
+            background: #000;
+            color: #fff;
+        }
+        
+        .reference {
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .delivery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .delivery-cell {
+            padding: 8px;
+            text-align: center;
+            border-right: 1.5px solid #000;
+            background: #f8f8f8;
+        }
+        
+        .delivery-cell:last-child {
+            border-right: none;
+        }
+        
+        .bold-text {
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="label-container">
+        <div class="header">
+            <div class="logo-section">EXPRESS</div>
+            <div class="header-right">
+                <div>21/01/2024</div>
+                <div>PRIORITY</div>
+            </div>
+        </div>
+
+        <div class="tracking-block">
+            <div class="order-id">ORDER ID: 2401210123-456</div>
+            <div class="tracking-number">TRK-123456789</div>
+        </div>
+
+         <div class="primary-barcode">
+            <img src="{{barcode}}" alt="Barcode">
+        </div>
+
+        <div class="address-section">
+            <div class="address-block">
+                <div class="address-label">From</div>
+                <div class="address-content">
+                    SENDER COMPANY NAME<br>
+                    123 SENDER STREET<br>
+                    SENDER CITY, STATE 12345<br>
+                    TEL: (123) 456-7890
+                </div>
+            </div>
+            <div class="address-block">
+                <div class="address-label">To</div>
+                <div class="address-content">
+                    RECIPIENT NAME<br>
+                    456 RECIPIENT AVENUE<br>
+                    BUILDING 4, SUITE 789<br>
+                    RECIPIENT CITY, STATE 67890<br>
+                    TEL: (098) 765-4321
+                </div>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="qr-section">
+                <div class="qr-placeholder">"{{qrCode}}"</div>
+            </div>
+            <div class="shipment-details">
+                <div class="detail-row">
+                    <span class="bold-text">WEIGHT:</span>
+                    <span>2.5 KG</span>
+                </div>
+                <div class="detail-row">
+                    <span class="bold-text">PIECES:</span>
+                    <span>1/1</span>
+                </div>
+                <div class="detail-row">
+                    <span class="bold-text">SERVICE:</span>
+                    <span>EXPRESS</span>
+                </div>
+                <div class="detail-row">
+                    <span class="bold-text">COD:</span>
+                    <span>$150.00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="reference">REF: 123-456-789</div>
+            <div>PAGE 1/1</div>
+        </div>
+
+        <div class="delivery-grid">
+            <div class="delivery-cell">1st Attempt</div>
+            <div class="delivery-cell">2nd Attempt</div>
+            <div class="delivery-cell">3rd Attempt</div>
+            <div class="delivery-cell">Return</div>
+        </div>
+    </div>
+</body>
+</html>
