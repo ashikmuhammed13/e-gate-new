@@ -1,5 +1,4 @@
 node_modules
-# .env
 
-# const { createSuperAdmin } = require('./controller/AdminController');
-# createSuperAdmin();
+ .env
+

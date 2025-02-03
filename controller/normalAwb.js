@@ -1,5 +1,6 @@
 const { Address, Shipment } = require('../models/Shipment');
 const AWB = require("../models/AwbNumb")
+const Airline=require("../models/Airlines")
 const fs = require('fs');
 const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 const path = require('path');
@@ -389,17 +390,20 @@ console.log(shipment.timeline); // Check if this outputs the expected array
     
   },
 
- getMawb :async (req, res) => {
+ getMawb : async (req, res) => {
     try {
-      // Fetch unused and master AWB numbers
-      const awbNumbers = await AWB.find({ used: false, awbType: 'master' }, { awbNumber: 1, _id: 0 });
-  
-      res.render("admin/mawb", { awbNumbers });
+        // Fetch all airlines with their prefixes
+        const airlines = await Airline.find({}, { airlineName: 1, prefix: 1, _id: 0 });
+
+        // Fetch unused AWB numbers
+        const awbNumbers = await AWB.find({ isUsed: false, awbType: 'master' }, { awbNumber: 1, prefix: 1, _id: 0 });
+
+        res.render("admin/mawb", { airlines, awbNumbers });
     } catch (error) {
-      console.error('Error fetching AWB numbers:', error);
-      res.render("admin/mawb", { error: 'Failed to load AWB numbers' });
+        console.error('Error fetching data:', error);
+        res.render("admin/mawb", { error: 'Failed to load data' });
     }
-  },
+},
   
 
 generatemawb:async (req, res) => {

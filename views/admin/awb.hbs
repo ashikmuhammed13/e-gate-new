@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWB Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #818cf8;
+            --accent-color: #6366f1;
+            --bg-color: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --primary-gradient: linear-gradient(135deg, #4361ee 0%, #4895ef 100%);
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    --card-border: 1px solid rgba(255, 255, 255, 0.18);
+    --neon-glow: 0 0 15px rgba(67, 97, 238, 0.3);
+    --sidebar-width: 280px;
+    --sidebar-bg: rgba(15, 23, 42, 0.95);
+    --sidebar-hover: rgba(30, 41, 59, 0.8);
+    --neon-accent: #0ea5e9;
+    --glass-effect: blur(10px);
+        }
+
+        /* Sidebar Base Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--glass-effect);
+    -webkit-backdrop-filter: var(--glass-effect);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    height: 100vh;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    scrollbar-width: none;
+    z-index: 1000;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Logo Section */
+.sidebar .logo {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.95)
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .logo h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(120deg, #fff, var(--neon-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation Links */
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem 1.5rem;
+    margin: 0.3rem 0.8rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+    text-decoration: none;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link i {
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link.active-nav-link {
+    background: rgba(14, 165, 233, 0.15);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link.active-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: var(--neon-accent);
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--neon-glow);
+}
+
+.nav.flex-column {
+    padding: 1rem 0;
+}
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 2rem;
+             margin-left: var(--sidebar-width);
+        }
+
+        .top-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            border-radius: 24px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .airline-logo {
+            height: 40px;
+            filter: brightness(1.1);
+        }
+
+        .create-awb-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .create-awb-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.2);
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table th {
+            background: #f8fafc;
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-active {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .status-inactive {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .status-used {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .status-unused {
+            background: #f5f3ff;
+            color: #7c3aed;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            margin: 0 0.25rem;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.5rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #e2e8f0;
+            padding: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .modal-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .btn-modal-close {
+            background: #f1f5f9;
+            color: var(--text-secondary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-save {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-save:hover {
+            background: var(--accent-color);
+            transform: translateY(-1px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .top-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .action-btn {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+     <div class="wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
+            </div>
+            <div class="nav flex-column">
+                <a href="/admin/track"class="nav-link ">
+                    <i class="bi bi-truck"></i> 
+                    Tracking
+                </a>
+
+               <a href="/admin/createAwb"class="nav-link">
+                    <i class="bi bi-files"></i>
+                    Create AWB
+                </a>
+                <a href="/awbCreate" class="nav-link ">
+                    <i class="bi bi-file-text"></i> 
+                    House AWB
+                </a>
+               <a href="/admin/mawb" class="nav-link ">
+                    <i class="bi bi-file-earmark-break"></i> 
+                    Master AWB
+                </a>
+
+                <a href="/admin/fetchShipment" class="nav-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Update AWB
+                </a>
+                <a href="/admin/getShipment" class="nav-link ">
+                    <i class="bi bi-boxes"></i>
+                    All Shipments
+                </a>
+                <a href="/admin/profile"class="nav-link active-nav-link">
+                    <i class="bi bi-gear"></i>
+                    Admin Profile
+                </a>
+            </div>
+        </nav>
+    <div class="dashboard-container">
+        <div class="top-header">
+            <img src="{{airlines.image}}" alt="Emirates Logo" class="airline-logo">
+            <button class="create-awb-btn" data-bs-toggle="modal" data-bs-target="#awbModal">
+                <i class="fas fa-plus"></i>
+                <span>Create New AWB</span>
+            </button>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2 class="card-title">Recently Used AWB</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>AWB Number</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>176-12345678</td>
+                            <td>Dubai, UAE</td>
+                            <td>London, UK</td>
+                            <td>2025-01-22</td>
+                            <td><span class="status-badge status-used">Used</span></td>
+                        </tr>
+                        <tr>
+                            <td>176-87654321</td>
+                            <td>Mumbai, India</td>
+                            <td>New York, USA</td>
+                            <td>2025-01-21</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2 class="card-title">All AWB Numbers</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>AWB Number</th>
+                            <th>Status</th>
+                            <th>Usage</th>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {{#each awbs}}
+    <tr>
+      <td>{{awbNumber}}</td>
+      <td><span class="status-badge {{status}}"><i class="fas fa-circle me-1"></i>{{status}}</span></td>
+      <td><span class="status-badge {{#if isUsed}}used{{else}}unused{{/if}}">
+        <i class="fas fa-circle me-1"></i>{{#if isUsed}}Used{{else}}Unused{{/if}}
+      </span></td>
+      <td>{{origin}}</td>
+      <td>{{destination}}</td>
+      <td>
+        <button class="btn btn-primary action-btn"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-danger action-btn"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- AWB Modal -->
+    <div class="modal fade" id="awbModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New AWB</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                     <form method="post" id="newAwbForm" action="/admin/addAwb">
+                    <div class="row">
+                        <div class="col-md-6  mb-3">
+                            <label class="form-label">Prefix</label>
+                            <input type="text" class="form-control" name="prefix" value="{{prefix}}" readonly>
+                            <input type="hidden" name="airlineId" value="{{airlineId}}">
+
+
+                        </div>
+                        <!-- AWB Number -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">AWB Number</label>
+                            <input type="text" class="form-control" name="awbNumber" placeholder="Enter AWB number" required>
+                        </div>
+                        <!-- AWB Type -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">AWB Type</label>
+                            <select class="form-select" name="awbType" required>
+                                <option value="">Select Type</option>
+                                <option value="master">Master AWB</option>
+                                <option value="house">House AWB</option>
+                            </select>
+                        </div>
+                        <!-- Origin -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Origin</label>
+                            <input type="text" class="form-control" name="origin" placeholder="Enter origin" required>
+                        </div>
+                        <!-- Destination -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Destination</label>
+                            <input type="text" class="form-control" name="destination" placeholder="Enter destination" required>
+                        </div>
+                        <!-- Carrier -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Carrier</label>
+                            <input type="text" class="form-control" name="carrier" placeholder="Enter carrier name">
+                        </div>
+                        <!-- Status -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <!-- Notes -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" name="notes" rows="3" placeholder="Enter any additional notes"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="newAwbForm" class="btn btn-custom-primary">Add AWB</button>
+            </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

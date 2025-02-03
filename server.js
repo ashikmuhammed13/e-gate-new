@@ -7,7 +7,8 @@ const session = require('express-session');
 const mongoDbStore = require("connect-mongodb-session")(session); // Import and configure mongoDbStore
 const handlebar          = require("express-handlebars")       
 const cors = require('cors'); // To handle CORS issues in development
-
+const { createSuperAdmin } = require('./controller/AdminController');
+createSuperAdmin();
 require('dotenv').config();
 
 const app = express();

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWB Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #2d2d2d;
+            --background-light: #f9fafb;
+            --text-dark: #111827;
+             --primary-gradient: linear-gradient(135deg, #4361ee 0%, #4895ef 100%);
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    --card-border: 1px solid rgba(255, 255, 255, 0.18);
+    --neon-glow: 0 0 15px rgba(67, 97, 238, 0.3);
+    --sidebar-width: 280px;
+    --sidebar-bg: rgba(15, 23, 42, 0.95);
+    --sidebar-hover: rgba(30, 41, 59, 0.8);
+    --neon-accent: #0ea5e9;
+    --glass-effect: blur(10px);
+        }
+        .container {
+    padding-top: 1rem; /* Add this to create space below header */
+}
+
+           /* Sidebar Base Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--glass-effect);
+    -webkit-backdrop-filter: var(--glass-effect);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    padding: 0;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Logo Section */
+.sidebar .logo {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.95)
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .logo h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(120deg, #fff, var(--neon-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation Links */
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem 1.5rem;
+    margin: 0.3rem 0.8rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+    text-decoration: none;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link i {
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link.active-nav-link {
+    background: rgba(14, 165, 233, 0.15);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link.active-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: var(--neon-accent);
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--neon-glow);
+}
+
+.nav.flex-column {
+    padding: 1rem 0;
+}
+        /* Main Content Adjustment */
+.wrapper {
+    margin-left: var(--sidebar-width);
+    padding-top: 120px; /* Add this to account for fixed header height */
+    min-height: 100vh;
+}
+
+        body {
+            background: var(--background-light);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+        }
+
+        .dashboard-header {
+    background: white;
+    padding: 0.7rem 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: var(--sidebar-width); /* Add this to align with sidebar */
+    z-index: 100;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .add-airline-btn {
+            background: var(--text-dark);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .add-airline-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .stats-container {
+            margin-bottom: 2rem;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .recent-awb-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+
+        .recent-awb-list {
+            max-height: 80px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #d1d5db transparent;
+        }
+
+        .recent-awb-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .recent-awb-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .recent-awb-list::-webkit-scrollbar-thumb {
+            background-color: #d1d5db;
+            border-radius: 2px;
+        }
+
+        .recent-awb-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .recent-awb-item:last-child {
+            border-bottom: none;
+        }
+
+        .recent-awb-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .recent-awb-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .airline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .airline-card {
+            position: relative;
+            height: 200px;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .airline-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .airline-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+}
+
+        .airline-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem;
+            color: var(--text-dark);
+            background: linear-gradient(to top, white 20%, transparent);
+        }
+        .airline-info {
+    text-align: center;
+}
+
+.airline-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: var(--text-dark);
+}
+
+.awb-count {
+    font-size: 1.1rem;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+        .hover-shield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(245, 245, 245, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            padding: 2rem;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .airline-card:hover .hover-shield {
+            opacity: 1;
+        }
+
+        .available-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .available-text {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .manage-btn {
+            background: var(--text-dark);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 12px;
+            margin-top: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .manage-btn:hover {
+            transform: scale(1.05);
+            background: var(--secondary-color);
+        }
+
+        /* Add to your existing styles */
+#addAirlineModal .modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+#addAirlineModal .modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+}
+
+#addAirlineModal .modal-body {
+    padding: 1.5rem;
+}
+
+#addAirlineModal .modal-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+}
+
+#addAirlineModal .btn-primary {
+    background: var(--text-dark);
+    border: none;
+    padding: 10px 25px;
+    border-radius: 12px;
+}
+
+#addAirlineModal .btn-secondary {
+    background: #f3f4f6;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 12px;
+    color: var(--text-dark);
+}
+
+#imagePreview {
+    margin-top: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+        @media (max-width: 768px) {
+            .airline-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                margin-bottom: 1rem;
+            }
+            
+            .stats-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="dashboard-header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="page-title">AWB Management</h1>
+            <button class="add-airline-btn">
+                <i class="fas fa-plus me-2"></i>Add Airline
+            </button>
+        </div>
+    </header>
+  <div class="wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
+            </div>
+            <div class="nav flex-column">
+                <a href="/admin/track"class="nav-link active-nav-link">
+                    <i class="bi bi-truck"></i> 
+                    Tracking
+                </a>
+
+               <a href="/admin/createAwb"class="nav-link">
+                    <i class="bi bi-files"></i>
+                    Create AWB
+                </a>
+                 <a href="/admin/hawb" class="nav-link ">
+                    <i class="bi bi-file-text"></i> 
+                    House AWB
+                </a>
+              <a href="/admin/mawb" class="nav-link ">
+                    <i class="bi bi-file-earmark-break"></i> 
+                    Master AWB
+                </a>
+
+               <a href="/admin/fetchShipment" class="nav-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Update AWB
+                </a>
+               <a href="/admin/getShipment" class="nav-link ">
+                    <i class="bi bi-boxes"></i>
+                    All Shipments
+                </a>
+                <a href="/admin/profile"class="nav-link">
+                    <i class="bi bi-gear"></i>
+                    Admin Profile
+                </a>
+            </div>
+        </nav>
+    <div class="container">
+        <div class="row stats-container">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h5 class="text-muted mb-2">Total AWBs</h5>
+                    <h2 class="mb-0">450</h2>
+                    <small class="text-success"><i class="fas fa-arrow-up me-1"></i>12% this month</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h5 class="text-muted mb-2">Active Airlines</h5>
+                    <h2 class="mb-0">4</h2>
+                    <small class="text-primary"><i class="fas fa-plane me-1"></i>All operational</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="recent-awb-section">
+                    <h5 class="mb-3">Recent AWBs</h5>
+                    <div class="recent-awb-list">
+                        <div class="recent-awb-item">
+                            <div class="me-3">
+                                <i class="fas fa-file-alt text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">AWB-2024-001</h6>
+                                <small class="text-muted">Emirates Airways • 2 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="recent-awb-item">
+                            <div class="me-3">
+                                <i class="fas fa-file-alt text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">AWB-2024-001</h6>
+                                <small class="text-muted">Emirates Airways • 2 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="recent-awb-item">
+                            <div class="me-3">
+                                <i class="fas fa-file-alt text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">AWB-2024-001</h6>
+                                <small class="text-muted">Emirates Airways • 2 hours ago</small>
+                            </div>
+                        </div>
+                        <!-- Add more AWB items here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Airline Grid -->
+  <div class="airline-grid">
+  {{#each airlines}}
+  <a href="/admin/getawb?prefix={{prefix}}" class="airline-card-link">
+    <div class="airline-card">
+      <div class="airline-bg" style="background-image: url('{{image}}')"></div>
+      <div class="airline-overlay">
+        <div class="airline-info">
+          <div class="airline-name">{{airlineName}}</div>
+          <div class="awb-count">{{awbs.length}} AWBs</div>
+        </div>
+      </div>
+      <div class="hover-shield">
+        <div class="available-number">{{awbs.length}}</div>
+        <div class="available-text">Available Airway Bills</div>
+      </div>
+    </div>
+  </a>
+  {{/each}}
+</div>
+
+
+
+    </div>
+
+    <!-- Add Airline Modal -->
+<div class="modal fade" id="addAirlineModal" tabindex="-1" aria-labelledby="addAirlineModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAirlineModalLabel">Add New Airline</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <form id="addAirlineForm" action="/admin/add-airline" method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="airlineName" class="form-label">Airline Name</label>
+        <input type="text" class="form-control" id="airlineName" name="airlineName" required>
+    </div>
+    <div class="mb-3">
+        <label for="airlineImage" class="form-label">Airline Logo</label>
+        <input type="file" class="form-control" id="airlineImage" name="airlineImage" accept="image/*" required>
+    </div>
+
+<div class="mb-3">
+        <label for="prefix" class="form-label">prefix</label>
+        <input type="text" class="form-control" id="prefix" name="prefix"  required>
+    </div>
+
+    <div class="text-center mb-3">
+        <img id="imagePreview" src="" alt="Logo Preview" style="max-width: 200px; display: none;">
+    </div>
+    <button type="submit" class="btn btn-primary">Add Airline</button>
+</form>
+        </div>
+    </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Update the add airline button to trigger the modal
+        document.querySelector('.add-airline-btn').addEventListener('click', function() {
+            var modal = new bootstrap.Modal(document.getElementById('addAirlineModal'));
+            modal.show();
+        });
+    
+      
+    </script>
+</body>
+</html>

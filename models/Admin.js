@@ -44,6 +44,9 @@ const adminSchema = new mongoose.Schema(
       minlength: 8,
       select: false, // Ensures the password is not returned in queries
     },
+    otp: String, // Store OTP
+    otpExpires: Date, // OTP Expiry
+    isVerified: { type: Boolean, default: false },
     loginAttempts: {
         type: Number,
         default: 0,

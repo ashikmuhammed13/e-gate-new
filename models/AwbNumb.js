@@ -1,45 +1,42 @@
+// models/AWB.js
 const mongoose = require('mongoose');
 
 const awbSchema = new mongoose.Schema({
+ 
   awbNumber: {
     type: String,
     required: true,
-    unique: true,
-    trim: true
+    unique: true
   },
   awbType: {
     type: String,
-    required: true,
-    enum: ['master', 'house']
+    enum: ['master', 'house'],
+    required: true
   },
-  origin: {
+  prefix: {
     type: String,
     required: true,
-    trim: true
+    unique: true
+},
+  origin: {
+    type: String,
+    required: true
   },
   destination: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
-  carrier: {
-    type: String,
-    trim: true
-  },
+  carrier: String,
   status: {
     type: String,
-    required: true,
-    enum: ['active', 'inactive'], // 'active' means currently in use
+    enum: ['active', 'inactive'],
     default: 'active'
   },
-  used: {
+  isUsed: {
     type: Boolean,
-    default: false // Marks whether the AWB number has been used
+    default: false
   },
-  notes: {
-    type: String,
-    trim: true
-  },
+  notes: String,
   createdAt: {
     type: Date,
     default: Date.now
@@ -50,13 +47,4 @@ const awbSchema = new mongoose.Schema({
   }
 });
 
-// Middleware to update `updatedAt` before save
-awbSchema.pre('save', function (next) {
-  this.updatedAt = Date.now();
-  next();
-});
-
-
-const AWB = mongoose.model('AWB', awbSchema);
-
-module.exports = AWB;
+module.exports = mongoose.model('AWB', awbSchema);

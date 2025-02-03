@@ -374,15 +374,24 @@ margin-left: var(--sidebar-width);
                         AWB Details
                     </h3>
                     <div class="row g-4">
-                       <div class="col-md-4">
-  <label class="form-label">AWB Number</label>
-  <select class="form-select" name="awbNumber">
-    <option value="" selected disabled>Select AWB Number</option>
-    {{#each awbNumbers}}
-      <option value="{{this.awbNumber}}">{{this.awbNumber}}</option>
-    {{/each}}
-  </select>
+                  <div class="col-md-4">
+    <label class="form-label">Select Airline</label>
+    <select class="form-select" id="airlineSelect" name="airline">
+        <option value="" selected disabled>Select Airline</option>
+        {{#each airlines}}
+            <option value="{{prefix}}">{{airlineName}}</option>
+        {{/each}}
+    </select>
 </div>
+
+<div class="col-md-4" id="awbNumberContainer" style="display:none;">
+    <label class="form-label">AWB Number</label>
+    <select class="form-select" id="awbNumberSelect" name="awbNumber">
+        <option value="" selected disabled>Select AWB Number</option>
+        <!-- AWB numbers will be dynamically populated -->
+    </select>
+</div>
+
 
                         <div class="col-md-4">
                             <label class="form-label">IATA Code</label>
@@ -622,6 +631,39 @@ margin-left: var(--sidebar-width);
                 });
             });
         });
+
+          document.addEventListener('DOMContentLoaded', function () {
+        const airlineSelect = document.getElementById('airlineSelect');
+        const awbNumberContainer = document.getElementById('awbNumberContainer');
+        const awbNumberSelect = document.getElementById('awbNumberSelect');
+
+        // Fetch AWB data from the server (data is embedded in Handlebars)
+        const awbNumbers = JSON.parse('{{{json awbNumbers}}}'); 
+
+        airlineSelect.addEventListener('change', function () {
+            const selectedPrefix = this.value;
+
+            // Clear previous AWB numbers
+            awbNumberSelect.innerHTML = '<option value="" selected disabled>Select AWB Number</option>';
+
+            if (selectedPrefix) {
+                // Show AWB container
+                awbNumberContainer.style.display = 'block';
+
+                // Filter and populate AWB numbers based on selected airline prefix
+                awbNumbers.forEach(awb => {
+                    if (awb.prefix === selectedPrefix) {
+                        const option = document.createElement('option');
+                        option.value = awb.awbNumber;
+                        option.textContent = awb.awbNumber;
+                        awbNumberSelect.appendChild(option);
+                    }
+                });
+            } else {
+                awbNumberContainer.style.display = 'none';
+            }
+        });
+    });
     </script>
 </body>
 </html>
