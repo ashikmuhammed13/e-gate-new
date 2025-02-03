@@ -6,7 +6,7 @@ const sessionAuth = require('../middlewares/sessionAuth')
 const { 
     fetchAdminProfile,
     addAdmin,login,addAwb,getAllAirlines,addAirline,getawb,generateAdminOTP,verifyAdminOTP
-} = require('../controller/adminController')
+} = require('../controller/AdminController')
 
 const { Shipment } = require('../models/Shipment');
 
