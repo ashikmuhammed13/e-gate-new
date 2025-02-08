@@ -5,31 +5,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        @page {
-            size: 4in 6in;
-            margin: 0;
-        }
+      @page { size: 4in 6in; margin: 0; }
+  html, body { margin: 0; padding: 0; }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+  }
+  
+  /* Change from min-height to height */
+  .label-container {
+    width: 4in;
+    height: 6in;   /* exactly 6 inches */
+    border: 3px solid #000;
+    background: #fff;
+    position: relative;
+  }
         
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #fff;
-            -webkit-print-color-adjust: exact;
-        }
-        
-        .label-container {
-            width: 4in;
-            min-height: 6in;
-            border: 3px solid #000;
-            background: #fff;
-            position: relative;
-        }
-        
+      
         .header {
             display: grid;
             grid-template-columns: 1fr 100px;
@@ -197,6 +197,7 @@
         .bold-text {
             font-weight: 700;
         }
+        
     </style>
 </head>
 <body>
@@ -214,9 +215,8 @@
             <div class="tracking-number">TRK-123456789</div>
         </div>
 
-         <div class="primary-barcode">
-            <img src="{{barcode}}" alt="Barcode">
-        </div>
+        <img src="{{{barcode}}}" alt="Barcode" style="max-width:95%; max-height:70px;" />
+
 
         <div class="address-section">
             <div class="address-block">
@@ -242,8 +242,9 @@
 
         <div class="info-grid">
             <div class="qr-section">
-                <div class="qr-placeholder">"{{qrCode}}"</div>
-            </div>
+  <img src="{{{qrCode}}}" alt="QR Code" style="width:100px; height:100px;" />
+</div>
+
             <div class="shipment-details">
                 <div class="detail-row">
                     <span class="bold-text">WEIGHT:</span>
