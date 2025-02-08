@@ -5,12 +5,12 @@ const adminSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: true,
+      required: function() { return this.isVerified; },
       trim: true,
     },
     lastName: {
       type: String,
-      required: true,
+      required: function() { return this.isVerified; },
       trim: true,
     },
     email: {
@@ -42,30 +42,27 @@ const adminSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 8,
-      select: false, // Ensures the password is not returned in queries
+      select: false,
     },
-    otp: String, // Store OTP
-    otpExpires: Date, // OTP Expiry
+    otp: String,
+    otpExpires: Date,
     isVerified: { type: Boolean, default: false },
     loginAttempts: {
-        type: Number,
-        default: 0,
-      },
-      lockUntil: {
-        type: Date,
-      },      
+      type: Number,
+      default: 0,
+    },
+    lockUntil: Date,
     createdAt: {
       type: Date,
       default: Date.now,
     },
-    updatedAt: {
-      type: Date,
-    },
+    updatedAt: Date,
   },
   {
-    timestamps: true, // Automatically add createdAt and updatedAt fields
+    timestamps: true,
   }
 );
+
 
 // Hash password before saving
 adminSchema.pre('save', async function (next) {
@@ -74,7 +71,7 @@ adminSchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
   }
   next();
-});   
+});
 
 // Instance method to check password
 adminSchema.methods.isPasswordValid = async function (password) {
@@ -82,5 +79,4 @@ adminSchema.methods.isPasswordValid = async function (password) {
 };
 
 const Admin = mongoose.model('Admin', adminSchema);
-
 module.exports = Admin;

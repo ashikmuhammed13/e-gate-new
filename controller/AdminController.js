@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Admin = require('../models/Admin');
 const AWB = require("../models/AwbNumb")
 const Airlines=require("../models/Airlines")
-const { sendOTP } = require('../utils/otp');
+const { sendOtps,generateOTP } = require('../utils/otp');
 const bcrypt = require('bcrypt');
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -81,7 +81,7 @@ const fetchAdminProfile =  async(req, res) => {
 
             // Fetch all admins for super admin view
             const adminList = await Admin.find({});
-            await Admin.deleteMany({ isVerified: false, createdAt: { $lt: new Date(Date.now() - 10 * 60 * 1000) } });
+            // await Admin.deleteMany({ isVerified: false, createdAt: { $lt: new Date(Date.now() - 10 * 60 * 1000) } });
             res.render('admin/admin', { 
                 isSuperAdmin: true,
                 adminList,
@@ -99,116 +99,92 @@ const fetchAdminProfile =  async(req, res) => {
         res.status(500).send('Server error');
     }
 }
-const generateOTP = () => Math.random().toString(36).substring(2, 8).toUpperCase();
-const generateAdminOTP = async (req, res) => {
-    const { email } = req.body;
-    
 
-    // Store in session
-    
-    console.log('Stored OTP Data:', req.session.otpData); // Debugging
-    try {
-        const existingAdmin = await Admin.findOne({ email });
-
-        if (existingAdmin && existingAdmin.isVerified) {
-            return res.json({ success: false, message: 'Email already verified!' });
-        }
-
-        const otp = generateOTP();
-        const otpExpires = Date.now() + 10 * 60 * 1000; // OTP valid for 10 minutes
-        req.session.otpData = { email, otp, otpExpires };
-        await Admin.findOneAndUpdate(
-            { email },
-            { otp, otpExpires },
-            { upsert: true, new: true } // Creates new admin if not exists
-        );
-
-        await sendOTP(email, otp);
-        res.json({ success: true, message: 'OTP sent successfully' });
-
-    } catch (error) {
-        console.error('OTP Generation Error:', error);
-        res.json({ success: false, message: 'Failed to send OTP' });
-    }
-};
 
 const addAdmin = async (req, res) => {
     const { firstName, lastName, email, phone, role, status, password } = req.body;
-
+    
     try {
-        const existingAdmin = await Admin.findOne({ email });
-
-        console.log('Admin Found in DB:', existingAdmin); // Debugging
-
-        if (!existingAdmin || !existingAdmin.isVerified) {
-            return res.json({ success: false, message: 'Email not verified. Please verify OTP first' });
-        }
-
-        existingAdmin.firstName = firstName;
-        existingAdmin.lastName = lastName;
-        existingAdmin.phone = phone;
-        existingAdmin.role = role;
-        existingAdmin.status = status;
-        existingAdmin.password = password; // Hash in pre-save hook
-
-        await existingAdmin.save();
-        res.json({ success: true, message: 'Admin created successfully' });
-
+      const admin = await Admin.findOne({ email });
+      if (!admin /* You could also check for a temporary flag if you set one */) {
+        return res.json({ success: false, message: 'Email not verified. Please verify OTP first' });
+      }
+      
+      // Now update with final details and mark as verified
+      admin.firstName = firstName;
+      admin.lastName = lastName;
+      admin.phone = phone;
+      admin.role = role;
+      admin.status = status || 'active';
+      admin.password = password; // Will be hashed in pre-save hook
+      admin.isVerified = true;
+      
+      await admin.save();
+      res.json({ success: true, message: 'Admin created successfully' });
+      
     } catch (error) {
-        console.error('Error adding admin:', error);
-        res.json({ success: false, message: 'Server error.' });
+      console.error('Error adding admin:', error);
+      res.json({ success: false, message: 'Server error.' });
     }
-};
+  };
+  
+  
 
-
-
-const verifyAdminOTP = async (req, res) => {
+  const sendOTP = async (req, res) => {
+    const { email } = req.body;
+    try {
+      const otp = generateOTP();
+      const otpExpires = Date.now() + 10 * 60 * 1000; // OTP valid for 10 minutes
+  
+      let admin = await Admin.findOne({ email });
+      if (!admin) {
+        // Create with temporary (non-empty) values for required fields
+        admin = new Admin({
+          email,
+          otp,
+          otpExpires,
+          isVerified: false,
+          password: 'tempPassword', // Temporary; update later
+          firstName: 'tempFirstName', // Non-empty dummy value
+          lastName: 'tempLastName'    // Non-empty dummy value
+        });
+      } else {
+        // Update OTP details for an existing record
+        admin.otp = otp;
+        admin.otpExpires = otpExpires;
+        admin.isVerified = false;
+      }
+      await admin.save();
+      await sendOtps(email, otp);
+      res.json({ success: true, message: 'OTP sent successfully' });
+    } catch (err) {
+      console.error('Error sending OTP:', err);
+      res.json({ success: false, message: 'Error sending OTP' });
+    }
+  }
+  
+  const verifyOTP = async (req, res) => {
     const { email, otp } = req.body;
-
-    console.log('Received Email:', email);
-    console.log('Received OTP:', otp);
-    console.log('Stored OTP Data:', req.session.otpData);
-
-    if (!req.session.otpData) {
-        return res.json({ success: false, message: 'OTP session expired or not found' });
-    }
-
-    if (req.session.otpData.email !== email) {
-        return res.json({ success: false, message: 'Email does not match OTP session' });
-    }
-
-    if (String(req.session.otpData.otp) !== String(otp)) {
-        return res.json({ success: false, message: 'Invalid OTP' });
-    }
-
-    if (req.session.otpData.otpExpires < Date.now()) {
-        return res.json({ success: false, message: 'OTP has expired' });
-    }
-
     try {
-        // ✅ Update `isVerified` to true in the database
-        const updatedAdmin = await Admin.findOneAndUpdate(
-            { email },
-            { isVerified: true, otp: null, otpExpires: null },
-            { new: true }
-        );
-
-        console.log('Updated Admin:', updatedAdmin); // Debugging
-
-        // ✅ Check if the admin exists immediately after updating
-        const checkAdmin = await Admin.findOne({ email });
-        console.log('Admin After Update:', checkAdmin); // This should NOT be null
-
-        req.session.otpVerified = email;
-        req.session.otpData = null; // Clear OTP session
-
-        res.json({ success: true, message: 'OTP verified successfully' });
-
-    } catch (error) {
-        console.error('Error updating verification status:', error);
-        res.json({ success: false, message: 'Server error during OTP verification' });
+      const admin = await Admin.findOne({ email });
+      if (!admin) {
+        return res.json({ success: false, message: 'Admin record not found' });
+      }
+      if (admin.otp !== otp || admin.otpExpires < Date.now()) {
+        return res.json({ success: false, message: 'Invalid or expired OTP' });
+      }
+      // Clear OTP fields but do not mark as verified yet
+      admin.otp = undefined;
+      admin.otpExpires = undefined;
+      await admin.save();
+      res.json({ success: true, message: 'OTP verified successfully' });
+    } catch (err) {
+      console.error('Error verifying OTP:', err);
+      res.json({ success: false, message: 'Error verifying OTP' });
     }
-};
+  };
+  
+  
 
 
 
@@ -317,7 +293,7 @@ getawb= async (req, res) => {
 
 module.exports = {
     fetchAdminProfile,
-    addAdmin, login ,createSuperAdmin,addAwb,getAllAirlines,addAirline,getawb,generateAdminOTP,verifyAdminOTP
+    addAdmin, login ,createSuperAdmin,addAwb,getAllAirlines,addAirline,getawb,verifyOTP,sendOTP
 };
 
 

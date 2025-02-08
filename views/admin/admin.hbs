@@ -3,556 +3,674 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Modern Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
-   /* Modern Admin Profile Styles */
-:root {
-    --primary-gradient: linear-gradient(135deg, #4361ee 0%, #4895ef 100%);
-    --glass-bg: rgba(255, 255, 255, 0.95);
-    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-    --card-border: 1px solid rgba(255, 255, 255, 0.18);
-    --neon-glow: 0 0 15px rgba(67, 97, 238, 0.3);
-    --sidebar-width: 280px;
+       :root {
+    --dark-bg: #0a0a0f;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --text-primary: #fff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --neon-accent: #0ea5e9;
+    --neon-glow: 0 0 10px rgba(14, 165, 233, 0.5);
+     --primary-color: #4f46e5;
+           --sidebar-width: 280px;
     --sidebar-bg: rgba(15, 23, 42, 0.95);
     --sidebar-hover: rgba(30, 41, 59, 0.8);
     --neon-accent: #0ea5e9;
+    --neon-glow: 0 0 10px rgba(14, 165, 233, 0.5);
     --glass-effect: blur(10px);
 }
-
-body {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #f6f7ff 0%, #eef1ff 100%);
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-}
-
 /* Sidebar Base Styles */
-
-
-/* Main Content Area */
-.main-content {
-    margin-left: var(--sidebar-width);
-    padding: 2rem;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f6f7ff 0%, #eef1ff 100%);
-    transition: margin-left 0.4s ease;
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--glass-effect);
+    -webkit-backdrop-filter: var(--glass-effect);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    height: 100vh;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
 }
 
-/* Top Navbar */
-.top-navbar {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border-bottom: var(--card-border);
-    padding: 1.25rem 2rem;
-    box-shadow: var(--glass-shadow);
-    position: sticky;
-    top: 0;
-    z-index: 900;
-    margin-bottom: 2rem;
+.sidebar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
 }
 
-/* Profile Section */
-.profile-wrapper {
-    position: relative;
-    padding: 1rem;
-    border-radius: 20px;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+/* Logo Section */
+.sidebar .logo {
+     padding: 1.5rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.95)
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+     margin-bottom: 1rem;
 }
 
-.profile-image-container {
-    position: relative;
-    width: 150px;
-    height: 150px;
-    margin: 0 auto;
-}
-
-.profile-image {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 4px solid transparent;
-    background: var(--primary-gradient);
-    padding: 3px;
-    transition: all 0.3s ease;
-}
-
-.profile-image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    opacity: 0;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.profile-image-container:hover .profile-image-overlay {
-    opacity: 1;
-}
-
-/* Form Controls */
-.form-control, .form-select {
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(67, 97, 238, 0.2);
-    border-radius: 12px;
-    padding: 0.8rem 1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(67, 97, 238, 0.1);
-}
-
-.form-control:focus, .form-select:focus {
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: var(--neon-glow);
-    border-color: #4361ee;
-    transform: translateY(-2px);
-    outline: none;
-}
-
-.form-control[readonly] {
-    background: rgba(243, 244, 246, 0.8);
-    border-color: rgba(67, 97, 238, 0.1);
-    cursor: not-allowed;
-}
-
-.form-label {
+.sidebar .logo h4 {
+    font-size: 1.25rem;
     font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    text-transform: uppercase;
+    background: linear-gradient(120deg, #fff, var(--neon-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
     letter-spacing: 0.5px;
 }
 
-/* Admin Table */
+/* Navigation Links */
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.8rem 1.2rem;
+    margin: 0.5rem 1rem;
+     border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link i {
+    width: 24px;
+    text-align: center;
+    margin-right: 12px;
+    font-size: 1.1rem;
+}
+
+/* Active Link Styles */
+.sidebar .nav-link.active-nav-link {
+    background: rgba(14, 165, 233, 0.15);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link.active-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: var(--neon-accent);
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--neon-glow);
+}
+
+/* Hover Effects */
+.sidebar .nav-link:hover i {
+    transform: translateX(3px);
+    color: var(--neon-accent);
+}
+
+/* Navigation Group */
+.nav.flex-column {
+    padding-top: 0.5rem;
+}
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.profile-section {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+}
+
+.verification-step {
+    transition: all 0.3s ease;
+}
+
+.modal-content {
+    background: var(--dark-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-link {
+    color: var(--neon-accent);
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
+
+/* Optional: Add animation for step transitions */
+.verification-step {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Override Bootstrap's default white background */
+.table {
+    background-color: #1a1a1a !important; /* Dark background */
+    color: #e0e0e0 !important; /* Light text */
+}
+
 .admin-table {
-    background: var(--glass-bg);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: var(--glass-shadow);
-    margin-top: 1rem;
+    background: #1a1a1a !important; /* Dark background */
+    border-radius: 12px;
+    color: #e0e0e0;
+}
+
+/* Override Bootstrap's striped table if used */
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #1f1f1f !important; /* Slightly lighter dark for striped rows */
+}
+
+/* Override table hover state */
+.table-hover tbody tr:hover {
+    background-color: #252525 !important;
+}
+
+/* Style table header */
+.admin-table thead {
+    background: #2c2c2c !important;
 }
 
 .admin-table thead th {
-    background: rgba(67, 97, 238, 0.05);
-    font-weight: 600;
-    padding: 1.2rem 1rem;
-    color: #2d3748;
-    border-bottom: 2px solid rgba(67, 97, 238, 0.1);
-}
-
-.admin-table tbody tr {
-    transition: all 0.3s ease;
-}
-
-.admin-table tbody tr:hover {
-    background: rgba(67, 97, 238, 0.02);
-    transform: translateY(-1px);
-}
-
-.admin-table td {
+    color: #0ea5e9 !important;
+    border: none;
     padding: 1rem;
-    vertical-align: middle;
-    border-bottom: 1px solid rgba(67, 97, 238, 0.05);
+    background-color: #2c2c2c !important;
 }
 
-/* Action Buttons */
-.action-buttons {
-    display: flex;
-    gap: 0.5rem;
+/* Style table body */
+.admin-table tbody td {
+    color: #e0e0e0;
+    border-color: #333333;
+    background-color: #1a1a1a !important;
 }
 
-.btn-action {
-    padding: 0.5rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+/* Override any Bootstrap background colors */
+.table > :not(caption) > * > * {
+    background-color: transparent !important;
+    border-bottom-color: #333333;
+    color: #e0e0e0;
+}
+
+/* Style the table container */
+.table-responsive {
+    background-color: #1a1a1a !important;
+    border-radius: 12px;
+}
+
+/* Additional style for the profile section containing the table */
+.profile-section {
+    background: #1a1a1a !important;
+}
+
+.form-control, .form-select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.btn-primary {
+    background: var(--neon-accent);
     border: none;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    box-shadow: var(--neon-glow);
 }
 
-.btn-edit {
-    background: rgba(67, 97, 238, 0.1);
-    color: #4361ee;
+.status-badge {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 30px;
 }
 
-.btn-delete {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+.modal-content {
+    background: var(--dark-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.btn-action:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Modal Styles */
-.modal-custom {
-    border-radius: 20px;
-    overflow: hidden;
-    background: var(--glass-bg);
+.top-navbar {
+    background: var(--card-bg);
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-custom .modal-header {
-    background: var(--primary-gradient);
-    color: white;
-    border: none;
-    padding: 1.5rem;
-}
-
-.modal-custom .modal-body {
-    padding: 2rem;
-}
-
-.modal-custom .modal-footer {
-    border: none;
-    padding: 1.5rem;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-    }
-    
-    .sidebar.active {
-        transform: translateX(0);
-    }
-    
-     /* Main Content Styles */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            width: calc(100% - var(--sidebar-width));
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
         }
-    
-    .top-navbar {
-        padding: 1rem;
-    }
-    
-    .admin-card {
-        padding: 1.5rem;
-    }
-    
-    .profile-image {
-        width: 120px;
-        height: 120px;
-    }
-    
-    .admin-table {
-        font-size: 0.9rem;
-    }
-    
-    .status-badge {
-        padding: 0.3rem 0.8rem;
-    }
-}
+
+       
+
+        .dashboard-wrapper {
+            display: flex;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            background: transparent;
+            min-height: 100vh;
+        }
+
+        .top-navbar {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+      
+
+        .profile-image-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-color);
+        }
+
+      
+
+        .form-control, .form-select {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            color: var(--text-primary);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(243, 243, 243, 0.8);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+        }
+
+        .form-label {
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(34, 211, 238, 0.3);
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .status-active {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--secondary-color);
+        }
+
+        .status-inactive {
+            background-color: rgba(244, 63, 94, 0.2);
+            color: #f43f5e;
+        }
+
+     
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
-   <div class="wrapper">
-        
+      <div class="wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
+            </div>
+             <div class="nav flex-column">
+                <a href="/admin/track"class="nav-link ">
+                    <i class="bi bi-truck"></i> 
+                    Tracking
+                </a>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Top Navbar -->
-        <div class="top-navbar mb-4">
-            <div class="d-flex justify-content-between align-items-center">
+               <a href="/admin/createAwb"class="nav-link">
+                    <i class="bi bi-files"></i>
+                    Create AWB
+                </a>
+               <a href="/admin/hawb" class="nav-link ">
+                    <i class="bi bi-file-text"></i> 
+                    House AWB
+                </a>
+               <a href="/admin/mawb" class="nav-link ">
+                    <i class="bi bi-file-earmark-break"></i> 
+                    Master AWB
+                </a>
+
+                <a href="/admin/fetchShipment" class="nav-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Update AWB
+                </a>
+                <a href="/admin/getShipment" class="nav-link">
+                    <i class="bi bi-boxes"></i>
+                    All Shipments
+                </a>
+                 <a href="/admin/profile"class="nav-link active-nav-link">
+                <i class="bi bi-gear-fill"></i>
+            Admin Profile
+        </a>
+
+        <a href="/admin/airlines" class="nav-link">
+            <i class="bi bi-cloud"></i>
+            Airlines
+        </a>
+            </div>
+        </nav>
+    <div class="dashboard-wrapper">
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <div class="top-navbar">
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-link text-dark d-md-none me-3" id="sidebarToggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h4 class="mb-0">{{#if isSuperAdmin}}Admin Management{{else}}My Profile{{/if}}</h4>
+                    <h4 class="mb-0">
+                        {{#if isSuperAdmin}}Admin Management{{else}}My Profile{{/if}}
+                    </h4>
                 </div>
                 {{#if isSuperAdmin}}
-                <div class="d-flex align-items-center">
-    <button class="btn btn-custom-primary" data-bs-toggle="modal" data-bs-target="#newAdminModal">
-        <i class="fas fa-plus me-2"></i>Add New Admin
-    </button>
-</div>
+                <div>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newAdminModal">
+                        <i class="fas fa-plus me-2"></i>Add New Admin
+                    </button>
+                </div>
                 {{/if}}
             </div>
-        </div>
 
-        {{#if isSuperAdmin}}
-        <!-- Admin List - Only visible to Super Admin -->
-        <div class="admin-card">
-            <div class="table-responsive admin-table">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Admin</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each adminList}}
-                        <tr>
-                            <td>{{this.firstName}} {{this.lastName}}</td>
-                            <td>{{this.email}}</td>
-                            <td>{{this.role}}</td>
-                            <td>
-                                <span class="status-badge {{#if this.isActive}}status-active{{else}}status-inactive{{/if}}">
-                                    {{this.status}}
-                                </span>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-primary edit-admin" data-id="{{this._id}}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger delete-admin" data-id="{{this._id}}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        {{else}}
-        <!-- Normal Admin Profile View -->
-        <div class="admin-card">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="profile-image mb-4">
-                        <img src="{{admin.profileImage}}" alt="Profile" class="rounded-circle">
-                        <div class="mt-3">
-                            <button class="btn btn-primary">
-                                <i class="fas fa-upload me-2"></i>Upload New Photo
-                            </button>
-                        </div>
-                    </div>
+            <!-- Super Admin View -->
+            {{#if isSuperAdmin}}
+            <div class="profile-section">
+                <div class="table-responsive admin-table">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Admin</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each adminList}}
+                            <tr>
+                                <td>{{this.firstName}} {{this.lastName}}</td>
+                                <td>{{this.email}}</td>
+                                <td>{{this.role}}</td>
+                                <td>
+                                    <span class="status-badge {{#if this.isActive}}status-active{{else}}status-inactive{{/if}}">
+                                        {{this.status}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button class="btn btn-sm btn-outline-primary me-2 edit-admin" data-id="{{this._id}}">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger delete-admin" data-id="{{this._id}}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-8">
-                    <form id="profileUpdateForm">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" value="{{admin.firstName}}" readonly>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control" value="{{admin.lastName}}" readonly>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" value="{{admin.email}}" readonly>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Role</label>
-                                <input type="text" class="form-control" value="{{admin.role}}" readonly>
-                            </div>
+            </div>
+            {{else}}
+            <!-- Normal Admin Profile View -->
+            <div class="profile-section">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="profile-image-container mb-3">
+                            <img src="{{admin.profileImage}}" alt="Profile" class="profile-image">
                         </div>
-                        
-                        <!-- Password Change Section -->
-                        <div class="mt-4">
-                            <h5>Change Password</h5>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-upload me-2"></i>Update Photo
+                        </button>
+                    </div>
+                    <div class="col-md-8">
+                        <form id="profileUpdateForm">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Current Password</label>
-                                    <input type="password" class="form-control" name="currentPassword">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" value="{{admin.firstName}}" readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">New Password</label>
-                                    <input type="password" class="form-control" name="newPassword">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" value="{{admin.lastName}}" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" value="{{admin.email}}" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Role</label>
+                                    <input type="text" class="form-control" value="{{admin.role}}" readonly>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Update Password</button>
-                        </div>
-                    </form>
+                            
+                            <div class="mt-4">
+                                <h5 class="text-secondary mb-3">Change Password</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Current Password</label>
+                                        <input type="password" class="form-control" name="currentPassword">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">New Password</label>
+                                        <input type="password" class="form-control" name="newPassword">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Password</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        {{/if}}
+            {{/if}}
 
-        {{#if isSuperAdmin}}
-        <!-- New Admin Modal - Only for Super Admin -->
-        <div class="modal fade" id="newAdminModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content modal-custom">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add New Admin</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                       <form method="post" id="newAdminForm" action="/admin/add">
-    <div class="row">
-        <!-- First Name -->
-        <div class="col-md-6 mb-3">
-            <label class="form-label">First Name</label>
-            <input type="text" class="form-control" name="firstName" placeholder="Enter first name" required>
-        </div>
-        <!-- Last Name -->
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" name="lastName" placeholder="Enter last name" required>
-        </div>
-        <!-- Email with OTP verification -->
-        <div class="col-md-12 mb-3">
-            <label class="form-label">Email</label>
-            <div class="input-group">
-                <input type="email" class="form-control" id="adminEmail" name="email" placeholder="Enter email" required>
-                <button type="button" class="btn btn-primary" id="sendOtpBtn">Send OTP</button>
-            </div>
-        </div>
-        <!-- OTP Verification (initially hidden) -->
-        <div class="col-md-12 mb-3" id="otpSection" style="display: none;">
+            <!-- New Admin Modal -->
+     {{#if isSuperAdmin}}
+<div class="modal fade" id="newAdminModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title">Add New Admin</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Step 1: Email Verification -->
+        <form id="adminRegistrationForm" class="verification-step active">
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="modal-footer border-top-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Send OTP</button>
+          </div>
+        </form>
+
+        <!-- Step 2: OTP Verification -->
+        <form id="otpVerificationForm" class="verification-step" style="display: none;">
+          <div class="mb-3">
             <label class="form-label">Enter OTP</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="otpInput" placeholder="Enter OTP" maxlength="6">
-                <button type="button" class="btn btn-secondary" id="resendOtpBtn">Resend OTP</button>
-            </div>
-            <small class="text-muted">Please enter the OTP sent to your email</small>
-        </div>
-        <!-- Other fields (initially hidden) -->
-        <div id="additionalFields" style="display: none;" class="row">
-            <!-- Phone -->
+            <input type="text" class="form-control" name="otp" required maxlength="6">
+            <small class="text-muted">Please enter the 6-digit code sent to your email</small>
+          </div>
+          <div class="modal-footer border-top-0">
+            <button type="button" class="btn btn-link" id="resendOTP">Resend OTP</button>
+            <button type="submit" class="btn btn-primary">Verify OTP</button>
+          </div>
+        </form>
+
+        <!-- Step 3: Admin Details -->
+        <form id="finalAdminForm" class="verification-step" style="display: none;">
+          <!-- Hidden field for the verified email -->
+          <input type="hidden" name="email">
+            <!-- Hidden field for status -->
+  <input type="hidden" name="status" value="active">
+          <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label">Phone</label>
-                <input type="tel" class="form-control" name="phone" placeholder="Enter phone number">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-control" name="firstName" required>
             </div>
-            <!-- Role -->
             <div class="col-md-6 mb-3">
-                <label class="form-label">Role</label>
-                <select class="form-select" name="role" required>
-                    <option value="">Select Role</option>
-                    <option value="Super Admin">Super Admin</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Moderator">Moderator</option>
-                </select>
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-control" name="lastName" required>
             </div>
-            <!-- Status -->
             <div class="col-md-6 mb-3">
-                <label class="form-label">Status</label>
-                <select class="form-select" name="status" required>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
+              <label class="form-label">Role</label>
+              <select class="form-select" name="role" required>
+                <option value="">Select Role</option>
+                <option value="Super Admin">Super Admin</option>
+                <option value="Admin">Admin</option>
+                <option value="Moderator">Moderator</option>
+              </select>
             </div>
-            <!-- Password -->
             <div class="col-md-6 mb-3">
-                <label class="form-label">Initial Password</label>
-                <input type="password" class="form-control" name="password" placeholder="Enter initial password" required>
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" name="password" required>
             </div>
-        </div>
+          </div>
+          <div class="modal-footer border-top-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Admin</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-custom-primary" id="submitBtn" disabled>Add Admin</button>
-    </div>
-</form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{/if}}
-    </div>
+  </div>
 </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>document.addEventListener('DOMContentLoaded', function () {
-    const adminEmail = document.getElementById('adminEmail');
-    const sendOtpBtn = document.getElementById('sendOtpBtn');
-    const otpSection = document.getElementById('otpSection');
-    const otpInput = document.getElementById('otpInput');
-    const additionalFields = document.getElementById('additionalFields');
-    const submitBtn = document.getElementById('submitBtn');
+{{/if}}
+        </div>
+    </div>
 
-    let emailVerified = false;
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+// Step 1: Send OTP
+document.getElementById('adminRegistrationForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
 
-    // Send OTP
-    sendOtpBtn.addEventListener('click', function () {
-        const email = adminEmail.value;
-        if (!email || !email.includes('@')) {
-            alert('Please enter a valid email address');
-            return;
-        }
+  const response = await fetch('/admin/send-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  });
+  const data = await response.json();
+  if (data.success) {
+    // Hide email form; show OTP form
+    this.style.display = 'none';
+    document.getElementById('otpVerificationForm').style.display = 'block';
+    // Store the email in the hidden field of the final form
+    document.querySelector('#finalAdminForm input[name="email"]').value = email;
+  } else {
+    alert(data.message);
+  }
+});
 
-        fetch('/admin/generate-otp', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                otpSection.style.display = 'block';
-                adminEmail.readOnly = true;
-                sendOtpBtn.disabled = true;
-                alert('OTP sent! Please check your email.');
-            } else {
-                alert('Error: ' + data.message);
-            }
-        });
-    });
+// Step 2: Verify OTP
+document.getElementById('otpVerificationForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = document.querySelector('#finalAdminForm input[name="email"]').value;
+  const otp = this.otp.value;
 
-    // Verify OTP
-    otpInput.addEventListener('input', function () {
-        if (this.value.length === 6) {
-            fetch('/admin/verify-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: adminEmail.value, otp: this.value })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    emailVerified = true;
-                    otpSection.innerHTML = '<div class="alert alert-success">Email verified!</div>';
-                    additionalFields.style.display = 'block';
-                    submitBtn.disabled = false;
-                } else {
-                    alert('Invalid OTP.');
-                    otpInput.value = '';
-                }
-            });
-        }
-    });
+  const response = await fetch('/admin/verify-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, otp })
+  });
+  const data = await response.json();
+  if (data.success) {
+    // Hide OTP form; show final admin details form
+    this.style.display = 'none';
+    document.getElementById('finalAdminForm').style.display = 'block';
+  } else {
+    alert(data.message);
+  }
+});
 
-    // Submit Form
-    document.getElementById('newAdminForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (!emailVerified) {
-            alert('Please verify email first');
-            return;
-        }
+// Step 3: Final Admin Details Submission
+document.getElementById('finalAdminForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  // Gather all form data into an object
+  const formData = new FormData(this);
+  const dataToSend = {};
+  formData.forEach((value, key) => {
+    dataToSend[key] = value;
+  });
 
-        const formData = new FormData(this);
-        fetch('/admin/add', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Admin created successfully!');
-                window.location.reload();
-            } else {
-                alert('Error: ' + data.message);
-            }
-        });
-    });
+  const response = await fetch('/admin/add-admin', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dataToSend)
+  });
+  const resData = await response.json();
+  if (resData.success) {
+    alert('Admin created successfully!');
+    location.reload(); // Or close the modal
+  } else {
+    alert(resData.message);
+  }
+});
+
+// Resend OTP functionality
+document.getElementById('resendOTP').addEventListener('click', async function(e) {
+  e.preventDefault();
+  const email = document.querySelector('#finalAdminForm input[name="email"]').value;
+  const response = await fetch('/admin/send-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  });
+  const data = await response.json();
+  alert(data.message);
 });
 </script>
-    </div>
-</body>
 
+</body>
 </html>

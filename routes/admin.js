@@ -5,7 +5,7 @@ const normalAwb = require('../controller/normalAwb')
 const sessionAuth = require('../middlewares/sessionAuth')
 const { 
     fetchAdminProfile,
-    addAdmin,login,addAwb,getAllAirlines,addAirline,getawb,generateAdminOTP,verifyAdminOTP
+    addAdmin,login,addAwb,getAllAirlines,addAirline,getawb,sendOTP,verifyOTP
 } = require('../controller/AdminController')
 
 const { Shipment } = require('../models/Shipment');
@@ -150,13 +150,14 @@ router.post("/generate-hawb",normalAwb.generateHawb)
 router.get("/hawb", normalAwb.getHawb)
 router.get("/getShipment", normalAwb.getShipment)
 router.get("/profile" ,sessionAuth,  fetchAdminProfile)
-router.post("/add",  sessionAuth    ,    addAdmin)
+router.post('/send-otp', sendOTP);
+router.post('/verify-otp', verifyOTP);
+router.post('/add-admin', addAdmin);
 router.get('/getSavedAddresses', normalAwb.getSavedAddresses);
 router.get("/airlines",getAllAirlines)
 router.post('/add-airline', upload.single('airlineImage'), addAirline);
 router.get("/getawb",getawb)
-router.post('/generate-otp',generateAdminOTP)
- router.post('/verify-otp',verifyAdminOTP)
+
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {

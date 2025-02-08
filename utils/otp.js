@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 const generateOTP = () => {
     return otpGenerator.generate(6, { upperCase: false, specialChars: false });
 };
-const sendOTP = async (email, otp) => {
+const sendOtps = async (email, otp) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -23,4 +23,4 @@ const sendOTP = async (email, otp) => {
     await transporter.sendMail(mailOptions);
 };
 
-module.exports = { generateOTP, sendOTP };
+module.exports = { generateOTP, sendOtps };
