@@ -244,15 +244,16 @@ module.exports = {
         console.log('Generated HTML:', htmlContent); // Debug log
     
         // 10. Launch Puppeteer to generate the PDF synchronously
-        const execPath = process.env.PUPPETEER_EXECUTABLE_PATH
-        ? process.env.PUPPETEER_EXECUTABLE_PATH.trim()
-        : '/usr/bin/chromium';
-    
-    const browser = await puppeteer.launch({
-      executablePath: execPath,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-    
+        const execPath = process.env.PUPPETEER_EXECUTABLE_PATH 
+        ? process.env.PUPPETEER_EXECUTABLE_PATH.trim() 
+        : '/usr/bin/chromium-browser';
+      
+      const browser = await puppeteer.launch({
+        executablePath: execPath,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      });
+      
+      
         
         
         const page = await browser.newPage();
