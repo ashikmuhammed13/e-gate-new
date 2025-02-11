@@ -245,9 +245,10 @@ module.exports = {
     
         // 10. Launch Puppeteer to generate the PDF synchronously
         const browser = await puppeteer.launch({
-          executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+          executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
           args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
+        
         
         const page = await browser.newPage();
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
