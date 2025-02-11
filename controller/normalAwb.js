@@ -70,242 +70,232 @@ module.exports = {
 
     // Required modules
 
-createAwb: async (req, res) => {
-    async function generateAndSavePdf(awbNumber, templateData) {
-        try {
-          const templatePath = './views/admin/bill.hbs';
-          if (!fs.existsSync(templatePath)) {
-            throw new Error(`Template file not found at: ${templatePath}`);
-          }
-          const templateHtml = fs.readFileSync(templatePath, 'utf8');
-          const template = handlebars.compile(templateHtml);
-          const html = template(templateData);
-      
-          const browser = await puppeteer.launch();
-          const page = await browser.newPage();
-          await page.setContent(html, { waitUntil: 'networkidle0' });
-          const pdfBuffer = await page.pdf({
-            width: '4in',
-height: '6in',
 
 
-            printBackground: true,
-            margin: { top: '0in', right: '0in', bottom: '0in', left: '0in' }
+    createAwb: async (req, res) => {
+      try {
+        // 1. Generate unique AWB number
+        const awbNumber = 'AWB' + Date.now() + Math.floor(Math.random() * 1000);
+    
+        // 2. Extract data from request body
+        const {
+          senderContact, senderCompany, senderPhone, senderEmail,
+          senderCountry, senderAddress1, senderAddress2, senderAddress3,
+          senderPostal, senderCity, senderIsResidential, saveSenderAddress,
+          receiverContact, receiverCompany, receiverPhone, receiverEmail,
+          receiverCountry, receiverAddress1, receiverAddress2, receiverAddress3,
+          receiverPostal, receiverCity, receiverIsResidential, saveReceiverAddress,
+          shipmentDate,
+          packages // Array of package objects
+        } = req.body;
+    
+        // 3. Calculate totals
+        const totalPackages = packages.length;
+        const totalWeight = packages.reduce((sum, pkg) => sum + parseFloat(pkg.weight), 0);
+    
+        // 4. Generate barcode (Base64 image)
+        const barcodeBuffer = await new Promise((resolve, reject) => {
+          bwipjs.toBuffer({
+            bcid: 'code128',
+            text: awbNumber,
+            scale: 2,
+            height: 10,
+            includetext: true,
+            textxalign: 'center',
+            backgroundcolor: 'FFFFFF',
+            padding: 5
+          }, (err, png) => {
+            if (err) reject(err);
+            else resolve(png);
           });
-          await browser.close();
-      
-          // Save PDF to disk (adjust directory as needed)
-          const labelsDir = './public/labels';
-          if (!fs.existsSync(labelsDir)) {
-            fs.mkdirSync(labelsDir, { recursive: true });
+        });
+        const barcodeBase64 = `data:image/png;base64,${barcodeBuffer.toString('base64')}`;
+    
+        // 5. Generate QR code (Base64 image)
+        const qrCodeBase64 = await QRCode.toDataURL(awbNumber, {
+          width: 100,
+          margin: 1,
+          color: { dark: '#000000', light: '#FFFFFF' }
+        });
+    
+        // 6. Prepare data for the PDF template
+        const templateData = {
+          date: new Date().toLocaleDateString(),
+          priority: 'PRIORITY',
+          orderId: awbNumber,
+          trackingNumber: awbNumber,
+          barcode: barcodeBase64,
+          qrCode: qrCodeBase64,
+          sender: {
+            company: senderCompany,
+            contact: senderContact,
+            address: `${senderAddress1}${senderAddress2 ? '\n' + senderAddress2 : ''}`,
+            city: senderCity,
+            postal: senderPostal,
+            phone: senderPhone
+          },
+          receiver: {
+            company: receiverCompany,
+            contact: receiverContact,
+            address: `${receiverAddress1}${receiverAddress2 ? '\n' + receiverAddress2 : ''}`,
+            city: receiverCity,
+            postal: receiverPostal,
+            phone: receiverPhone
+          },
+          shipment: {
+            weight: `${totalWeight} KG`,
+            pieces: `${totalPackages}/${totalPackages}`,
+            service: 'EXPRESS'
           }
-          const pdfPath = `${labelsDir}/${awbNumber}.pdf`;
-          fs.writeFileSync(pdfPath, pdfBuffer);
-          console.log(`PDF generated and saved at ${pdfPath}`);
-        } catch (error) {
-          console.error(`Error generating PDF for AWB ${awbNumber}:`, error);
+        };
+    
+        // 7. Optionally save addresses
+        let senderSavedAddress;
+        if (saveSenderAddress) {
+          const senderAddress = new Address({
+            contactName: senderContact,
+            company: senderCompany,
+            phoneNumber: senderPhone,
+            email: senderEmail,
+            country: senderCountry,
+            addressLine1: senderAddress1,
+            addressLine2: senderAddress2,
+            addressLine3: senderAddress3,
+            postalCode: senderPostal,
+            city: senderCity,
+            isResidential: senderIsResidential
+          });
+          senderSavedAddress = await senderAddress.save();
         }
+        let receiverSavedAddress;
+        if (saveReceiverAddress) {
+          const receiverAddress = new Address({
+            contactName: receiverContact,
+            company: receiverCompany,
+            phoneNumber: receiverPhone,
+            email: receiverEmail,
+            country: receiverCountry,
+            addressLine1: receiverAddress1,
+            addressLine2: receiverAddress2,
+            addressLine3: receiverAddress3,
+            postalCode: receiverPostal,
+            city: receiverCity,
+            isResidential: receiverIsResidential
+          });
+          receiverSavedAddress = await receiverAddress.save();
+        }
+    
+        // 8. Create shipment record
+        const shipment = new Shipment({
+          awbNumber,
+          shipmentDate,
+          sender: {
+            addressDetails: {
+              contactName: senderContact,
+              company: senderCompany,
+              phoneNumber: senderPhone,
+              email: senderEmail,
+              country: senderCountry,
+              addressLine1: senderAddress1,
+              addressLine2: senderAddress2,
+              addressLine3: senderAddress3,
+              postalCode: senderPostal,
+              city: senderCity,
+              isResidential: senderIsResidential
+            },
+            savedAddress: senderSavedAddress ? senderSavedAddress._id : null
+          },
+          receiver: {
+            addressDetails: {
+              contactName: receiverContact,
+              company: receiverCompany,
+              phoneNumber: receiverPhone,
+              email: receiverEmail,
+              country: receiverCountry,
+              addressLine1: receiverAddress1,
+              addressLine2: receiverAddress2,
+              addressLine3: receiverAddress3,
+              postalCode: receiverPostal,
+              city: receiverCity,
+              isResidential: receiverIsResidential
+            },
+            savedAddress: receiverSavedAddress ? receiverSavedAddress._id : null
+          },
+          packages,
+          totalPackages,
+          totalWeight,
+          timeline: [{
+            location: senderCity,
+            status: 'Created',
+            description: 'Shipment created and AWB generated',
+            updatedBy: 'System'
+          }]
+        });
+        await shipment.save();
+    
+        // 9. Compile the Handlebars template and generate HTML
+        const templatePath = './views/admin/bill.hbs';
+        if (!fs.existsSync(templatePath)) {
+          throw new Error(`Template file not found at: ${templatePath}`);
+        }
+        const templateHtml = fs.readFileSync(templatePath, 'utf8');
+        const compiledTemplate = handlebars.compile(templateHtml);
+        const htmlContent = compiledTemplate(templateData);
+        console.log('Generated HTML:', htmlContent); // Debug log
+    
+        // 10. Launch Puppeteer to generate the PDF synchronously
+        const browser = await puppeteer.launch({
+          args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+        const page = await browser.newPage();
+        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+        // Minimal wait: 300ms (adjust if needed)
+        await new Promise(resolve => setTimeout(resolve, 300));
+        // Optionally wait for fonts (if necessary):
+        // await page.evaluate(() => document.fonts.ready);
+    
+        // Force PDF to exactly 4in x 6in on one page.
+        const pdfBuffer = await page.pdf({
+          width: '4in',
+          height: '6in',
+          printBackground: true,
+          margin: { top: '0in', right: '0in', bottom: '0in', left: '0in' },
+          // If content slightly overflows, try a scale less than 1 (e.g., 0.95).
+          scale: 0.95
+        });
+        await browser.close();
+    
+        // 11. Send the PDF in the HTTP response so the download starts immediately.
+        res.writeHead(200, {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `attachment; filename=shipping_label_${awbNumber}.pdf`,
+          'Content-Length': pdfBuffer.length,
+          'Access-Control-Expose-Headers': 'X-AWB-Number, Content-Disposition',
+          'X-AWB-Number': awbNumber
+        });
+        return res.end(pdfBuffer);
+    
+      } catch (error) {
+        console.error('Error creating shipment:', error);
+        return res.status(500).json({
+          success: false,
+          error: error.message || 'Failed to create shipment'
+        });
       }
-  try {
-    // Generate unique AWB number
-    const awbNumber = 'AWB' + Date.now() + Math.floor(Math.random() * 1000);
-
-    // Extract data from request body
-    const {
-      senderContact, senderCompany, senderPhone, senderEmail,
-      senderCountry, senderAddress1, senderAddress2, senderAddress3,
-      senderPostal, senderCity, senderIsResidential, saveSenderAddress,
-      receiverContact, receiverCompany, receiverPhone, receiverEmail,
-      receiverCountry, receiverAddress1, receiverAddress2, receiverAddress3,
-      receiverPostal, receiverCity, receiverIsResidential, saveReceiverAddress,
-      shipmentDate,
-      packages // Array of package objects
-    } = req.body;
-
-    // Calculate totals
-    const totalPackages = packages.length;
-    const totalWeight = packages.reduce((sum, pkg) => sum + parseFloat(pkg.weight), 0);
-
-    // Generate barcode (Base64 image) with a smaller scale
-    const barcodeBuffer = await new Promise((resolve, reject) => {
-      bwipjs.toBuffer({
-        bcid: 'code128',
-        text: awbNumber,
-        scale: 2,        // reduced scale for smaller size
-        height: 10,
-        includetext: true,
-        textxalign: 'center',
-        backgroundcolor: 'FFFFFF',
-        padding: 5
-      }, (err, png) => {
-        if (err) reject(err);
-        else resolve(png);
-      });
-    });
-    const barcodeBase64 = `data:image/png;base64,${barcodeBuffer.toString('base64')}`;
-
-    // Generate QR code (Base64 image)
-    const qrCodeBase64 = await QRCode.toDataURL(awbNumber, {
-      width: 100,
-      margin: 1,
-      color: {
-        dark: '#000000',
-        light: '#FFFFFF'
+    }
+    
+    
+    ,
+    downloadPdf: (req, res) => {
+      const pdfFile = req.params.pdfFile;
+      const filePath = path.join(__dirname, '../public/labels', pdfFile);
+      if (fs.existsSync(filePath)) {
+        res.download(filePath, pdfFile);
+      } else {
+        res.status(404).send('PDF not ready yet, please try again later.');
       }
-    });
+    },
 
-    // Prepare template data (for PDF generation)
-    const templateData = {
-      date: new Date().toLocaleDateString(),
-      orderId: awbNumber,
-      trackingNumber: awbNumber,
-      barcode: barcodeBase64,
-      qrCode: qrCodeBase64,
-      sender: {
-        company: senderCompany,
-        contact: senderContact,
-        address: `${senderAddress1}${senderAddress2 ? '\n' + senderAddress2 : ''}`,
-        city: senderCity,
-        postal: senderPostal,
-        phone: senderPhone
-      },
-      receiver: {
-        company: receiverCompany,
-        contact: receiverContact,
-        address: `${receiverAddress1}${receiverAddress2 ? '\n' + receiverAddress2 : ''}`,
-        city: receiverCity,
-        postal: receiverPostal,
-        phone: receiverPhone
-      },
-      shipment: {
-        weight: `${totalWeight} KG`,
-        pieces: `${totalPackages}/${totalPackages}`,
-        service: 'EXPRESS'
-      }
-    };
-
-    // Create sender address if save is requested
-    let senderSavedAddress;
-    if (saveSenderAddress) {
-      const senderAddress = new Address({
-        contactName: senderContact,
-        company: senderCompany,
-        phoneNumber: senderPhone,
-        email: senderEmail,
-        country: senderCountry,
-        addressLine1: senderAddress1,
-        addressLine2: senderAddress2,
-        addressLine3: senderAddress3,
-        postalCode: senderPostal,
-        city: senderCity,
-        isResidential: senderIsResidential
-      });
-      senderSavedAddress = await senderAddress.save();
-    }
-
-    // Create receiver address if save is requested
-    let receiverSavedAddress;
-    if (saveReceiverAddress) {
-      const receiverAddress = new Address({
-        contactName: receiverContact,
-        company: receiverCompany,
-        phoneNumber: receiverPhone,
-        email: receiverEmail,
-        country: receiverCountry,
-        addressLine1: receiverAddress1,
-        addressLine2: receiverAddress2,
-        addressLine3: receiverAddress3,
-        postalCode: receiverPostal,
-        city: receiverCity,
-        isResidential: receiverIsResidential
-      });
-      receiverSavedAddress = await receiverAddress.save();
-    }
-
-    // Create new shipment record
-    const shipment = new Shipment({
-      awbNumber,
-      shipmentDate,
-      sender: {
-        addressDetails: {
-          contactName: senderContact,
-          company: senderCompany,
-          phoneNumber: senderPhone,
-          email: senderEmail,
-          country: senderCountry,
-          addressLine1: senderAddress1,
-          addressLine2: senderAddress2,
-          addressLine3: senderAddress3,
-          postalCode: senderPostal,
-          city: senderCity,
-          isResidential: senderIsResidential
-        },
-        savedAddress: senderSavedAddress ? senderSavedAddress._id : null
-      },
-      receiver: {
-        addressDetails: {
-          contactName: receiverContact,
-          company: receiverCompany,
-          phoneNumber: receiverPhone,
-          email: receiverEmail,
-          country: receiverCountry,
-          addressLine1: receiverAddress1,
-          addressLine2: receiverAddress2,
-          addressLine3: receiverAddress3,
-          postalCode: receiverPostal,
-          city: receiverCity,
-          isResidential: receiverIsResidential
-        },
-        savedAddress: receiverSavedAddress ? receiverSavedAddress._id : null
-      },
-      packages,
-      totalPackages,
-      totalWeight,
-      // Initial timeline event
-      timeline: [{
-        location: senderCity,
-        status: 'Created',
-        description: 'Shipment created and AWB generated',
-        updatedBy: 'System'
-      }]
-    });
-    await shipment.save();
-
-    // Trigger PDF generation asynchronously.
-    // (Do not await—this lets the response return quickly.)
-    generateAndSavePdf(awbNumber, templateData);
-
-    // Return a quick response with a download URL.
-    res.status(200).json({
-      success: true,
-      awbNumber,
-      pdfUrl: `/downloadPdf/${awbNumber}`,
-      message: 'Shipment created successfully'
-    });
-  } catch (error) {
-    console.error('Error creating shipment:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message || 'Failed to create shipment'
-    });
-  }
-},
-downloadPdf: async (req, res) => {
-  try {
-    const { awbNumber } = req.params;
-    const pdfPath = `./public/labels/${awbNumber}.pdf`;
-    if (fs.existsSync(pdfPath)) {
-      // This sets headers to force download
-      res.download(pdfPath, `${awbNumber}.pdf`);
-    } else {
-      res.status(404).json({ error: "PDF not found yet. Please try again shortly." });
-    }
-  } catch (error) {
-    console.error('Error downloading PDF:', error);
-    res.status(500).json({ error: "Error downloading PDF" });
-  }
-},
-  // controller/normalAwb.js
 
 
     // Display tracking search page

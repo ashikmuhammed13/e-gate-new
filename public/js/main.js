@@ -205,66 +205,95 @@ class ShipmentForm {
   
     async handleSubmit(event) {
         event.preventDefault();
-  
+      
         if (!this.validateForm()) {
             this.showError('Please fill in all required fields');
             return;
         }
-  
+      
         try {
-            const formData = {
-                senderContact: document.querySelector('input[name="senderContact"]').value,
-                senderCompany: document.querySelector('input[name="senderCompany"]').value,
-                senderPhone: document.querySelector('input[name="senderPhone"]').value,
-                senderEmail: document.querySelector('input[name="senderEmail"]').value,
-                senderCountry: document.querySelector('input[name="senderCountry"]').value,
-                senderAddress1: document.querySelector('input[name="senderAddress1"]').value,
-                senderAddress2: document.querySelector('input[name="senderAddress2"]').value,
-                senderAddress3: document.querySelector('input[name="senderAddress3"]').value,
-                senderPostal: document.querySelector('input[name="senderPostal"]').value,
-                senderCity: document.querySelector('input[name="senderCity"]').value,
-                senderIsResidential: document.querySelector('input[name="senderIsResidential"]')?.checked || false,
-  
-                receiverContact: document.querySelector('input[name="receiverContact"]').value,
-                receiverCompany: document.querySelector('input[name="receiverCompany"]').value,
-                receiverPhone: document.querySelector('input[name="receiverPhone"]').value,
-                receiverEmail: document.querySelector('input[name="receiverEmail"]').value,
-                receiverCountry: document.querySelector('input[name="receiverCountry"]').value,
-                receiverAddress1: document.querySelector('input[name="receiverAddress1"]').value,
-                receiverAddress2: document.querySelector('input[name="receiverAddress2"]').value,
-                receiverAddress3: document.querySelector('input[name="receiverAddress3"]').value,
-                receiverPostal: document.querySelector('input[name="receiverPostal"]').value,
-                receiverCity: document.querySelector('input[name="receiverCity"]').value,
-                receiverIsResidential: document.querySelector('input[name="receiverIsResidential"]')?.checked || false,
-  
-                shipmentDate: document.getElementById('shipmentDate').value,
-                saveSenderAddress: document.getElementById('senderSaveAddressCheck').checked,
-                saveReceiverAddress: document.getElementById('receiverSaveAddressCheck').checked,
-                packages: this.getPackagesData()
-            };
-  
-            console.log('Submitting form data:', formData);
-  
-            const response = await fetch('/admin/createAwb', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-  
-            const result = await response.json();
-            if (result.success) {
-                this.showSuccess(`Airway Bill created successfully. AWB Number: ${result.awbNumber}`);
-                this.resetForm();
-            } else {
-                this.showError(result.error || 'Failed to create Airway Bill');
+          const formData = {
+            senderContact: document.querySelector('input[name="senderContact"]').value,
+            senderCompany: document.querySelector('input[name="senderCompany"]').value,
+            senderPhone: document.querySelector('input[name="senderPhone"]').value,
+            senderEmail: document.querySelector('input[name="senderEmail"]').value,
+            senderCountry: document.querySelector('input[name="senderCountry"]').value,
+            senderAddress1: document.querySelector('input[name="senderAddress1"]').value,
+            senderAddress2: document.querySelector('input[name="senderAddress2"]').value,
+            senderAddress3: document.querySelector('input[name="senderAddress3"]').value,
+            senderPostal: document.querySelector('input[name="senderPostal"]').value,
+            senderCity: document.querySelector('input[name="senderCity"]').value,
+            senderIsResidential: document.querySelector('input[name="senderIsResidential"]')?.checked || false,
+      
+            receiverContact: document.querySelector('input[name="receiverContact"]').value,
+            receiverCompany: document.querySelector('input[name="receiverCompany"]').value,
+            receiverPhone: document.querySelector('input[name="receiverPhone"]').value,
+            receiverEmail: document.querySelector('input[name="receiverEmail"]').value,
+            receiverCountry: document.querySelector('input[name="receiverCountry"]').value,
+            receiverAddress1: document.querySelector('input[name="receiverAddress1"]').value,
+            receiverAddress2: document.querySelector('input[name="receiverAddress2"]').value,
+            receiverAddress3: document.querySelector('input[name="receiverAddress3"]').value,
+            receiverPostal: document.querySelector('input[name="receiverPostal"]').value,
+            receiverCity: document.querySelector('input[name="receiverCity"]').value,
+            receiverIsResidential: document.querySelector('input[name="receiverIsResidential"]')?.checked || false,
+      
+            shipmentDate: document.getElementById('shipmentDate').value,
+            saveSenderAddress: document.getElementById('senderSaveAddressCheck').checked,
+            saveReceiverAddress: document.getElementById('receiverSaveAddressCheck').checked,
+            packages: this.getPackagesData()
+          };
+      
+          console.log('Submitting form data:', formData);
+
+          const response = await fetch('/admin/createAwb', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+      
+          if (!response.ok) {
+            const errorText = await response.text();
+            this.showError(errorText || 'Failed to create Airway Bill');
+            return;
+          }
+      
+          // Get AWB number from custom header (if desired)
+          const awbNumber = response.headers.get('X-AWB-Number') || 'N/A';
+      
+          // Convert response to a Blob (PDF file)
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+      
+          // Create a temporary download link and trigger the download
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          
+          // Extract filename from headers if available
+          let fileName = 'shipping_label.pdf';
+          const disposition = response.headers.get('Content-Disposition');
+          if (disposition && disposition.indexOf('filename=') !== -1) {
+            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) {
+              fileName = matches[1].replace(/['"]/g, '');
             }
+          }
+          a.download = fileName;
+          
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+      
+          this.showSuccess(`Airway Bill created successfully. AWB Number: ${awbNumber}`);
+          this.resetForm();
         } catch (error) {
-            console.error('Form submission error:', error);
-            this.showError('An error occurred while creating the Airway Bill');
+          console.error('Form submission error:', error);
+          this.showError('An error occurred while creating the Airway Bill');
         }
-    }
+      }
+      
   
     validateForm() {
         const requiredFields = document.querySelectorAll('[required]');

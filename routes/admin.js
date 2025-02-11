@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const upload = require ("../helper/multer")
+const NodeCache = require('node-cache');
+const cache = new NodeCache();
+const fileStorage = require('../utils/fileStorage');
 const normalAwb = require('../controller/normalAwb')
 const sessionAuth = require('../middlewares/sessionAuth')
 const { 
@@ -157,6 +160,8 @@ router.get('/getSavedAddresses', normalAwb.getSavedAddresses);
 router.get("/airlines",getAllAirlines)
 router.post('/add-airline', upload.single('airlineImage'), addAirline);
 router.get("/getawb",getawb)
+router.get('/downloadPdf/:pdfFile',normalAwb.downloadPdf);
+  
 
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {

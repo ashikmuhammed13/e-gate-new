@@ -201,44 +201,47 @@
     </style>
 </head>
 <body>
+    
     <div class="label-container">
         <div class="header">
             <div class="logo-section">EXPRESS</div>
             <div class="header-right">
-                <div>21/01/2024</div>
-                <div>PRIORITY</div>
-            </div>
+  <div>{{date}}</div>
+  <div>{{priority}}</div>
+</div>
+
         </div>
 
-        <div class="tracking-block">
-            <div class="order-id">ORDER ID: 2401210123-456</div>
-            <div class="tracking-number">TRK-123456789</div>
-        </div>
+       <div class="tracking-block">
+    <div class="order-id">ORDER ID: {{orderId}}</div>
+    <div class="tracking-number">{{trackingNumber}}</div>
+</div>
+
 
         <img src="{{{barcode}}}" alt="Barcode" style="max-width:95%; max-height:70px;" />
 
 
         <div class="address-section">
-            <div class="address-block">
-                <div class="address-label">From</div>
-                <div class="address-content">
-                    SENDER COMPANY NAME<br>
-                    123 SENDER STREET<br>
-                    SENDER CITY, STATE 12345<br>
-                    TEL: (123) 456-7890
-                </div>
-            </div>
-            <div class="address-block">
-                <div class="address-label">To</div>
-                <div class="address-content">
-                    RECIPIENT NAME<br>
-                    456 RECIPIENT AVENUE<br>
-                    BUILDING 4, SUITE 789<br>
-                    RECIPIENT CITY, STATE 67890<br>
-                    TEL: (098) 765-4321
-                </div>
-            </div>
-        </div>
+  <div class="address-block">
+      <div class="address-label">From</div>
+      <div class="address-content">
+          {{sender.company}}<br>
+          {{sender.address}}<br>
+          {{sender.city}}, {{sender.postal}}<br>
+          TEL: {{sender.phone}}
+      </div>
+  </div>
+  <div class="address-block">
+      <div class="address-label">To</div>
+      <div class="address-content">
+          {{receiver.company}}<br>
+          {{receiver.address}}<br>
+          {{receiver.city}}, {{receiver.postal}}<br>
+          TEL: {{receiver.phone}}
+      </div>
+  </div>
+</div>
+
 
         <div class="info-grid">
             <div class="qr-section">
@@ -246,36 +249,27 @@
 </div>
 
             <div class="shipment-details">
-                <div class="detail-row">
-                    <span class="bold-text">WEIGHT:</span>
-                    <span>2.5 KG</span>
-                </div>
-                <div class="detail-row">
-                    <span class="bold-text">PIECES:</span>
-                    <span>1/1</span>
-                </div>
-                <div class="detail-row">
-                    <span class="bold-text">SERVICE:</span>
-                    <span>EXPRESS</span>
-                </div>
-                <div class="detail-row">
-                    <span class="bold-text">COD:</span>
-                    <span>$150.00</span>
-                </div>
-            </div>
+  <div class="detail-row">
+      <span class="bold-text">WEIGHT:</span>
+      <span>{{shipment.weight}}</span>
+  </div>
+  <div class="detail-row">
+      <span class="bold-text">PIECES:</span>
+      <span>{{shipment.pieces}}</span>
+  </div>
+  <div class="detail-row">
+      <span class="bold-text">SERVICE:</span>
+      <span>{{shipment.service}}</span>
+  </div>
+  <div class="detail-row">
+      <span class="bold-text">COD:</span>
+      <span>{{shipment.cod}}</span>
+  </div>
+</div>
+
         </div>
 
-        <div class="footer">
-            <div class="reference">REF: 123-456-789</div>
-            <div>PAGE 1/1</div>
-        </div>
-
-        <div class="delivery-grid">
-            <div class="delivery-cell">1st Attempt</div>
-            <div class="delivery-cell">2nd Attempt</div>
-            <div class="delivery-cell">3rd Attempt</div>
-            <div class="delivery-cell">Return</div>
-        </div>
+        
     </div>
 </body>
 </html>
