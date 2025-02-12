@@ -247,18 +247,19 @@ module.exports = {
       
         const execPath = process.env.PUPPETEER_EXECUTABLE_PATH
         ? process.env.PUPPETEER_EXECUTABLE_PATH.trim()
-        : '/usr/bin/chromium'; // Adjust this path as needed
+        : '/usr/bin/chromium';
       
       const browser = await puppeteer.launch({
         executablePath: execPath,
         headless: true,
-        timeout: 60000, // Increase timeout to 60 seconds
+        timeout: 60000, // increase timeout if needed
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage'
         ]
       });
+      
       
       
         
