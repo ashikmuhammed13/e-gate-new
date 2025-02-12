@@ -241,16 +241,25 @@ module.exports = {
         const templateHtml = fs.readFileSync(templatePath, 'utf8');
         const compiledTemplate = handlebars.compile(templateHtml);
         const htmlContent = compiledTemplate(templateData);
-        console.log('Generated HTML:', htmlContent); // Debug log
+
     
+   
+      
         const execPath = process.env.PUPPETEER_EXECUTABLE_PATH
         ? process.env.PUPPETEER_EXECUTABLE_PATH.trim()
-        : '/usr/bin/chromium';
+        : '/usr/bin/chromium'; // Adjust this path as needed
       
       const browser = await puppeteer.launch({
         executablePath: execPath,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        headless: true,
+        timeout: 60000, // Increase timeout to 60 seconds
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage'
+        ]
       });
+      
       
         
         const page = await browser.newPage();
