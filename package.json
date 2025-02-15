@@ -36,7 +36,7 @@
     "otp-generator": "^4.0.1",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.16.0",
-    "puppeteer": "^24.1.0",
+    "puppeteer": "^24.2.0",
     "qrcode": "^1.5.4"
   }
 }

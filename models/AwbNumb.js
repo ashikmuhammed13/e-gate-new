@@ -15,8 +15,7 @@ const awbSchema = new mongoose.Schema({
   },
   prefix: {
     type: String,
-    required: true,
-    unique: true
+    required: true
 },
   origin: {
     type: String,

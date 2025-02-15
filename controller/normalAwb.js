@@ -234,62 +234,47 @@ module.exports = {
         await shipment.save();
     
         // 9. Compile the Handlebars template and generate HTML
-        const templatePath = './views/admin/bill.hbs';
-        if (!fs.existsSync(templatePath)) {
-          throw new Error(`Template file not found at: ${templatePath}`);
-        }
-        const templateHtml = fs.readFileSync(templatePath, 'utf8');
-        const compiledTemplate = handlebars.compile(templateHtml);
-        const htmlContent = compiledTemplate(templateData);
+       // 5. Compile the Handlebars template and generate HTML
+    const templatePath = './views/admin/bill.hbs';
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Template file not found at: ${templatePath}`);
+    }
+    const templateHtml = fs.readFileSync(templatePath, 'utf8');
+    const compiledTemplate = handlebars.compile(templateHtml);
+    const htmlContent = compiledTemplate(templateData);
+    console.log('Generated HTML:', htmlContent);
 
-    
-   
-      
-        const execPath = process.env.PUPPETEER_EXECUTABLE_PATH
-        ? process.env.PUPPETEER_EXECUTABLE_PATH.trim()
-        : '/usr/bin/chromium';
-      
-      const browser = await puppeteer.launch({
-        executablePath: execPath,
-        headless: true,
-        timeout: 60000, // increase timeout if needed
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage'
-        ]
-      });
-      
-      
-      
-        
-        const page = await browser.newPage();
-        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
-        // Minimal wait: 300ms (adjust if needed)
-        await new Promise(resolve => setTimeout(resolve, 300));
-        // Optionally wait for fonts (if necessary):
-        // await page.evaluate(() => document.fonts.ready);
-    
-        // Force PDF to exactly 4in x 6in on one page.
-        const pdfBuffer = await page.pdf({
-          width: '4in',
-          height: '6in',
-          printBackground: true,
-          margin: { top: '0in', right: '0in', bottom: '0in', left: '0in' },
-          // If content slightly overflows, try a scale less than 1 (e.g., 0.95).
-          scale: 0.95
-        });
-        await browser.close();
-    
-        // 11. Send the PDF in the HTTP response so the download starts immediately.
-        res.writeHead(200, {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename=shipping_label_${awbNumber}.pdf`,
-          'Content-Length': pdfBuffer.length,
-          'Access-Control-Expose-Headers': 'X-AWB-Number, Content-Disposition',
-          'X-AWB-Number': awbNumber
-        });
-        return res.end(pdfBuffer);
+    // 6. Launch Puppeteer to generate the PDF synchronously
+    // Use your existing Puppeteer launch (adjust flags as needed)
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+    });
+    const page = await browser.newPage();
+    // Use a faster waitUntil option:
+    await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
+    // Reduce additional waiting time
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
+    // Force a single 4in x 6in page with a slightly reduced scale
+    const pdfBuffer = await page.pdf({
+      width: '4in',
+      height: '6in',
+      printBackground: true,
+      margin: { top: '0in', right: '0in', bottom: '0in', left: '0in' },
+      scale: 0.9
+    });
+    await browser.close();
+
+    // 7. Send the PDF so the download starts immediately
+    res.writeHead(200, {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=shipping_label_${awbNumber}.pdf`,
+      'Content-Length': pdfBuffer.length,
+      'Access-Control-Expose-Headers': 'X-AWB-Number, Content-Disposition',
+      'X-AWB-Number': awbNumber
+    });
+    return res.end(pdfBuffer);
+
     
       } catch (error) {
         console.error('Error creating shipment:', error);
@@ -618,6 +603,7 @@ getHawb :async (req, res) => {
 generateHawb:async (req, res) => {
     try {
         const {
+          mawbNumber,
             awbNumber,
             shipperName,
             consigneeName,
@@ -656,6 +642,7 @@ generateHawb:async (req, res) => {
         ) {
             return res.status(400).send('Missing required fields');
         }
+        console.log("mawbNumber:",mawbNumber)
         // Path to the template PDF
         const templatePath = path.join(global.appRoot, 'controller', 'templates', 'MAWB_Template.pdf');
 
@@ -727,7 +714,7 @@ generateHawb:async (req, res) => {
         drawText(consigneeName, 63, 670); // Consignee Address
         drawText(`${signature}`, 64, 605);
 // Carrier and Transport Details
-drawText(`${awbNumber}`, 63, 780);
+drawText(`${mawbNumber}`, 63, 780);
 drawText(`${awbNumber}`, 500, 780);
 drawText( `${iataCode}`, 63, 560);
 drawText(`${carrierCode}`, 90, 515, { size: 8 }); // Aligned with DXB

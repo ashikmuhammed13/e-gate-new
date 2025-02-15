@@ -189,101 +189,101 @@ const addAdmin = async (req, res) => {
 
 
     
-    addAwb = async (req, res) => {
-        try {
-          const { awbNumber, awbType, origin, destination, carrier, status, notes,prefix } = req.body;
-      console.log(req.body)
-          // Check if the AWB number already exists and has been used
-          const existingAwb = await AWB.findOne({ awbNumber });
-          if (existingAwb) {
-            if (existingAwb.used) {
-              return res.status(400).send("This AWB number has already been used and cannot be reused.");
-            } else {
-              return res.status(400).send("This AWB number already exists.");
-            }
-          }
-      
-          // Create a new AWB document
-          const newAwb = new AWB({
-            awbNumber,
-            awbType,
-            origin,
-            destination,
-            carrier,
-            status,
-            prefix,
-            notes,
-          });
-      
-          await newAwb.save();
-          const awbs = await AWB.find({ prefix }).lean(); 
-          res.render("admin/awb", { awbs, prefix });
-
-        } catch (error) {
-          console.error("Error adding AWB:", error);
-          res.status(500).send("Internal Server Error");
+  addAwb = async (req, res) => {
+    try {
+      const { awbNumber, awbType, origin, destination, carrier, status, notes,prefix } = req.body;
+  console.log(req.body)
+      // Check if the AWB number already exists and has been used
+      const existingAwb = await AWB.findOne({ awbNumber });
+      if (existingAwb) {
+        if (existingAwb.used) {
+          return res.status(400).send("This AWB number has already been used and cannot be reused.");
+        } else {
+          return res.status(400).send("This AWB number already exists.");
         }
+      }
+  
+      // Create a new AWB document
+      const newAwb = new AWB({
+        awbNumber,
+        awbType,
+        origin,
+        destination,
+        carrier,
+        status,
+        prefix,
+        notes,
+      });
+  
+      await newAwb.save();
+      const awbs = await AWB.find({ prefix }).lean(); 
+      res.render("admin/awb", { awbs, prefix });
+
+    } catch (error) {
+      console.error("Error adding AWB:", error);
+      res.status(500).send("Internal Server Error");
+    }
 }
 
 const getAllAirlines = async (req, res) => {
-    try {
-      const airlines = await Airlines.find(); // Fetch all airlines from the database
-      res.render('admin/airlines', { airlines });
-    } catch (error) {
-      console.error('Error fetching airlines:', error);
-      res.status(500).send('Internal Server Error');
+try {
+  const airlines = await Airlines.find(); // Fetch all airlines from the database
+  res.render('admin/airlines', { airlines });
+} catch (error) {
+  console.error('Error fetching airlines:', error);
+  res.status(500).send('Internal Server Error');
+}
+};
+addAirline = async (req, res) => {
+try {
+    let { airlineName, prefix } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+
+    // Prevent saving if airlineName is missing
+    if (!airlineName || !prefix) {
+        return res.status(400).send('Airline Name and Prefix are required.');
     }
-  };
-  addAirline = async (req, res) => {
-    try {
-        let { airlineName, prefix } = req.body;
-        const image = req.file ? `/uploads/${req.file.filename}` : null;
 
-        // Prevent saving if airlineName is missing
-        if (!airlineName || !prefix) {
-            return res.status(400).send('Airline Name and Prefix are required.');
-        }
+    // Trim whitespace
+    airlineName = airlineName.trim();
+    prefix = prefix.trim();
 
-        // Trim whitespace
-        airlineName = airlineName.trim();
-        prefix = prefix.trim();
+    // Check if airlineName or prefix already exists
+    const existingAirline = await Airlines.findOne({
+        $or: [{ airlineName }, { prefix }]
+    });
 
-        // Check if airlineName or prefix already exists
-        const existingAirline = await Airlines.findOne({
-            $or: [{ airlineName }, { prefix }]
-        });
-
-        if (existingAirline) {
-            return res.status(400).send('Airline Name or Prefix already exists.');
-        }
-
-        const newAirline = new Airlines({
-            airlineName,
-            prefix,
-            image
-        });
-
-        await newAirline.save();
-        res.redirect('/admin/airlines'); // Redirect after successful creation
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error saving airline');
+    if (existingAirline) {
+        return res.status(400).send('Airline Name or Prefix already exists.');
     }
+
+    const newAirline = new Airlines({
+        airlineName,
+        prefix,
+        image
+    });
+
+    await newAirline.save();
+    res.redirect('/admin/airlines'); // Redirect after successful creation
+} catch (err) {
+    console.error(err);
+    res.status(500).send('Error saving airline');
+}
 };
 
 getawb= async (req, res) => {
-    try {
-        const { prefix } = req.query;
-        if (!prefix) return res.status(400).send("Prefix is required");
+try {
+    const { prefix } = req.query;
+    if (!prefix) return res.status(400).send("Prefix is required");
 
-        const awbs = await AWB.find({ prefix }).lean(); // Fetch AWBs with the given prefix
-        const airlines = await Airlines.findOne({ prefix }).lean(); // Fetch only one airline
+    const awbs = await AWB.find({ prefix }).lean(); // Fetch AWBs with the given prefix
+    const airlines = await Airlines.findOne({ prefix }).lean(); // Fetch only one airline
 
-        res.render("admin/awb", { awbs, prefix ,airlines}); // Render the AWB numbers page
-    } catch (error) {
-        console.error("Error fetching AWBs:", error);
-        res.status(500).send("Internal Server Error");
-    }
+    res.render("admin/awb", { awbs, prefix ,airlines}); // Render the AWB numbers page
+} catch (error) {
+    console.error("Error fetching AWBs:", error);
+    res.status(500).send("Internal Server Error");
+}
 }
 
 

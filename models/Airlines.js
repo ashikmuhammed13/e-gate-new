@@ -10,7 +10,7 @@ const airlineSchema = new mongoose.Schema({
     prefix: {
         type: String,
         required: true,
-        unique: true
+      
     },
     createdAt: {
         type: Date,

@@ -336,10 +336,7 @@ margin-left: var(--sidebar-width);
                     <i class="bi bi-files"></i>
                     Create AWB
                 </a>
-                 <a href="/admin/hawb" class="nav-link ">
-                    <i class="bi bi-file-text"></i> 
-                    House AWB
-                </a>
+                 
                 <a href="/admin/mawb" class="nav-link active-nav-link">
                     <i class="bi bi-file-earmark-break"></i> 
                     Master AWB
@@ -353,14 +350,15 @@ margin-left: var(--sidebar-width);
                     <i class="bi bi-boxes"></i>
                     All Shipments
                 </a>
+                  <a href="/admin/airlines" class="nav-link">
+            <i class="bi bi-cloud"></i>
+            Airlines
+        </a>
                 <a href="/admin/profile"class="nav-link">
                     <i class="bi bi-gear"></i>
                     Admin Profile
                 </a>
-                 <a href="/admin/airlines" class="nav-link">
-            <i class="bi bi-cloud"></i>
-            Airlines
-        </a>
+               
             </div>
         </nav>
     <div class="main-container">
@@ -601,6 +599,12 @@ margin-left: var(--sidebar-width);
                     </button>
                 </div>
             </form>
+
+             <!-- Hidden HAWB Button -->
+    <div id="hawbButtonContainer" style="display: none; text-align: center; margin-top: 20px;">
+      <!-- The href will be updated with the selected AWB number -->
+      <a id="createHawbBtn" class="btn btn-secondary" href="#">Generate HAWB</a>
+    </div>
         </div>
     </div>
     </div>
@@ -608,66 +612,72 @@ margin-left: var(--sidebar-width);
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    <script>
-        // Form validation and interaction enhancements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Form validation
-            const form = document.getElementById('mawbForm');
-            
-            form.addEventListener('submit', function(event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            });
-
-            // Add floating labels behavior
-            const inputs = document.querySelectorAll('.form-control, .form-select');
-            inputs.forEach(input => {
-                input.addEventListener('focus', () => {
-                    input.parentElement.classList.add('focused');
-                });
-                input.addEventListener('blur', () => {
-                    if (!input.value) {
-                        input.parentElement.classList.remove('focused');
-                    }
-                });
-            });
-        });
-
-          document.addEventListener('DOMContentLoaded', function () {
-        const airlineSelect = document.getElementById('airlineSelect');
-        const awbNumberContainer = document.getElementById('awbNumberContainer');
-        const awbNumberSelect = document.getElementById('awbNumberSelect');
-
-        // Fetch AWB data from the server (data is embedded in Handlebars)
-        const awbNumbers = JSON.parse('{{{json awbNumbers}}}'); 
-
-        airlineSelect.addEventListener('change', function () {
-            const selectedPrefix = this.value;
-
-            // Clear previous AWB numbers
-            awbNumberSelect.innerHTML = '<option value="" selected disabled>Select AWB Number</option>';
-
-            if (selectedPrefix) {
-                // Show AWB container
-                awbNumberContainer.style.display = 'block';
-
-                // Filter and populate AWB numbers based on selected airline prefix
-                awbNumbers.forEach(awb => {
-                    if (awb.prefix === selectedPrefix) {
-                        const option = document.createElement('option');
-                        option.value = awb.awbNumber;
-                        option.textContent = awb.awbNumber;
-                        awbNumberSelect.appendChild(option);
-                    }
-                });
-            } else {
-                awbNumberContainer.style.display = 'none';
-            }
-        });
+   <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Form validation and floating labels
+    const form = document.getElementById('mawbForm');
+    form.addEventListener('submit', function(event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
     });
-    </script>
+    const inputs = document.querySelectorAll('.form-control, .form-select');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        input.parentElement.classList.add('focused');
+      });
+      input.addEventListener('blur', () => {
+        if (!input.value) {
+          input.parentElement.classList.remove('focused');
+        }
+      });
+    });
+
+    // Populate AWB numbers based on selected airline prefix
+    const airlineSelect = document.getElementById('airlineSelect');
+    const awbNumberContainer = document.getElementById('awbNumberContainer');
+    const awbNumberSelect = document.getElementById('awbNumberSelect');
+    const hawbButtonContainer = document.getElementById('hawbButtonContainer');
+    const createHawbBtn = document.getElementById('createHawbBtn');
+
+    // AWB data is passed from the server as a JSON string using Handlebars
+    const awbNumbers = JSON.parse('{{{json awbNumbers}}}');
+
+    airlineSelect.addEventListener('change', function () {
+      const selectedPrefix = this.value;
+      awbNumberSelect.innerHTML = '<option value="" selected disabled>Select AWB Number</option>';
+      if (selectedPrefix) {
+        awbNumberContainer.style.display = 'block';
+        // Filter and populate AWB numbers based on the selected airline prefix
+        awbNumbers.forEach(awb => {
+          if (awb.prefix === selectedPrefix) {
+            const option = document.createElement('option');
+            option.value = awb.awbNumber;
+            option.textContent = awb.awbNumber;
+            awbNumberSelect.appendChild(option);
+          }
+        });
+      } else {
+        awbNumberContainer.style.display = 'none';
+      }
+      // Hide the HAWB button until an AWB number is selected
+      hawbButtonContainer.style.display = 'none';
+    });
+
+    // When an AWB number is selected, update the HAWB link and reveal the hidden button
+    awbNumberSelect.addEventListener('change', function () {
+      const selectedAwb = this.value;
+      if (selectedAwb) {
+        // Update the HAWB link with the selected MAWB (AWB) number as a query parameter.
+        createHawbBtn.href = "/admin/hawb?mawbNumber=" + encodeURIComponent(selectedAwb);
+        hawbButtonContainer.style.display = 'block';
+      } else {
+        hawbButtonContainer.style.display = 'none';
+      }
+    });
+  });
+</script>
 </body>
 </html>

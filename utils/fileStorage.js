@@ -1,4 +1,5 @@
-const puppeteer = require('puppeteer-core'); // or if using puppeteer-core
+const puppeteer = require('puppeteer'); // instead of puppeteer-core
+
 
 (async () => {
   try {
