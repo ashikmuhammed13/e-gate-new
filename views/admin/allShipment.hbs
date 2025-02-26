@@ -252,6 +252,120 @@
             background: #34495e;
             color: #3498db !important;
         }
+
+.stat-card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 0.35rem 0.65rem;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.status-delivered {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-in-transit {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.status-exception {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+/* Table styling */
+.table thead th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+}
+
+.table tbody td {
+    vertical-align: middle;
+}
+
+/* Filter section */
+#filterCollapse {
+    transition: all 0.3s ease;
+}
+
+.input-group-text {
+    background-color: transparent;
+}
+
+.input-group .form-control:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+}
+
+.input-group:focus-within {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-radius: 0.375rem;
+}
+
+/* Better button styling */
+.btn-outline-primary, .btn-outline-secondary, .btn-outline-danger {
+    font-weight: 500;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Actions alignment */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+/* Container padding */
+.container-fluid {
+    padding: 2rem;
+}
+
+/* Card shadows and borders */
+.card {
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+/* Animation for filter collapse */
+.collapse {
+    transition: all 0.3s ease;
+}
     </style>
 </head>
 <body>
@@ -321,100 +435,174 @@
                 </div>
             </nav>
 
-            <div class="dashboard-stats">
-                <div class="row g-4">
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background: #e3f2fd;">
-                                <i class="bi bi-box-seam text-primary fs-4"></i>
-                            </div>
-                            <h3 class="fs-2 fw-bold">{{stats.total}}</h3>
-                            <p class="text-muted mb-0">Total Shipments</p>
-                        </div>
+  <div class="dashboard-stats">
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e3f2fd;">
+                        <i class="bi bi-box-seam text-primary fs-4"></i>
                     </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background: #e8f5e9;">
-                                <i class="bi bi-check-circle text-success fs-4"></i>
-                            </div>
-                            <h3 class="fs-2 fw-bold">{{stats.delivered}}</h3>
-                            <p class="text-muted mb-0">Delivered</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background: #fff3e0;">
-                                <i class="bi bi-truck text-warning fs-4"></i>
-                            </div>
-                            <h3 class="fs-2 fw-bold">{{stats.inTransit}}</h3>
-                            <p class="text-muted mb-0">In Transit</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background: #ffebee;">
-                                <i class="bi bi-exclamation-circle text-danger fs-4"></i>
-                            </div>
-                            <h3 class="fs-2 fw-bold">{{stats.exceptions}}</h3>
-                            <p class="text-muted mb-0">Exceptions</p>
-                        </div>
-                    </div>
+                    <h3 class="fs-2 fw-bold">{{stats.total}}</h3>
+                    <p class="text-muted mb-0">Total Shipments</p>
                 </div>
             </div>
-            
-            {{!-- Shipments Table --}}
-            <div class="shipment-table">
-                <div class="table-header">
-                    <h4>All Shipments</h4>
-                    <div class="filter-section">
-                        <input type="text" class="form-control" placeholder="Search shipments...">
-                        <button class="btn btn-outline-primary">
-                            <i class="bi bi-funnel"></i> Filter
-                        </button>
-                        <button class="btn btn-outline-secondary">
-                            <i class="bi bi-download"></i> Export
-                        </button>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e8f5e9;">
+                        <i class="bi bi-check-circle text-success fs-4"></i>
                     </div>
+                    <h3 class="fs-2 fw-bold">{{stats.delivered}}</h3>
+                    <p class="text-muted mb-0">Delivered</p>
                 </div>
-            
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0;">
+                        <i class="bi bi-truck text-warning fs-4"></i>
+                    </div>
+                    <h3 class="fs-2 fw-bold">{{stats.inTransit}}</h3>
+                    <p class="text-muted mb-0">In Transit</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #ffebee;">
+                        <i class="bi bi-exclamation-circle text-danger fs-4"></i>
+                    </div>
+                    <h3 class="fs-2 fw-bold">{{stats.exceptions}}</h3>
+                    <p class="text-muted mb-0">Exceptions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipments Table -->
+    <div class="shipment-table mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold text-dark mb-0">All Shipments</h4>
+            <button class="btn btn-md btn-outline-primary" type="button" data-bs-toggle="collapse" 
+                    data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+                <i class="bi bi-funnel"></i> Filters & Search
+            </button>
+        </div>
+
+        <div class="collapse mb-4" id="filterCollapse">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body bg-light rounded">
+                    <form id="filterForm" action="/admin/getShipment" method="GET">
+                        <div class="row g-3">
+                            <!-- Search Input -->
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="bi bi-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0" id="searchInput" name="search" 
+                                           placeholder="Search by AWB, sender, recipient, location..." value="{{filters.search}}">
+                                </div>
+                            </div>
+                            
+                            <!-- Status Filter -->
+                            <div class="col-md-3">
+                                <select class="form-select" id="statusFilter" name="status">
+                                    <option value="All" {{#if (eq filters.status 'All')}}selected{{/if}}>All Status</option>
+                                    <option value="Created" {{#if (eq filters.status 'Created')}}selected{{/if}}>Created</option>
+                                    <option value="Pickup Scheduled" {{#if (eq filters.status 'Pickup Scheduled')}}selected{{/if}}>Pickup Scheduled</option>
+                                    <option value="Picked Up" {{#if (eq filters.status 'Picked Up')}}selected{{/if}}>Picked Up</option>
+                                    <option value="In Transit" {{#if (eq filters.status 'In Transit')}}selected{{/if}}>In Transit</option>
+                                    <option value="Out for Delivery" {{#if (eq filters.status 'Out for Delivery')}}selected{{/if}}>Out for Delivery</option>
+                                    <option value="Delivered" {{#if (eq filters.status 'Delivered')}}selected{{/if}}>Delivered</option>
+                                    <option value="Failed Delivery" {{#if (eq filters.status 'Failed Delivery')}}selected{{/if}}>Failed Delivery</option>
+                                    <option value="Cancelled" {{#if (eq filters.status 'Cancelled')}}selected{{/if}}>Cancelled</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="col-md-3 d-flex">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="bi bi-search"></i> Search
+                                </button>
+                                <button type="button" id="resetFilters" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-3">
+                        
+                        <!-- Date Range Filters -->
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="startDate" class="form-label small text-muted">From Date</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="bi bi-calendar3 text-muted"></i>
+                                    </span>
+                                    <input type="date" class="form-control border-start-0" id="startDate" name="startDate" value="{{filters.startDate}}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="endDate" class="form-label small text-muted">To Date</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="bi bi-calendar3 text-muted"></i>
+                                    </span>
+                                    <input type="date" class="form-control border-start-0" id="endDate" name="endDate" value="{{filters.endDate}}">
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="button" id="exportBtn" class="btn btn-success w-100">
+                                    <i class="bi bi-file-earmark-excel"></i> Export to CSV
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipments Table -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table">
-                        <thead>
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
                             <tr>
-                                <th>AWB Number</th>
-                                <th>Status</th>
-                                <th>Sender</th>
-                                <th>Recipient</th>
-                                <th>Current Location</th>
-                                <th>Last Update</th>
-                                <th>Actions</th>
+                                <th class="border-0 px-4 py-3">AWB Number</th>
+                                <th class="border-0 px-4 py-3">Status</th>
+                                <th class="border-0 px-4 py-3">Sender</th>
+                                <th class="border-0 px-4 py-3">Recipient</th>
+                                <th class="border-0 px-4 py-3">Current Location</th>
+                                <th class="border-0 px-4 py-3">Last Update</th>
+                                <th class="border-0 px-4 py-3 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#each shipments}}
                             <tr>
-                                <td>{{this.awbNumber}}</td>
-                                <td>
+                                <td class="px-4 py-3 fw-bold">{{this.awbNumber}}</td>
+                                <td class="px-4 py-3">
                                     <span class="status-badge {{statusBadgeClass this.status}}">
                                         {{this.status}}
                                     </span>
                                 </td>
-                                <td>{{this.sender.addressDetails.contactName}}</td>
-                                <td>{{this.receiver.addressDetails.contactName}}</td>
-                                <td class="location-cell">
-                                    {{#if this.timeline.length}}
+                                <td class="px-4 py-3">{{this.sender.addressDetails.contactName}}</td>
+                                <td class="px-4 py-3">{{this.receiver.addressDetails.contactName}}</td>
+                                <td class="px-4 py-3">
+                                    {{#if this.currentLocation}}
+                                        {{this.currentLocation}}
+                                    {{else if this.timeline.length}}
                                         {{lookup (last this.timeline) 'location'}}
                                     {{else}}
                                         N/A
                                     {{/if}}
                                 </td>
-                                <td>{{formatDate this.updatedAt}}</td>
-                                <td>
+                                <td class="px-4 py-3">{{formatDate this.updatedAt}}</td>
+                                <td class="px-4 py-3 text-center">
                                     <div class="action-buttons">
-                                        <button class="btn btn-sm btn-outline-primary me-1" 
-                                                onclick="editShipment('{{this._id}}')">
+                                        <a href="/admin/shipments/{{this._id}}/edit" class="btn btn-sm btn-outline-primary me-1">
                                             <i class="bi bi-pencil"></i>
-                                        </button>
+                                        </a>
                                         <button class="btn btn-sm btn-outline-danger" 
                                                 onclick="deleteShipment('{{this._id}}')">
                                             <i class="bi bi-trash"></i>
@@ -423,33 +611,142 @@
                                 </td>
                             </tr>
                             {{/each}}
+                            {{#unless shipments.length}}
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="bi bi-search fs-2 text-muted mb-2"></i>
+                                        <p class="mb-0">No shipments found matching your criteria</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/unless}}
                         </tbody>
                     </table>
                 </div>
             </div>
-            
-            <script>
-                async function deleteShipment(id) {
-                    if(confirm('Are you sure you want to delete this shipment?')) {
-                        try {
-                            const response = await fetch(`/admin/shipments/${id}`, {
-                                method: 'DELETE'
-                            });
-                            if(response.ok) {
-                                window.location.reload();
-                            }
-                        } catch(error) {
-                            console.error('Error deleting shipment:', error);
-                            alert('Failed to delete shipment');
-                        }
-                    }
-                }
-            
-                function editShipment(id) {
-                    window.location.href = `/admin/shipments/${id}/edit`;
-                }
-            </script>
-            
+        </div>
+    </div>
+</div>
+
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Delete shipment functionality
+    async function deleteShipment(id) {
+        if(confirm('Are you sure you want to delete this shipment?')) {
+            try {
+                const response = await fetch(`/admin/shipments/${id}`, {
+                    method: 'DELETE'
+                });
+                if(response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to delete shipment');
+                }
+            } catch(error) {
+                console.error('Error deleting shipment:', error);
+                alert('Failed to delete shipment');
+            }
+        }
+    }
+
+    // Handle filter section display
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if any filters are applied
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('search') || urlParams.has('status') || 
+            urlParams.has('startDate') || urlParams.has('endDate')) {
+            // Show filter section if filters are applied
+            const filterCollapse = document.getElementById('filterCollapse');
+            if (filterCollapse) {
+                new bootstrap.Collapse(filterCollapse, {
+                    toggle: true
+                });
+            }
+        }
+        
+        // Reset filters button
+        document.getElementById('resetFilters').addEventListener('click', function() {
+            window.location.href = '/admin/getShipment';
+        });
+        
+        // Export functionality
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            // Get current filtered data
+            const table = document.querySelector('.table');
+            const headers = Array.from(table.querySelectorAll('thead th'))
+                .map(th => th.textContent.trim())
+                .slice(0, -1); // Remove Actions column
+            
+            const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
+                // Skip the "No shipments found" row
+                if (row.querySelectorAll('td').length === 1) {
+                    return null;
+                }
+                
+                return Array.from(row.querySelectorAll('td'))
+                    .slice(0, -1) // Remove Actions column
+                    .map(td => {
+                        // Get text content or extract status text
+                        if (td.querySelector('.status-badge')) {
+                            return td.querySelector('.status-badge').textContent.trim();
+                        }
+                        return td.textContent.trim();
+                    });
+            }).filter(Boolean); // Remove null rows
+            
+            // Create CSV content
+            let csvContent = headers.join(',') + '\n';
+            rows.forEach(row => {
+                csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
+            });
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'shipments_export.csv');
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Enhanced search input
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('focus', function() {
+                this.placeholder = "Type and press Enter to search...";
+            });
+            
+            searchInput.addEventListener('blur', function() {
+                this.placeholder = "Search by AWB, sender, recipient, location...";
+            });
+            
+            // Allow search on Enter key
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('filterForm').submit();
+                }
+            });
+        }
+
+        // Date range validation
+        document.getElementById('filterForm').addEventListener('submit', function(event) {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate && endDate) {
+                if (new Date(startDate) > new Date(endDate)) {
+                    event.preventDefault();
+                    alert('Start date cannot be after end date');
+                }
+            }
+        });
+    });
+</script>
+
             </body>
 </html>
