@@ -304,10 +304,7 @@ module.exports = {
     getTrackingPage: async (req, res) => {
       try {
          
-        const recentSearches = await Shipment.find()
-          .sort({ updatedAt: -1 })
-          .limit(3)
-          .select('awbNumber');
+        const recentSearches  = req.session.searchHistory || [];
           
         res.render('admin/track', { recentSearches }); // Changed from 'tracking/index' to 'admin/track'
       } catch (error) {
@@ -321,14 +318,30 @@ module.exports = {
      
       try {
         const { awbNumber } = req.body; 
-       
-        const shipment = await Shipment.findOne({ awbNumber })
-          .populate('sender.savedAddress')
-          .populate('receiver.savedAddress');
-          const recentSearches = await Shipment.find()
-          .sort({ updatedAt: -1 })
-          .limit(3)
-          .select('awbNumber');
+       // When a search is performed, update the search history
+    let searchHistory = req.session.searchHistory || [];
+    
+    // Only add if it's not already in the history
+    if (!searchHistory.includes(awbNumber)) {
+      // Add to beginning of array
+      searchHistory.unshift({ awbNumber });
+      
+      // Limit to 5 recent searches
+      if (searchHistory.length > 5) {
+        searchHistory = searchHistory.slice(0, 5);
+      }
+      
+      // Save to session
+      req.session.searchHistory = searchHistory;
+    }
+    
+    const shipment = await Shipment.findOne({ awbNumber })
+      .populate('sender.savedAddress')
+      .populate('receiver.savedAddress');
+      
+    // Use the session search history instead of database queries
+    const recentSearches = req.session.searchHistory;
+        
         if (!shipment) {
           return res.render('admin/track', { recentSearches,
             error: 'Shipment not found',
