@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <meta id="awbMeta" name="awb-number" content="{{shipment.awbNumber}}">
 
-    
+
     <style>
         :root {
             --primary: #3b82f6;
@@ -28,16 +29,17 @@
             --border: #e2e8f0;
             --border-light: #f1f5f9;
             --primary-gradient: linear-gradient(135deg, #4361ee 0%, #4895ef 100%);
-    --glass-bg: rgba(255, 255, 255, 0.95);
-    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-    --card-border: 1px solid rgba(255, 255, 255, 0.18);
-    --neon-glow: 0 0 15px rgba(67, 97, 238, 0.3);
-    --sidebar-width: 280px;
-    --sidebar-bg: rgba(15, 23, 42, 0.95);
-    --sidebar-hover: rgba(30, 41, 59, 0.8);
-    --neon-accent: #0ea5e9;
-    --glass-effect: blur(10px);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            --card-border: 1px solid rgba(255, 255, 255, 0.18);
+            --neon-glow: 0 0 15px rgba(67, 97, 238, 0.3);
+            --sidebar-width: 280px;
+            --sidebar-bg: rgba(15, 23, 42, 0.95);
+            --sidebar-hover: rgba(30, 41, 59, 0.8);
+            --neon-accent: #0ea5e9;
+            --glass-effect: blur(10px);
         }
+
         .wrapper {
             display: flex;
             min-height: 100vh;
@@ -49,101 +51,100 @@
             color: var(--text);
             min-height: 100vh;
         }
+
         /* Sidebar Base Styles */
-.sidebar {
-    width: var(--sidebar-width);
-    background: var(--sidebar-bg);
-    backdrop-filter: var(--glass-effect);
-    -webkit-backdrop-filter: var(--glass-effect);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    position: fixed;
-    height: 100vh;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto;
-    scrollbar-width: none;
-    z-index: 1000;
-}
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            backdrop-filter: var(--glass-effect);
+            -webkit-backdrop-filter: var(--glass-effect);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            height: 100vh;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            scrollbar-width: none;
+            z-index: 1000;
+        }
 
-.sidebar::-webkit-scrollbar {
-    display: none;
-}
+        .sidebar::-webkit-scrollbar {
+            display: none;
+        }
 
-/* Logo Section */
-.sidebar .logo {
-    padding: 2rem 1.5rem;
-    background: linear-gradient(
-        to bottom,
-        rgba(15, 23, 42, 0.98),
-        rgba(15, 23, 42, 0.95)
-    );
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
+        /* Logo Section */
+        .sidebar .logo {
+            padding: 2rem 1.5rem;
+            background: linear-gradient(to bottom,
+                    rgba(15, 23, 42, 0.98),
+                    rgba(15, 23, 42, 0.95));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-.sidebar .logo h4 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    background: linear-gradient(120deg, #fff, var(--neon-accent));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    letter-spacing: 0.5px;
-}
+        .sidebar .logo h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(120deg, #fff, var(--neon-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 0.5px;
+        }
 
-/* Navigation Links */
-.sidebar .nav-link {
-    color: rgba(255, 255, 255, 0.7);
-    padding: 1rem 1.5rem;
-    margin: 0.3rem 0.8rem;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    position: relative;
-    text-decoration: none;
-}
+        /* Navigation Links */
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            padding: 1rem 1.5rem;
+            margin: 0.3rem 0.8rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            position: relative;
+            text-decoration: none;
+        }
 
-.sidebar .nav-link:hover {
-    background: var(--sidebar-hover);
-    color: var(--neon-accent);
-    box-shadow: var(--neon-glow);
-}
+        .sidebar .nav-link:hover {
+            background: var(--sidebar-hover);
+            color: var(--neon-accent);
+            box-shadow: var(--neon-glow);
+        }
 
-.sidebar .nav-link i {
-    margin-right: 1rem;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-}
+        .sidebar .nav-link i {
+            margin-right: 1rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
 
-.sidebar .nav-link.active-nav-link {
-    background: rgba(14, 165, 233, 0.15);
-    color: var(--neon-accent);
-    box-shadow: var(--neon-glow);
-}
+        .sidebar .nav-link.active-nav-link {
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--neon-accent);
+            box-shadow: var(--neon-glow);
+        }
 
-.sidebar .nav-link.active-nav-link::before {
-    content: '';
-    position: absolute;
-    left: -0.8rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 20px;
-    background: var(--neon-accent);
-    border-radius: 0 4px 4px 0;
-    box-shadow: var(--neon-glow);
-}
+        .sidebar .nav-link.active-nav-link::before {
+            content: '';
+            position: absolute;
+            left: -0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: var(--neon-accent);
+            border-radius: 0 4px 4px 0;
+            box-shadow: var(--neon-glow);
+        }
 
-.nav.flex-column {
-    padding: 1rem 0;
-}
+        .nav.flex-column {
+            padding: 1rem 0;
+        }
 
         /* Main Container Styles */
         .tracking-container {
 
-           width: calc(100% - var(--sidebar-width));
+            width: calc(100% - var(--sidebar-width));
             margin-left: var(--sidebar-width);
-          
-            
+
+
         }
 
         .tracking-grid {
@@ -185,6 +186,7 @@
             font-size: 0.875rem;
             font-weight: 500;
         }
+
         /* Timeline Styles */
         .timeline-section {
             background: var(--surface);
@@ -312,9 +314,11 @@
             0% {
                 box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
             }
+
             70% {
                 box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
             }
+
             100% {
                 box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
             }
@@ -359,14 +363,16 @@
             display: none;
         }
 
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 0.875rem 1rem;
             transition: all 0.3s ease;
         }
 
-        .form-control:focus, .form-select:focus {
+        .form-control:focus,
+        .form-select:focus {
             border-color: var(--primary-light);
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
@@ -408,7 +414,8 @@
         .btn-icon.delete:hover {
             background: var(--danger);
         }
-        </style>
+    </style>
+
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
@@ -417,41 +424,41 @@
                 <h4 class="mb-0">E Gate Shipping</h4>
             </div>
             <div class="nav flex-column">
-                <a href="/admin/track"class="nav-link ">
-                    <i class="bi bi-truck"></i> 
+                <a href="/admin/track" class="nav-link ">
+                    <i class="bi bi-truck"></i>
                     Tracking
                 </a>
 
-               <a href="/admin/createAwb"class="nav-link">
+                <a href="/admin/createAwb" class="nav-link">
                     <i class="bi bi-files"></i>
                     Create AWB
                 </a>
-                
-              <a href="/admin/mawb" class="nav-link ">
-                    <i class="bi bi-file-earmark-break"></i> 
+
+                <a href="/admin/mawb" class="nav-link ">
+                    <i class="bi bi-file-earmark-break"></i>
                     Master AWB
                 </a>
 
-                 <a href="/admin/fetchShipment" class="nav-link active-nav-link">
+                <a href="/admin/fetchShipment" class="nav-link active-nav-link">
                     <i class="bi bi-pencil-square"></i>
                     Update AWB
                 </a>
-               <a href="/admin/getShipment" class="nav-link ">
+                <a href="/admin/getShipment" class="nav-link ">
                     <i class="bi bi-boxes"></i>
                     All Shipments
                 </a>
-                  <a href="/admin/airlines" class="nav-link">
-            <i class="bi bi-cloud"></i>
-            Airlines
-        </a>
-                <a href="/admin/profile"class="nav-link">
+                <a href="/admin/airlines" class="nav-link">
+                    <i class="bi bi-cloud"></i>
+                    Airlines
+                </a>
+                <a href="/admin/profile" class="nav-link">
                     <i class="bi bi-gear"></i>
                     Admin Profile
                 </a>
-               
+
             </div>
         </nav>
-   
+
 
         <div class="tracking-container">
             <div class="tracking-grid">
@@ -466,33 +473,34 @@
                             <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
-    
-                    <div class="status-info">
-    <div class="info-item mb-4">
-        <div class="text-muted mb-2">Expected Delivery</div>
-        <div class="d-flex align-items-center gap-2">
-            <i class="fas fa-clock text-primary"></i>
-            <div>
-                <div class="fw-semibold" id="estimatedDelivery">{{formatDate shipment.estimatedDeliveryDate}}</div>
-                <div class="small text-muted">By End of Day</div>
-            </div>
-        </div>
-    </div>
 
-    <div class="info-item mb-4">
-        <div class="text-muted mb-2">Current Location</div>
-        <div class="d-flex align-items-center gap-2">
-            <i class="fas fa-map-marker-alt text-primary"></i>
-            <div>
-                <div class="fw-semibold" id="currentLocation">{{currentLocation}}</div>
-                <div class="small text-muted" id="facilityType">{{facilityType}}</div>
-            </div>
-        </div>
-    </div>
-</div>
+                    <div class="status-info">
+                        <div class="info-item mb-4">
+                            <div class="text-muted mb-2">Expected Delivery</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-clock text-primary"></i>
+                                <div>
+                                    <div class="fw-semibold" id="estimatedDelivery">{{formatDate
+                                        shipment.estimatedDeliveryDate}}</div>
+                                    <div class="small text-muted">By End of Day</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-item mb-4">
+                            <div class="text-muted mb-2">Current Location</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-map-marker-alt text-primary"></i>
+                                <div>
+                                    <div class="fw-semibold" id="currentLocation">{{currentLocation}}</div>
+                                    <div class="small text-muted" id="facilityType">{{facilityType}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
-    
+
                 <!-- Timeline Section -->
                 <div class="timeline-section">
                     <div class="timeline-header">
@@ -502,101 +510,107 @@
                             Add Location
                         </button>
                     </div>
-    
+
                     <!-- Add Location Form -->
                     <div class="add-location-form" id="addLocationForm">
-                        <h5 class="mb-4">Add New Location</h5> 
-                       <form id="locationForm" action="/admin/addLocation/{{shipment.awbNumber}}" method="POST">
+                        <h5 class="mb-4">Add New Location</h5>
+                        <form id="locationForm" action="/admin/addLocation/{{shipment.awbNumber}}" method="POST">
 
-    <div class="row g-3">
-        <div class="col-md-6">
-            <input type="text" class="form-control" name="location" placeholder="Location Name" required>
-        </div>
-        <div class="col-md-6">
-            <input type="text" class="form-control" name="description" placeholder="Description">
-        </div>
-        <div class="col-md-6">
-            <select class="form-select" name="status" required>
-                <option value="">Select Status</option>
-                <option value="Picked Up">Picked Up</option>
-                <option value="In Transit">In Transit</option>
-                <option value="Out for Delivery">Out for Delivery</option>
-                <option value="Delivered">Delivered</option>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary flex-grow-1">Add Location</button>
-                <button type="button" class="btn btn-light" onclick="window.trackingSystem.toggleAddLocationForm()">Cancel</button>
-            </div>
-        </div>
-    </div>
-</form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="location" placeholder="Location Name"
+                                        required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="description"
+                                        placeholder="Description">
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-select" name="status" required>
+                                        <option value="">Select Status</option>
+                                        <option value="Picked Up">Picked Up</option>
+                                        <option value="In Transit">In Transit</option>
+                                        <option value="Out for Delivery">Out for Delivery</option>
+                                        <option value="Delivered">Delivered</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-primary flex-grow-1">Add Location</button>
+                                        <button type="button" class="btn btn-light"
+                                            onclick="window.trackingSystem.toggleAddLocationForm()">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
 
                     </div>
-    
-<div class="container">
-    <div class="timeline-wrapper">
-        <div class="timeline-line"></div>
-        <div class="timeline-progress" id="progressLine"></div>
-        {{#each timeline}}
-<div class="timeline-item" 
-     data-timeline-id="{{this._id}}" 
-     data-status="{{this.status}}"
-     data-completed="{{this.isCompleted}}">
-    <div class="timeline-marker {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
-        <i class="fas fa-check"></i>
-    </div>
-    <div class="timeline-content {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
-                <div class="location-info">
-                    <h5>{{this.location}}</h5>
-                    <p class="location-address mb-2">
-                        <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{this.description}}
-                    </p>
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="location-timestamp">
-                            <i class="far fa-clock me-2"></i>{{formatDate this.timestamp}}
-                        </span>
-                        <span class="status-badge">
-                            {{this.status}}
-                        </span>
+
+                    <div class="container">
+                        <div class="timeline-wrapper">
+                            <div class="timeline-line"></div>
+                            <div class="timeline-progress" id="progressLine"></div>
+                            {{#each timeline}}
+                            <div class="timeline-item" data-timeline-id="{{this._id}}" data-status="{{this.status}}"
+                                data-completed="{{this.isCompleted}}">
+                                <div
+                                    class="timeline-marker {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div
+                                    class="timeline-content {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
+                                    <div class="location-info">
+                                        <h5>{{this.location}}</h5>
+                                        <p class="location-address mb-2">
+                                            <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{this.description}}
+                                        </p>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <span class="location-timestamp">
+                                                <i class="far fa-clock me-2"></i>{{formatDate this.timestamp}}
+                                            </span>
+                                            <span class="status-badge">
+                                                {{this.status}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        {{/each}}
     </div>
-</div>
-    
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-   <script>
-     window.trackingSystem = {
-        toggleAddLocationForm: function () {
-            console.log("Toggle button clicked");
-            const form = document.getElementById("addLocationForm");
-            if (form) {
-                form.style.display = form.style.display === "none" || form.style.display === "" ? "block" : "none";
-            } else {
-                console.error("Form not found");
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.trackingSystem = {
+            toggleAddLocationForm: function () {
+                console.log("Toggle button clicked");
+                const form = document.getElementById("addLocationForm");
+                if (form) {
+                    form.style.display = form.style.display === "none" || form.style.display === "" ? "block" : "none";
+                } else {
+                    console.error("Form not found");
+                }
             }
-        }
-    };
+        };
 
-    document.getElementById("locationForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        console.log("Form submitted", Object.fromEntries(formData.entries()));
-        alert("Location added successfully!");
-        window.trackingSystem.toggleAddLocationForm();
-    });
+        document.getElementById("locationForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            console.log("Form submitted", Object.fromEntries(formData.entries()));
+            alert("Location added successfully!");
+            window.trackingSystem.toggleAddLocationForm();
+        });
 
- // Function to append new timeline event to the container
-    function renderTimelineEvent(event) {
-        const timelineContainer = document.getElementById('timeline-container');
-        const eventElement = document.createElement('div');
-        eventElement.className = 'timeline-event';
-        eventElement.innerHTML = `
+        // Function to append new timeline event to the container
+        function renderTimelineEvent(event) {
+            const timelineContainer = document.getElementById('timeline-container');
+            const eventElement = document.createElement('div');
+            eventElement.className = 'timeline-event';
+            eventElement.innerHTML = `
             <div>
                 <strong>Location:</strong> ${event.location}
             </div>
@@ -610,16 +624,20 @@
                 <strong>Timestamp:</strong> ${new Date(event.timestamp).toLocaleString()}
             </div>
         `;
-        timelineContainer.appendChild(eventElement);
-    }
+            timelineContainer.appendChild(eventElement);
+        }
 
-    // Submit form via AJAX
-document.getElementById('locationForm').addEventListener('submit', async (event) => {
+        // Submit form via AJAX
+        // Submit form via AJAX
+
+
+        // Submit form via AJAX
+        document.getElementById('locationForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const form = event.target;
     const formData = new FormData(form);
-    const awbNumber = form.action.split('/').pop();
+    const awbNumber = document.getElementById('awbNumber').textContent.replace('#', '');
 
     try {
         const response = await fetch(`/admin/addLocation/${awbNumber}`, {
@@ -639,18 +657,52 @@ document.getElementById('locationForm').addEventListener('submit', async (event)
         }
 
         const data = await response.json();
-        
-        // Add the new location to the timeline without page refresh
+
+        // Update the current location and facility type in the UI
+        document.getElementById('currentLocation').textContent = data.currentLocation;
+        document.getElementById('facilityType').textContent = data.facilityType || data.description || "N/A";
+
+        // Get the newly added timeline item from the response
+        const newTimelineEvent = data.timeline[data.timeline.length - 1];
+
+        // Create and append the new timeline item
         const timelineWrapper = document.querySelector('.timeline-wrapper');
-        const newTimelineItem = createTimelineItem(data.timeline[data.timeline.length - 1]);
-        timelineWrapper.appendChild(newTimelineItem);
-        
+        const newTimelineItem = `
+    <div class="timeline-item" 
+         data-timeline-id="${newTimelineEvent._id}" 
+         data-status="${newTimelineEvent.status}"
+         data-completed="${newTimelineEvent.isCompleted}">
+        <div class="timeline-marker active">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="timeline-content active">
+            <div class="location-info">
+                <h5>${newTimelineEvent.location}</h5>
+                <p class="location-address mb-2">
+                    <i class="fas fa-map-marker-alt me-2 text-primary"></i>${newTimelineEvent.description || ''}
+                </p>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="location-timestamp">
+                        <i class="far fa-clock me-2"></i>${new Date(newTimelineEvent.timestamp).toLocaleString()}
+                    </span>
+                    <span class="status-badge">
+                        ${newTimelineEvent.status}
+                    </span>
+                </div>
+            </div>
+        </div>
+     </div>
+`;
+        timelineWrapper.insertAdjacentHTML('beforeend', newTimelineItem);
+
         // Reset form and hide it
         form.reset();
         window.trackingSystem.toggleAddLocationForm();
-        
-        // Reinitialize timeline system
-        window.timelineSystem = new TimelineSystem();
+
+        // Completely reinitialize the timeline system
+        if (window.timelineSystem) {
+            window.timelineSystem.reinitialize();
+        }
 
     } catch (error) {
         console.error('Error:', error);
@@ -659,82 +711,123 @@ document.getElementById('locationForm').addEventListener('submit', async (event)
 });
 
 
-function addTimelineEventToUI(event) {
-    const timelineList = document.getElementById('timelineList'); // Assuming an element with this ID
-    const newEvent = document.createElement('li');
-    newEvent.textContent = `${event.timestamp}: ${event.location} (${event.status}) - ${event.description || 'No description'}`;
-    timelineList.appendChild(newEvent);
-}
+        function addTimelineEventToUI(event) {
+            const timelineList = document.getElementById('timelineList'); // Assuming an element with this ID
+            const newEvent = document.createElement('li');
+            newEvent.textContent = `${event.timestamp}: ${event.location} (${event.status}) - ${event.description || 'No description'}`;
+            timelineList.appendChild(newEvent);
+        }
 
 
-function getCurrentUser() {
-    return document.querySelector('meta[name="user-id"]')?.content || 'system';
-}
+        function getCurrentUser() {
+            return document.querySelector('meta[name="user-id"]')?.content || 'system';
+        }
 
-class TimelineSystem {
+        class TimelineSystem {
     constructor() {
         this.initializeTimeline();
-        this.bindEvents();
+    }
+
+    reinitialize() {
+        // Clear existing event handlers first
+        this.timelineItems?.forEach(item => {
+            const marker = item.querySelector('.timeline-marker');
+            if (marker) {
+                const newMarker = marker.cloneNode(true);
+                marker.parentNode.replaceChild(newMarker, marker);
+            }
+        });
+
+        // Re-initialize everything from scratch
+        this.initializeTimeline();
     }
 
     initializeTimeline() {
         this.timelineItems = document.querySelectorAll('.timeline-item');
         this.progressLine = document.getElementById('progressLine');
         this.updateProgressLine();
-    }
-
-    updateProgressLine() {
-        const completedItems = Array.from(this.timelineItems).filter(
-            item => item.dataset.completed === 'true'
-        );
-        const progressHeight = (completedItems.length / this.timelineItems.length) * 100;
-        this.progressLine.style.height = `${progressHeight}%`;
+        this.bindEvents();
     }
 
     bindEvents() {
         this.timelineItems.forEach(item => {
             const marker = item.querySelector('.timeline-marker');
-            marker.addEventListener('click', (e) => {
-                e.preventDefault();
-                const timelineId = item.dataset.timelineId;
-                if (timelineId) {
-                    this.handleTimelineUpdate(item);
-                }
-            });
+            if (marker) {
+                marker.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const timelineId = item.dataset.timelineId;
+                    if (timelineId) {
+                        this.handleTimelineUpdate(item);
+                    }
+                });
+            }
         });
     }
 
-    async handleTimelineUpdate(timelineItem) {
-        try {
-            const timelineId = timelineItem.dataset.timelineId;
-            const currentCompleted = timelineItem.dataset.completed === 'true';
-            const newCompleted = !currentCompleted;
-            const awbNumber = document.getElementById('awbMeta').getAttribute('content');
+   async handleTimelineUpdate(timelineItem) {
+    try {
+        const timelineId = timelineItem.dataset.timelineId;
+        const currentCompleted = timelineItem.dataset.completed === 'true';
+        const newCompleted = !currentCompleted;
+        const awbNumber = document.getElementById('awbNumber').textContent.replace('#', '');
 
-            // Update UI optimistically
-            this.updateItemUI(timelineItem, newCompleted);
+        // Update UI optimistically
+        this.updateItemUI(timelineItem, newCompleted);
 
-            const response = await this.updateTimelineStatus(timelineId, {
-                isCompleted: newCompleted,
-                timestamp: new Date().toISOString(),
-                updatedBy: getCurrentUser(),
-                awbNumber: awbNumber
-            });
+        const response = await fetch('/admin/update-timeline', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: timelineId,
+                awbNumber: awbNumber,
+                isCompleted: newCompleted
+            })
+        });
 
-            if (!response.success) {
-                // Revert UI if update failed
-                this.updateItemUI(timelineItem, currentCompleted);
-                throw new Error(response.message);
-            }
-
-            // Update progress line
-            this.updateProgressLine();
-
-        } catch (error) {
-            console.error('Timeline update error:', error);
-            alert(`Error updating timeline: ${error.message}`);
+        if (!response.ok) {
+            // Revert UI if update failed
+            this.updateItemUI(timelineItem, currentCompleted);
+            const errorText = await response.text();
+            console.error('Server error response:', errorText);
+            throw new Error(`Server request failed: ${response.status}`);
         }
+
+        const data = await response.json();
+        
+        if (!data.success) {
+            // Revert UI if update failed
+            this.updateItemUI(timelineItem, currentCompleted);
+            throw new Error(data.message);
+        }
+
+        // Update status badge
+        const statusBadge = document.querySelector('.status-badge');
+        if (statusBadge && data.status) {
+            statusBadge.textContent = data.status;
+        }
+        
+        // Update current location
+        const currentLocationElement = document.getElementById('currentLocation');
+        if (currentLocationElement && data.currentLocation) {
+            currentLocationElement.textContent = data.currentLocation;
+        }
+        
+        // Update facility type
+        const facilityTypeElement = document.getElementById('facilityType');
+        if (facilityTypeElement && data.facilityType) {
+            facilityTypeElement.textContent = data.facilityType;
+        }
+
+        // Update progress line
+        this.updateProgressLine();
+
+    } catch (error) {
+        console.error('Timeline update error:', error);
+        alert(`Error updating timeline: ${error.message}`);
     }
+}
 
     updateItemUI(item, isCompleted) {
         const marker = item.querySelector('.timeline-marker');
@@ -752,37 +845,26 @@ class TimelineSystem {
             content.classList.remove('completed', 'active');
         }
     }
+    
+    updateProgressLine() {
+        if (!this.timelineItems || !this.timelineItems.length || !this.progressLine) return;
 
-    async updateTimelineStatus(timelineId, updateData) {
-        try {
-            const response = await fetch('/admin/update-timeline', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                    id: timelineId,
-                    ...updateData
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('Server request failed');
-            }
-
-            return await response.json();
-
-        } catch (error) {
-            throw new Error('Failed to update timeline status');
-        }
+        const completedItems = Array.from(this.timelineItems).filter(
+            item => item.dataset.completed === 'true'
+        );
+        const progressHeight = this.timelineItems.length > 0 ?
+            (completedItems.length / this.timelineItems.length) * 100 : 0;
+        this.progressLine.style.height = `${progressHeight}%`;
     }
 }
 
-// Initialize timeline system
-document.addEventListener('DOMContentLoaded', () => {
-    window.timelineSystem = new TimelineSystem();
-});
-</script>
-        </body>
-        </html>
+          
+
+        // Initialize timeline system
+        document.addEventListener('DOMContentLoaded', () => {
+            window.timelineSystem = new TimelineSystem();
+        });
+    </script>
+</body>
+
+</html>

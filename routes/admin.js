@@ -6,10 +6,7 @@ const cache = new NodeCache();
 const fileStorage = require('../utils/fileStorage');
 const normalAwb = require('../controller/normalAwb')
 const sessionAuth = require('../middlewares/sessionAuth')
-const { 
-    fetchAdminProfile,
-    addAdmin,login,addAwb,getAllAirlines,addAirline,getawb,sendOTP,verifyOTP
-} = require('../controller/AdminController')
+const {fetchAdminProfile,addAdmin,login,addAwb,getAllAirlines,addAirline,getawb,sendOTP,verifyOTP} = require('../controller/AdminController')
 
 const { Shipment } = require('../models/Shipment');
 
@@ -29,19 +26,28 @@ router.get("/tracking-details", async (req, res) => {
         // Sort timeline by timestamp
         shipment.timeline.sort((a, b) => a.timestamp - b.timestamp);
 
+        // Get the timeline entry that matches the current location for facility type
+        const currentLocationEntry = shipment.timeline.find(entry => 
+            entry.location === shipment.currentLocation
+        );
+        
+        const facilityType = currentLocationEntry?.description || 
+                            shipment.timeline?.[shipment.timeline.length - 1]?.description || 
+                            "N/A";
+
         if (req.headers.accept.includes('text/html')) {
             return res.render("admin/updateAwb", { 
                 shipment,
                 awbNumber,
                 timeline: shipment.timeline,
-                currentLocation: shipment.timeline?.[shipment.timeline.length - 1]?.location || "N/A",
-                facilityType: shipment.timeline?.[shipment.timeline.length - 1]?.description || "N/A"
+                currentLocation: shipment.currentLocation || "N/A",
+                facilityType: facilityType
             });
         }
 
         return res.json({
             timeline: shipment.timeline,
-            currentLocation: shipment.timeline?.[shipment.timeline.length - 1]?.location || "N/A",
+            currentLocation: shipment.currentLocation || "N/A",
             status: shipment.status
         });
     } catch (err) {
@@ -66,68 +72,138 @@ router.post('/addLocation/:awbNumber', async (req, res) => {
             return res.status(404).json({ message: 'Shipment not found.' });
         }
 
+        // Create the new timeline event
         const newTimelineEvent = {
             location,
             status,
             description,
             timestamp: new Date(),
             updatedBy: updatedBy || 'System',
+            isCompleted: false
         };
 
+        // Add to timeline array
         shipment.timeline.push(newTimelineEvent);
-        shipment.status = status; // Update shipment status
+        
+        // REMOVE THIS LINE - don't update currentLocation when adding a new location
+        // shipment.currentLocation = location;
+        
+        // Save to database
         await shipment.save();
 
-        console.log("Location added successfully:", newTimelineEvent);
-        res.status(201).json({ message: 'Location added successfully.', timeline: shipment.timeline });
+        // Find the timeline entry that matches the current location for facility type
+        const currentLocationEntry = shipment.timeline.find(entry => 
+            entry.location === shipment.currentLocation
+        );
+        
+        const facilityType = currentLocationEntry?.description || "N/A";
+
+        res.status(201).json({
+            message: 'Location added successfully.',
+            timeline: shipment.timeline,
+            currentLocation: shipment.currentLocation, // This will be the unchanged current location
+            facilityType: facilityType,
+            status: shipment.status,
+            success: true
+        });
     } catch (error) {
         console.error('Error adding location:', error.stack);
-        res.status(500).json({ message: 'An error occurred while adding location.' });
+        res.status(500).json({ 
+            message: 'An error occurred while adding location.',
+            success: false 
+        });
     }
 });
 
-
-
-
-// Update timeline event status
 router.post('/update-timeline', async (req, res) => {
     const { id, awbNumber, isCompleted } = req.body;
     
+    console.log('Update timeline request:', { id, awbNumber, isCompleted });
+    
     try {
-        // Use updateOne with a very specific query to update only the exact timeline item
-        const result = await Shipment.updateOne(
-            { 
-                awbNumber: awbNumber,
-                'timeline._id': id 
-            },
-            { 
-                $set: {
-                    'timeline.$.isCompleted': isCompleted
-                }
-            }
-        );
-
-        if (result.matchedCount === 0) {
+        // First find the shipment to get the timeline item's status
+        const shipment = await Shipment.findOne({ awbNumber });
+        
+        if (!shipment) {
+            console.error(`Shipment not found for AWB: ${awbNumber}`);
+            return res.status(404).json({
+                success: false,
+                message: 'Shipment not found'
+            });
+        }
+        
+        // Find the timeline item we're updating
+        const timelineItem = shipment.timeline.find(item => item._id.toString() === id);
+        
+        if (!timelineItem) {
+            console.error(`Timeline item ${id} not found in shipment ${awbNumber}`);
             return res.status(404).json({
                 success: false,
                 message: 'Timeline item not found'
             });
         }
-
-        // Fetch the updated shipment to verify the change
-        const updatedShipment = await Shipment.findOne({ awbNumber });
-        const updatedItem = updatedShipment.timeline.find(
-            item => item._id.toString() === id
+        
+        console.log('Found timeline item:', timelineItem);
+        
+        // Update the isCompleted status of the timeline item
+        const updateResult = await Shipment.updateOne(
+            { awbNumber, 'timeline._id': id },
+            { $set: { 'timeline.$.isCompleted': isCompleted } }
         );
-
-        if (!updatedItem || updatedItem.isCompleted !== isCompleted) {
-            throw new Error('Failed to update timeline item');
+        
+        console.log('Timeline item update result:', updateResult);
+        
+        // If the item is being marked as completed, update the overall shipment status
+        // and currentLocation
+        if (isCompleted) {
+            const statusUpdateResult = await Shipment.updateOne(
+                { awbNumber },
+                { 
+                    $set: { 
+                        status: timelineItem.status,
+                        currentLocation: timelineItem.location  // This line is correct
+                    } 
+                }
+            );
+            
+            console.log('Status and location update result:', statusUpdateResult);
         }
-
+        
+        // Get the updated shipment
+        const updatedShipment = await Shipment.findOne({ awbNumber });
+        
+        // THIS IS THE ISSUE - you're ignoring the database's currentLocation and overriding with timeline data
+        // Remove or change these lines:
+        
+        // Sort timeline by timestamp to get the latest entry
+        // Note: We're creating a copy with [...] to avoid modifying the original
+        const sortedTimeline = [...updatedShipment.timeline].sort((a, b) => 
+            new Date(b.timestamp) - new Date(a.timestamp)
+        );
+        
+        // Get the current location and facility type from the most recent timeline entry
+       
+        
+        // INSTEAD, use the updatedShipment's currentLocation directly:
+        
+        // Find the timeline entry that matches the shipment's currentLocation for facility type
+        const currentLocationEntry = updatedShipment.timeline.find(entry => 
+            entry.location === updatedShipment.currentLocation
+        );
+        
+        const facilityType = currentLocationEntry?.description || "N/A";
+        
+        console.log('Updated shipment status:', updatedShipment.status);
+        console.log('Current location:', updatedShipment.currentLocation); // Use this instead
+        console.log('Facility type:', facilityType);
+        
         res.json({
             success: true,
             message: 'Timeline updated successfully',
-            timeline: updatedShipment.timeline
+            timeline: updatedShipment.timeline,
+            status: updatedShipment.status,
+            currentLocation: updatedShipment.currentLocation, // Use this instead
+            facilityType: facilityType
         });
 
     } catch (error) {

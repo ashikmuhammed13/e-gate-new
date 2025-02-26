@@ -223,6 +223,7 @@ module.exports = {
           },
           packages,
           totalPackages,
+          currentLocation:senderCity,
           totalWeight,
           timeline: [{
             location: senderCity,

@@ -385,11 +385,7 @@
                     </div>
                     <div class="location">
                         <strong>Current Location:</strong> 
-                        {{#if timeline.[0]}}
-                        {{timeline.[0].location}}
-                        {{else}}
-                        Not Available
-                        {{/if}}
+                        {{currentLocation}}
                     </div>
                     <div class="status" data-status="{{status}}">{{status}}</div>
                 </div>

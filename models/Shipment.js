@@ -80,6 +80,10 @@ const shipmentSchema = new mongoose.Schema({
     required: true,
     min: 0 
   },
+  currentLocation:{
+    type: String,
+    required: true,
+  },
 
   // Shipment Status and Tracking
   status: {
