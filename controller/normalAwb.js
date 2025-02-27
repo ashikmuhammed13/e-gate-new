@@ -818,31 +818,67 @@ drawText(`${totalChargesCarrier}`, 65, 127, { size: 9 });
 },
 
 getShipment: async (req, res) => {
-    try {
-        const shipments = await Shipment.find().sort({ createdAt: -1 });
-        
-        // Get statistics
-        const totalShipments = await Shipment.countDocuments();
-        const deliveredShipments = await Shipment.countDocuments({ status: 'Delivered' });
-        const inTransitShipments = await Shipment.countDocuments({ status: 'In Transit' });
-        const exceptionShipments = await Shipment.countDocuments({ 
-            status: { $in: ['Failed Delivery', 'Cancelled'] }
-        });
-
-        res.render("admin/allShipment", { 
-            shipments,
-            stats: {
-                total: totalShipments,
-                delivered: deliveredShipments,
-                inTransit: inTransitShipments,
-                exceptions: exceptionShipments
-            }
-        });
-    } catch (error) {
-        console.error('Error fetching shipments:', error);
-        res.render("admin/allShipment", { error: 'Failed to load shipments' });
-    }
-},
+  try {
+      let query = {};
+      
+      // Search functionality
+      if (req.query.search) {
+          const searchRegex = new RegExp(req.query.search, 'i');
+          query = {
+              $or: [
+                  { awbNumber: searchRegex },
+                  { 'sender.addressDetails.contactName': searchRegex },
+                  { 'receiver.addressDetails.contactName': searchRegex },
+                  { status: searchRegex },
+                  { 'timeline.location': searchRegex } // Add current location search
+              ]
+          };
+      }
+      
+      // Filter by status
+      if (req.query.status && req.query.status !== 'All') {
+          query.status = req.query.status;
+      }
+      
+      // Date range filter
+      if (req.query.startDate && req.query.endDate) {
+          query.createdAt = {
+              $gte: new Date(req.query.startDate),
+              $lte: new Date(req.query.endDate + 'T23:59:59')
+          };
+      }
+      
+      const shipments = await Shipment.find(query).sort({ createdAt: -1 });
+      
+      // Get statistics
+      const totalShipments = await Shipment.countDocuments();
+      const deliveredShipments = await Shipment.countDocuments({ status: 'Delivered' });
+      const inTransitShipments = await Shipment.countDocuments({ status: 'In Transit' });
+      const exceptionShipments = await Shipment.countDocuments({
+          status: { $in: ['Failed Delivery', 'Cancelled'] }
+      });
+      
+      res.render("admin/allShipment", {
+          shipments,
+          stats: {
+              total: totalShipments,
+              delivered: deliveredShipments,
+              inTransit: inTransitShipments,
+              exceptions: exceptionShipments
+          },
+          filters: {
+              search: req.query.search || '',
+              status: req.query.status || 'All',
+              startDate: req.query.startDate || '',
+              endDate: req.query.endDate || ''
+          }
+      });
+  } catch (error) {
+      console.error('Error fetching shipments:', error);
+      res.render("admin/allShipment", { error: 'Failed to load shipments' });
+  }
+}
+,
 fetchAllAwb: async (req, res) => { 
     try {
         const shipments = await Shipment.find({ status: { $ne: 'Delivered' } }).sort({ createdAt: -1 });

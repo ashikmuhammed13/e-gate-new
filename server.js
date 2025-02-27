@@ -165,6 +165,11 @@ hbs.registerHelper('getStatusIcon', function(status) {
     };
     return icons[status] || 'bi-circle';
 });
+
+// Add this with your other helper registrations
+hbs.registerHelper('eq', function(a, b) {
+    return a === b;
+});
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
