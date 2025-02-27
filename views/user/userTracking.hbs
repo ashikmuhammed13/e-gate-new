@@ -3,619 +3,997 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Shipment Tracking</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Futuristic Shipment Tracking</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>:root {
-    --primary: #0ea5e9;
-    --success: #10b981;
-    --neutral: #64748b;
-    --light: #f1f5f9;
-    --pink: #be185d;
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --primary-bg: #eef2ff;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --neutral: #64748b;
+            --neutral-light: #f1f5f9;
+            --dark: #0f172a;
+            --card-bg: #ffffff;
+            --bg: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
+            --gradient-start: #4f46e5;
+            --gradient-end: #8b5cf6;
+          --primary-purple: #6366f1;
+            --secondary-orange: #f59e0b;
+            --text-dark: #0f172a;
+        }
+        /* Futuristic Navbar Styles */
+.navbar {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    padding: 0.7rem 1rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 1000;
+    transition: all 0.3s ease;
 }
 
-/* Base Styles */
-html {
-    scroll-behavior: smooth;
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    padding: 0.5rem 1rem;
 }
 
-* {
-    transition: all 0.3s ease-in-out;
-}
-
-body {
-    background-color: #f8fafc;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: #1a1a1a;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-}
-
-/* Main Container */
-.tracking-wrapper {
-    max-width: 1200px;
-    margin: 5rem auto 2rem;
-    padding: 2rem;
-}
-
-/* Tracking Card */
-.tracking-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    padding: 3rem;
-    margin-bottom: 2rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.tracking-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-}
-
-/* Status Badge */
-.status-badge {
-    background: linear-gradient(45deg, #4caf50, #45a049);
-    color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.2);
-}
-
-/* Delivery Date */
-.delivery-date {
-    font-size: 2.5rem;
-    color: #4070f4;
-    font-weight: bold;
-    margin: 0;
-}
-
-.delivery-date-section {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-/* Info Grid */
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2.5rem;
-    background: var(--light);
-    padding: 2.5rem;
-    border-radius: 16px;
-    margin-bottom: 3.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.info-item {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    background: white;
-    border-radius: 12px;
-    transition: transform 0.3s ease;
-}
-
-.info-item:hover {
-    transform: translateY(-4px);
-}
-
-.info-label {
-    color: var(--neutral);
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.info-value {
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: #1a1a1a;
-}
-
-/* Timeline Container */
-.timeline-container {
+.navbar-brand {
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--primary-purple);
     position: relative;
-    padding-top: 2rem;
-    margin-top: 2rem;
-    width: 100%;
+    letter-spacing: -0.5px;
+    transition: all 0.3s ease;
+}
+
+.brand-accent {
+    color: var(--secondary-orange);
+    font-size: 2.2rem;
+}
+
+.navbar-brand:hover {
+    transform: translateY(-2px);
+    color: var(--primary-purple);
+}
+
+.navbar-nav {
+    align-items: center;
+}
+
+.nav-item {
+    margin: 0 0.3rem;
+}
+
+.nav-link {
+    color: var(--text-dark);
+    font-weight: 600;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
     overflow: hidden;
 }
 
-/* Timeline Progress Bar */
-.timeline-progress {
-    position: absolute;
-    top:59px;           /* Adjust this to move line up/down */
-    left:135px;             /* Increased to start more inward */
-    width: calc(100% - 250px); 
-    height: 4px;
-    background: #e2e8f0;
-    border-radius: 4px;
-    z-index: 1;
-}
-
-.progress-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: var(--progress-width, 50%);
-    background: linear-gradient(90deg, var(--success), #34d399);
-    border-radius: 4px;
-    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Timeline Points */
-.timeline-points {
-    display: grid;
-    /* Change to a more flexible grid that wraps naturally */
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    position: relative;
-    z-index: 2;
-    gap: 2rem 1.5rem; /* Add row gap */
-    margin: 0 auto;
-    max-width: 1200px;
-    padding: 0 1rem;
-}
-
-.timeline-point {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 0 1rem;
-    position: relative;
-}
-
-.point-icon {
-    width: 60px;
-    height: 60px;
-    background: white;
-    border: 3px solid var(--neutral);
-    border-radius: 50%;
+.nav-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    margin-right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(85, 98, 112, 0.1), rgba(78, 205, 196, 0.2));
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1rem;
-    z-index: 2;
 }
 
-.point-time {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 0.75rem;
-    width: 100%;
-    min-height: 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.time-value {
-    font-weight: 700;
-    color: var(--neutral);
-    font-size: 1rem;
-}
-
-.time-date {
-    font-size: 0.9rem;
-    color: var(--neutral);
-    margin-top: 0.35rem;
-}
-
-.point-label {
-    font-weight: 600;
-    margin: 0.5rem 0;
-    color: #1a1a1a;
-    font-size: 1rem;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    word-break: break-word;
-}
-
-.point-location {
-    font-size: 0.9rem;
-    color: var(--neutral);
-    word-break: break-word;
-}
-
-/* Timeline States */
-.timeline-point.active .point-icon {
-    background: linear-gradient(45deg, var(--primary), #38bdf8);
-    border-color: var(--primary);
-    color: white;
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
-}
-
-.timeline-point.completed .point-icon {
-    background: linear-gradient(45deg, var(--success), #34d399);
-    border-color: var(--success);
-    color: white;
-}
-
-.timeline-point.active .point-time {
-    border-color: var(--primary);
-    background: #f0f9ff;
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
-}
-
-.timeline-point.active .time-value {
-    color: var(--primary);
-}
-
-/* Detailed Timeline */
-.timeline {
-    position: relative;
-    padding-left: 3rem;
-}
-
-.timeline::before {
+.nav-link:before {
     content: '';
     position: absolute;
-    left: 8px;
-    top: 0;
-    height: 100%;
-    width: 3px;
-    background: linear-gradient(to bottom, var(--pink), var(--primary));
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-purple), var(--secondary-orange));
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease;
     border-radius: 3px;
 }
 
-.timeline-item {
-    position: relative;
-    margin-bottom: 2.5rem;
+.nav-link:hover:before,
+.nav-link.active:before {
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
-.timeline-marker {
-    position: absolute;
-    left: -3rem;
-    width: 20px;
-    height: 20px;
+.nav-link:hover {
+    color: var(--primary-purple);
+    background: rgba(78, 205, 196, 0.08);
+    transform: translateY(-2px);
 }
 
-.timeline-marker .marker {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--neutral);
-    transition: all 0.4s ease;
-    border: 3px solid white;
-    box-shadow: 0 0 0 3px var(--neutral);
+.nav-link:hover .nav-icon {
+    background: linear-gradient(135deg, rgba(85, 98, 112, 0.2), rgba(78, 205, 196, 0.4));
 }
 
-.timeline-marker.delivered .marker {
-    background: var(--pink);
-    box-shadow: 0 0 0 3px var(--pink), 0 0 20px rgba(190, 24, 93, 0.3);
+.nav-button {
+    background: linear-gradient(135deg, var(--primary-purple), var(--secondary-orange));
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    margin-left: 10px;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.timeline-content {
-    background: white;
-    border-radius: 16px;
-    padding: 1.75rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+.nav-button:hover,
+.nav-button:focus {
+    background: linear-gradient(135deg, var(--secondary-orange), var(--primary-purple));
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(78, 205, 196, 0.4);
 }
 
-.timeline-content:hover {
-    transform: translateX(8px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+.navbar-toggler {
+    border: none;
+    background: linear-gradient(135deg, rgba(85, 98, 112, 0.1), rgba(78, 205, 196, 0.2));
+    padding: 0.6rem;
+    border-radius: 12px;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
 }
 
-.event-details {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 2rem;
+.navbar-toggler:hover {
+    background: linear-gradient(135deg, rgba(85, 98, 112, 0.2), rgba(78, 205, 196, 0.3));
 }
 
-.event-text h4 {
-    font-size: 1.2rem;
-    margin: 0;
-    font-weight: 700;
-    color: #1a1a1a;
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(78, 205, 196, 0.25);
 }
 
-.shipment-details {
-    font-size: 1rem;
-    color: var(--neutral);
-    margin: 0.75rem 0 0 0;
-    font-weight: 500;
-}
-
-.event-time {
-    text-align: right;
-    font-size: 0.95rem;
-    color: var(--neutral);
-    min-width: 130px;
-    font-weight: 600;
-}
-
-.event-time span {
-    display: block;
-    margin-bottom: 0.35rem;
-}
-
-/* Mobile Responsive Styles */
-@media (max-width: 768px) {
-    .tracking-wrapper {
+/* Mobile Navigation Styles */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
         padding: 1rem;
-        margin-top: 4rem;
-    }
-
-    .tracking-card {
-        padding: 1.5rem;
-        margin: 1rem;
-    }
-
-    .timeline-points {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 0 1rem;
-    }
-
-    .timeline-point {
-        flex-direction: row;
-        text-align: left;
-        gap: 1rem;
-        padding: 0;
-    }
-
-    .timeline-point::before {
-        content: '';
-        position: absolute;
-        left: 30px;
-        top: 60px;
-      height: calc(100% - 40px);
-        width: 2px;
-        background: #e2e8f0;
-        z-index: 1;
-    }
-
-    .timeline-point:last-child::before {
-        display: none;
-    }
-
-    .point-icon {
-        margin: 0;
-        flex-shrink: 0;
-        width: 50px;
-        height: 50px;
-        font-size: 1.25rem;
-    }
-
-    .point-time {
-        width: calc(100% - 60px);
-        min-height: auto;
-        margin-bottom: 0.5rem;
-    }
-
-    .point-content {
-        flex: 1;
-    }
-
-    .point-label {
-        min-height: auto;
-        margin: 0.25rem 0;
-        justify-content: flex-start;
-        text-align: left;
-    }
-
-    .point-location {
-        margin-bottom: 0;
-    }
-
-    .timeline-progress {
-        display: none;
-    }
-
-    .info-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1.5rem;
-    }
-
-    .event-details {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .event-time {
-        text-align: left;
         margin-top: 1rem;
-    }
-
-    .delivery-date {
-        font-size: 2rem;
-    }
-
-    .timeline::before {
-        left: 6px;
-    }
-
-    .timeline-marker {
-        left: -2.5rem;
-    }
-
-    .timeline-content {
-        margin-left: -1rem;
-    }
-
-    .tracking-title {
-        font-size: 1.75rem;
-        text-align: left;
-    }
-}
-
-/* Touch Device Optimizations */
-@media (hover: none) {
-    .tracking-card:hover,
-    .timeline-content:hover,
-    .info-item:hover {
-        transform: none;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(78, 205, 196, 0.1);
     }
     
-    .timeline-point.active .point-icon {
-        transform: scale(1.1);
+    .nav-link {
+        padding: 0.8rem 1rem;
+        margin: 0.3rem 0;
+    }
+    
+    .nav-button {
+        margin: 0.5rem 0;
+        text-align: center;
+        justify-content: center;
     }
 }
 
-/* Print Styles */
-@media print {
-    .navbar {
-        display: none;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    .tracking-wrapper {
-        margin: 0;
-        padding: 0;
-    }
+        body {
+            padding-top: 80px; /* Add padding to account for fixed navbar */
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            line-height: 1.7;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.05) 0%, transparent 30%);
+            background-attachment: fixed;
+        }
 
-    .tracking-card,
-    .timeline-content {
-        box-shadow: none;
-        border: 1px solid #ddd;
-    }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
 
-    .timeline-progress {
-        display: none;
-    }
+        /* Glass Morphism Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 var(--glass-shadow);
+        }
 
-    .timeline-point::before {
-        display: none;
-    }
-}
-</style>
+        .tracking-wrapper {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 1rem;
+        }
+
+        .order-card {
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-decoration {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .decoration-1 {
+            top: -150px;
+            right: -150px;
+        }
+
+        .decoration-2 {
+            bottom: -150px;
+            left: -150px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tracking-title {
+            font-size: 2.5rem;
+            margin: 0;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tracking-number {
+            font-size: 1.1rem;
+            color: var(--neutral);
+            margin: 0.5rem 0 0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 1.2rem;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            gap: 0.5rem;
+            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .pulse {
+            height: 10px;
+            width: 10px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        .delivery-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .delivery-date-wrapper {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .date-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--neutral);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .delivery-date {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+        }
+
+        .countdown {
+            margin-top: 0.5rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .countdown span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            border-radius: 20px;
+            background: var(--neutral-light);
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-card {
+            padding: 1.5rem;
+            border-radius: 16px;
+            background: var(--card-bg);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: var(--primary-bg);
+            color: var(--primary);
+        }
+
+        .info-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--neutral);
+            margin: 0;
+        }
+
+        .info-content {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .info-content strong {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Modern Timeline */
+        .timeline-container {
+            position: relative;
+            margin: 4rem 0;
+            padding-top: 2rem;
+        }
+
+        .timeline-track {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--neutral-light);
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            width: var(--progress-width, 0%);
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 4px;
+            transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .timeline-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .step-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--neutral);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: var(--neutral);
+            position: relative;
+            z-index: 2;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .step-content {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-location {
+            color: var(--neutral);
+            font-size: 0.9rem;
+            flex-grow: 1;
+        }
+
+        .step-time {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--neutral-light);
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            color: var(--neutral);
+        }
+
+        /* Timeline Status Classes */
+        .timeline-step.completed .step-icon {
+            background: linear-gradient(135deg, var(--success), #34d399);
+            border-color: var(--success);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .timeline-step.active .step-icon {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-color: var(--primary);
+            color: white;
+            transform: scale(1.2);
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.4);
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% {
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(99, 102, 241, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+            }
+        }
+
+        .timeline-step.active .step-content {
+            background: linear-gradient(135deg, white, var(--primary-bg));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .timeline-step.completed .step-content {
+            background: linear-gradient(135deg, white, var(--success-light));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* Detailed Timeline */
+        .detailed-timeline {
+            margin-top: 4rem;
+        }
+
+        .timeline-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .detailed-events {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .detailed-events::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--gradient-start), var(--gradient-end));
+            border-radius: 3px;
+        }
+
+        .event-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .event-marker {
+            position: absolute;
+            left: -3rem;
+            top: 0.5rem;
+        }
+
+        .marker-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--neutral);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--neutral);
+        }
+
+        .event-item.active .marker-dot {
+            background: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary), 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .event-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .event-status {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .event-timestamp {
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--neutral);
+        }
+
+        .event-timestamp span {
+            display: block;
+        }
+
+        .event-details {
+            color: var(--neutral);
+            font-size: 0.95rem;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .tracking-wrapper {
+                padding: 0.75rem;
+                margin: 2rem auto;
+            }
+
+            .order-card, .info-grid {
+                padding: 1.5rem;
+            }
+
+            .tracking-title {
+                font-size: 1.75rem;
+            }
+
+            .delivery-date {
+                font-size: 2rem;
+            }
+
+            .timeline-steps {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .timeline-track {
+                display: none;
+            }
+
+            .timeline-step {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                grid-template-areas: 
+                    "icon content";
+                text-align: left;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .step-icon {
+                grid-area: icon;
+                margin-bottom: 0;
+            }
+
+            .step-content {
+                grid-area: content;
+            }
+
+            .timeline-step::after {
+                content: '';
+                position: absolute;
+                left: 35px;
+                top: 70px;
+                height: calc(100% + 3rem);
+                width: 3px;
+                background: var(--neutral-light);
+                z-index: 1;
+            }
+
+            .timeline-step:last-child::after {
+                display: none;
+            }
+
+            .step-title {
+                font-size: 1rem;
+            }
+
+            .detailed-events {
+                padding-left: 2.5rem;
+            }
+
+            .event-marker {
+                left: -2.5rem;
+            }
+
+            .event-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .event-timestamp {
+                text-align: left;
+            }
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.7s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+        .delay-5 { animation-delay: 1s; }
+    </style>
 </head>
 <body>
- <div class="tracking-wrapper">
-    <div class="tracking-card">
-        <div class="status-chip">
-            <h2 class="mb-4">Track Your Order</h2>
+    <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="bi bi-box-seam me-2"></i>E-Gate<span class="brand-accent">.</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#"><span class="nav-icon"><i class="bi bi-house-door"></i></span>Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><span class="nav-icon"><i class="bi bi-telephone"></i></span>Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><span class="nav-icon"><i class="bi bi-headset"></i></span>Support</a>
+                </li>
+            </ul>
         </div>
+    </div>
+</nav>
 
-        <div class="mb-4">
-            <div class="d-flex justify-content-between align-items-center">
-                <span>Tracking Number</span>
-                <span class="status-badge">{{shipment.status}}</span>
+    <div class="tracking-wrapper">
+        {{#if error}}
+        <div class="alert alert-danger">
+            {{error}}
+        </div>
+        {{else}}
+        <div class="glass-card order-card fadeIn">
+            <div class="card-decoration decoration-1"></div>
+            <div class="card-decoration decoration-2"></div>
+            
+            <div class="order-header">
+                <div>
+                    <h1 class="tracking-title">Track Your Order</h1>
+                    <p class="tracking-number">AWB: {{shipment.awbNumber}}</p>
+                </div>
+                <div class="status-badge">
+                    <span class="pulse"></span>
+                    <span>{{shipment.status}}</span>
+                </div>
             </div>
-            <p class="delivery-date">{{formatDate shipment.estimatedDeliveryDate}}</p>
-            <p class="text-muted mb-0">{{shipment.awbNumber}}</p>
-            <p class="mb-2">Your Order Is <span class="text-primary">{{shipment.status}}</span></p>
-
-            <div class="timeline-container">
-                <div class="timeline-progress">
-                    <div class="progress-bar"></div>
+            
+            <div class="delivery-info fadeIn delay-1">
+                <div class="delivery-date-wrapper">
+                    <div class="date-label">Estimated Delivery</div>
+                    <h2 class="delivery-date">{{helpers.formatDate shipment.estimatedDeliveryDate}}</h2>
+                    <p class="countdown">Arriving in <span>{{countdown}}</span></p>
                 </div>
-                
-                <div class="timeline-points">
-                    {{#each shipment.timeline}}
-                    <div class="timeline-point {{#if isCompleted}}completed{{/if}} {{#if status}}active{{/if}}">
-                        <div class="point-icon">
-                            {{!-- Add icon based on status --}}
-                            <i class="bi {{getStatusIcon status}}"></i>
-                        </div>
-                        <div class="point-time">
-                            <div class="time-value">{{formatTime timestamp}}</div>
-                            <div class="time-date">{{formatDate timestamp}}</div>
-                        </div>
-                        <div class="point-label">{{status}}</div>
-                        <div class="point-location">{{location}}</div>
-                    </div>
-                    {{/each}}
-                </div>
+            </div>
+            
+            <div class="timeline-container fadeIn delay-2">
+    <div class="timeline-track">
+        <div class="timeline-progress" style="--progress-width: {{progressPercentage}}%"></div>
+    </div>
+    
+    <div class="timeline-steps">
+    {{#each shipment.timeline}}
+    <div class="timeline-step {{#if isCompleted}}completed{{/if}} {{#if isActive}}active{{/if}}">
+        <div class="step-icon">
+            <i class="bi {{../helpers.getStatusIcon status}}"></i>
+        </div>
+        <div class="step-content">
+            <h4 class="step-title">{{status}}</h4>
+            <p class="step-location">{{location}}</p>
+            <div class="step-time">
+                <span>{{../helpers.formatDate timestamp}}</span>
+                <span>{{../helpers.formatTime timestamp}}</span>
             </div>
         </div>
     </div>
-
-    <div class="tracking-details">
-        <h2 class="tracking-title">Shipment Details</h2>
-        
-        <div class="info-grid">
-            <div class="info-item">
-                <span class="info-label">From</span>
-                <div class="info-value">
-                    {{shipment.sender.addressDetails.contactName}}<br>
-                    {{shipment.sender.addressDetails.company}}<br>
-                    {{shipment.sender.addressDetails.addressLine1}}<br>
-                    {{shipment.sender.addressDetails.city}}, {{shipment.sender.addressDetails.country}}
-                </div>
-            </div>
-
-            <div class="info-item">
-                <span class="info-label">To</span>
-                <div class="info-value">
-                    {{shipment.receiver.addressDetails.contactName}}<br>
-                    {{shipment.receiver.addressDetails.company}}<br>
-                    {{shipment.receiver.addressDetails.addressLine1}}<br>
-                    {{shipment.receiver.addressDetails.city}}, {{shipment.receiver.addressDetails.country}}
-                </div>
-            </div>
-
-            <div class="info-item">
-                <span class="info-label">Package Details</span>
-                <div class="info-value">
-                    Total Packages: {{shipment.totalPackages}}<br>
-                    Total Weight: {{shipment.totalWeight}} kg
-                </div>
-            </div>
-        </div>
-
-        <div class="timeline">
-            {{#each shipment.timeline}}
-            <div class="timeline-item">
-                <div class="timeline-marker {{#if isCompleted}}delivered{{/if}}">
-                    <div class="marker"></div>
-                </div>
-                <div class="timeline-content">
-                    <div class="event-details">
-                        <div class="event-text">
-                            <h4>{{status}}</h4>
-                            <p class="shipment-details">{{description}}</p>
-                        </div>
-                        <div class="event-time">
-                            <span>{{formatDate timestamp}}</span>
-                            <span>{{formatTime timestamp}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/each}}
-        </div>
-    </div>
+    {{/each}}
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>function updateProgress() {
-        const points = document.querySelectorAll('.timeline-point');
-        let completedPoints = 0;
+</div>
+        </div>
         
-        points.forEach(point => {
-            if (point.classList.contains('completed')) {
-                completedPoints++;
+        <div class="info-grid fadeIn delay-3">
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <h3 class="info-title">Sender</h3>
+                </div>
+                <div class="info-content">
+                    <p>
+                        <strong>{{shipment.sender.addressDetails.contactName}}</strong><br>
+                        <span>{{shipment.sender.addressDetails.company}}</span><br>
+                        <span>{{shipment.sender.addressDetails.addressLine1}}</span><br>
+                        <span>{{shipment.sender.addressDetails.city}}</span>, 
+                        <span>{{shipment.sender.addressDetails.country}}</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon">
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+                    <h3 class="info-title">Recipient</h3>
+                </div>
+                <div class="info-content">
+                    <p>
+                        <strong>{{shipment.receiver.addressDetails.contactName}}</strong><br>
+                        <span>{{shipment.receiver.addressDetails.company}}</span><br>
+                        <span>{{shipment.receiver.addressDetails.addressLine1}}</span><br>
+                        <span>{{shipment.receiver.addressDetails.city}}</span>, 
+                        <span>{{shipment.receiver.addressDetails.country}}</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon">
+                        <i class="bi bi-box"></i>
+                    </div>
+                    <h3 class="info-title">Package Details</h3>
+                </div>
+                <div class="info-content">
+                    <p>
+                        <strong>Total Packages:</strong> <span>{{shipment.totalPackages}}</span><br>
+                        <strong>Total Weight:</strong> <span>{{shipment.totalWeight}} kg</span><br>
+                        <strong>Service:</strong> <span>{{shipment.serviceType}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="detailed-timeline fadeIn delay-4">
+            <h2 class="timeline-title">Detailed Tracking History</h2>
+            
+            <div class="detailed-events">
+                {{#each shipment.timeline}}
+                <div class="event-item {{#if isActive}}active{{/if}}">
+                    <div class="event-marker">
+                        <div class="marker-dot"></div>
+                    </div>
+                    <div class="event-card">
+                        <div class="event-header">
+                            <h4 class="event-status">{{status}}</h4>
+                            <div class="event-timestamp">
+                                <span>{{lookup ../helpers.formatDate timestamp}}</span>
+                                <span>{{lookup ../helpers.formatTime timestamp}}</span>
+                            </div>
+                        </div>
+                        <p class="event-details">{{description}}</p>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add code to mark the current active step
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mark the current active step
+            const timeline = document.querySelectorAll('.timeline-step');
+            let foundActive = false;
+            
+            // First pass: find if any step is already marked as active
+            timeline.forEach(step => {
+                if (step.classList.contains('active')) {
+                    foundActive = true;
+                }
+            });
+            
+            // If no active step is marked, mark the first non-completed step as active
+            if (!foundActive) {
+                for (let i = 0; i < timeline.length; i++) {
+                    if (!timeline[i].classList.contains('completed')) {
+                        timeline[i].classList.add('active');
+                        
+                        // Also mark this step as active in the detailed timeline
+                        const detailedEvents = document.querySelectorAll('.event-item');
+                        if (detailedEvents[i]) {
+                            detailedEvents[i].classList.add('active');
+                        }
+                        
+                        break;
+                    }
+                }
             }
+            
+            // Intersection Observer for animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fadeIn').forEach(item => {
+                observer.observe(item);
+            });
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+            
+            // Set active nav item based on section
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
         });
-    
-        const progressPercentage = (completedPoints / (points.length - 1)) * 100;
-        document.querySelector('.progress-bar').style.setProperty('--progress-width', `${progressPercentage}%`);
-    }
-    
-    // Call on page load
-    document.addEventListener('DOMContentLoaded', updateProgress);</script>
-</script>
+    </script>
 </body>
 </html>
