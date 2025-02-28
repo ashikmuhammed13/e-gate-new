@@ -166,9 +166,33 @@ hbs.registerHelper('getStatusIcon', function(status) {
     return icons[status] || 'bi-circle';
 });
 
-// Add this with your other helper registrations
-hbs.registerHelper('eq', function(a, b) {
+// Register individual helpers
+hbs.registerHelper('eq', function (a, b) {
     return a === b;
+});
+
+hbs.registerHelper('gt', function (a, b) {
+    return a > b;
+});
+
+hbs.registerHelper('abs', function (num) {
+    return Math.abs(num);
+});
+
+hbs.registerHelper('formatTimeAgo', function (date) {
+    const now = new Date();
+    const diff = Math.floor((now - new Date(date)) / 1000 / 60); // difference in minutes
+
+    if (diff < 1) return 'just now';
+    if (diff < 60) return `${diff} minutes ago`;
+
+    const hours = Math.floor(diff / 60);
+    if (hours < 24) return `${hours} hours ago`;
+
+    const days = Math.floor(hours / 24);
+    if (days === 1) return 'yesterday';
+
+    return `${days} days ago`;
 });
 // Start the server
 const PORT = process.env.PORT || 3000;

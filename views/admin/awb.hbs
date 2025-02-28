@@ -137,7 +137,7 @@
         .top-header {
             background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
             border-radius: 24px;
-            padding: 1.5rem 2rem;
+            padding:  2rem;
             margin-bottom: 2rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             display: flex;
@@ -146,9 +146,10 @@
         }
 
         .airline-logo {
-            height: 40px;
-            filter: brightness(1.1);
-        }
+        height: 80px; /* Increased from 40px to 80px */
+        filter: brightness(1.1);
+        object-fit: contain;
+    }
 
         .create-awb-btn {
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
@@ -404,39 +405,40 @@
         </div>
 
         <div class="dashboard-card">
-            <div class="card-header">
-                <h2 class="card-title">Recently Used AWB</h2>
-            </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
+    <div class="card-header">
+        <h2 class="card-title">Recently Used AWB</h2>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>AWB Number</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#if recentlyUsedAwbs.length}}
+                    {{#each recentlyUsedAwbs}}
                         <tr>
-                            <th>AWB Number</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>176-12345678</td>
-                            <td>Dubai, UAE</td>
-                            <td>London, UK</td>
-                            <td>2025-01-22</td>
+                            <td>{{prefix}}-{{awbNumber}}</td>
+                            <td>{{origin}}</td>
+                            <td>{{destination}}</td>
+                            <td>{{formatDate updatedAt}}</td>
                             <td><span class="status-badge status-used">Used</span></td>
                         </tr>
-                        <tr>
-                            <td>176-87654321</td>
-                            <td>Mumbai, India</td>
-                            <td>New York, USA</td>
-                            <td>2025-01-21</td>
-                            <td><span class="status-badge status-active">Active</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    {{/each}}
+                {{else}}
+                    <tr>
+                        <td colspan="5" class="text-center">No recently used AWBs found</td>
+                    </tr>
+                {{/if}}
+            </tbody>
+        </table>
+    </div>
+</div>
 
         <div class="dashboard-card">
             <div class="card-header">

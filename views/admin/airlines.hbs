@@ -461,59 +461,52 @@
         </nav>
     <div class="container">
         <div class="row stats-container">
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <h5 class="text-muted mb-2">Total AWBs</h5>
-                    <h2 class="mb-0">450</h2>
-                    <small class="text-success"><i class="fas fa-arrow-up me-1"></i>12% this month</small>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <h5 class="text-muted mb-2">Active Airlines</h5>
-                    <h2 class="mb-0">4</h2>
-                    <small class="text-primary"><i class="fas fa-plane me-1"></i>All operational</small>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="recent-awb-section">
-                    <h5 class="mb-3">Recent AWBs</h5>
-                    <div class="recent-awb-list">
+    <div class="col-md-3">
+        <div class="stats-card">
+            <h5 class="text-muted mb-2">Total AWBs</h5>
+            <h2 class="mb-0">{{totalAwbs}}</h2>
+            <small class="{{#if growthPercentage}}{{#if (gt growthPercentage 0)}}text-success{{else}}text-danger{{/if}}{{else}}text-muted{{/if}}">
+                <i class="fas fa-{{#if (gt growthPercentage 0)}}arrow-up{{else}}arrow-down{{/if}} me-1"></i>
+                {{abs growthPercentage}}% this month
+            </small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <h5 class="text-muted mb-2">Active Airlines</h5>
+            <h2 class="mb-0">{{activeAirlinesCount}}</h2>
+            <small class="text-primary"><i class="fas fa-plane me-1"></i>All operational</small>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="recent-awb-section">
+            <h5 class="mb-3">Recent AWBs</h5>
+            <div class="recent-awb-list">
+                {{#if recentAwbs.length}}
+                    {{#each recentAwbs}}
                         <div class="recent-awb-item">
                             <div class="me-3">
                                 <i class="fas fa-file-alt text-primary"></i>
                             </div>
                             <div>
-                                <h6 class="mb-0">AWB-2024-001</h6>
-                                <small class="text-muted">Emirates Airways • 2 hours ago</small>
+                                <h6 class="mb-0">{{awbNumber}}</h6>
+                                <small class="text-muted">{{airline}} • {{formatTimeAgo timestamp}}</small>
                             </div>
                         </div>
-                        <div class="recent-awb-item">
-                            <div class="me-3">
-                                <i class="fas fa-file-alt text-primary"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">AWB-2024-001</h6>
-                                <small class="text-muted">Emirates Airways • 2 hours ago</small>
-                            </div>
-                        </div>
-                        <div class="recent-awb-item">
-                            <div class="me-3">
-                                <i class="fas fa-file-alt text-primary"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">AWB-2024-001</h6>
-                                <small class="text-muted">Emirates Airways • 2 hours ago</small>
-                            </div>
-                        </div>
-                        <!-- Add more AWB items here -->
+                    {{/each}}
+                {{else}}
+                    <div class="text-center py-3">
+                        <p class="text-muted">No recent AWBs found</p>
                     </div>
-                </div>
+                {{/if}}
             </div>
         </div>
+    </div>
+</div>
 
         <!-- Airline Grid -->
-  <div class="airline-grid">
+  <!-- Update the airline grid to show accurate AWB counts -->
+<div class="airline-grid">
   {{#each airlines}}
   <a href="/admin/getawb?prefix={{prefix}}" class="airline-card-link">
     <div class="airline-card">
@@ -521,21 +514,18 @@
       <div class="airline-overlay">
         <div class="airline-info">
           <div class="airline-name">{{airlineName}}</div>
-          <div class="awb-count">{{awbs.length}} AWBs</div>
+          
         </div>
       </div>
       <div class="hover-shield">
-        <div class="available-number">{{awbs.length}}</div>
+        <div class="available-number">{{awbCount}}</div>
         <div class="available-text">Available Airway Bills</div>
+        
       </div>
     </div>
   </a>
   {{/each}}
 </div>
-
-
-
-    </div>
 
     <!-- Add Airline Modal -->
 <div class="modal fade" id="addAirlineModal" tabindex="-1" aria-labelledby="addAirlineModalLabel" aria-hidden="true">

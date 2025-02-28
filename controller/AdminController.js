@@ -227,8 +227,62 @@ addAwb = async (req, res) => {
 
 const getAllAirlines = async (req, res) => {
   try {
-    const airlines = await Airlines.find(); // Fetch all airlines from the database
-    res.render('admin/airlines', { airlines });
+    // Fetch all airlines from the database
+    const airlines = await Airlines.find().lean();
+    
+    // For each airline, get the AWB count
+    for (let airline of airlines) {
+      const awbCount = await AWB.countDocuments({ prefix: airline.prefix });
+      airline.awbCount = awbCount;
+    }
+    
+    // Get total AWB count
+    const totalAwbs = await AWB.countDocuments();
+    
+    // Get active airlines count
+    const activeAirlinesCount = airlines.length;
+    
+    // Get 5 most recently used AWBs across all airlines
+    const recentAwbs = await AWB.find({ isUsed: true })
+      .sort({ updatedAt: -1 })
+      .limit(5)
+      .populate({
+        path: 'prefix',
+        select: 'prefix'
+      })
+      .lean();
+      
+    // Format recent AWBs with airline info
+    const formattedRecentAwbs = [];
+    
+    for (const awb of recentAwbs) {
+      const airline = await Airlines.findOne({ prefix: awb.prefix }).lean();
+      
+      formattedRecentAwbs.push({
+        awbNumber: `${awb.prefix}-${awb.awbNumber}`,
+        airlineName: airline ? airline.airlineName : 'Unknown Airline',
+        timestamp: awb.updatedAt,
+        origin: awb.origin,
+        destination: awb.destination
+      });
+    }
+    
+    // Calculate growth percentage (example calculation - you can adjust this based on your needs)
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    
+    const lastMonthAwbs = await AWB.countDocuments({ createdAt: { $lte: oneMonthAgo } });
+    const growthPercentage = lastMonthAwbs > 0 
+      ? Math.round(((totalAwbs - lastMonthAwbs) / lastMonthAwbs) * 100) 
+      : 0;
+    
+    res.render('admin/airlines', { 
+      airlines, 
+      totalAwbs, 
+      activeAirlinesCount,
+      recentAwbs: formattedRecentAwbs,
+      growthPercentage
+    });
   } catch (error) {
     console.error('Error fetching airlines:', error);
     res.status(500).send('Internal Server Error');
@@ -271,15 +325,34 @@ addAirline = async (req, res) => {
   }
 };
 
-getawb = async (req, res) => {
+// Modified getawb controller function
+const getawb = async (req, res) => {
   try {
     const { prefix } = req.query;
     if (!prefix) return res.status(400).send("Prefix is required");
 
-    const awbs = await AWB.find({ prefix }).lean(); // Fetch AWBs with the given prefix
-    const airlines = await Airlines.findOne({ prefix }).lean(); // Fetch only one airline
+    // Get all AWBs with the specified prefix
+    const awbs = await AWB.find({ prefix }).lean();
+    
+    // Get the airline information
+    const airlines = await Airlines.findOne({ prefix }).lean();
+    
+    // Get the last 3 used AWBs, sorted by most recent first
+    const recentlyUsedAwbs = await AWB.find({ 
+      prefix, 
+      isUsed: true 
+    })
+    .sort({ updatedAt: -1 })
+    .limit(3)
+    .lean();
 
-    res.render("admin/awb", { awbs, prefix, airlines }); // Render the AWB numbers page
+    res.render("admin/awb", { 
+      awbs, 
+      prefix, 
+      airlines, 
+      airlineId: airlines._id,
+      recentlyUsedAwbs 
+    });
   } catch (error) {
     console.error("Error fetching AWBs:", error);
     res.status(500).send("Internal Server Error");

@@ -243,7 +243,7 @@ class ShipmentForm {
             packages: this.getPackagesData()
           };
       
-          console.log('Submitting form data:', formData);
+        //   console.log('Submitting form data:', formData);
 
           const response = await fetch('/admin/createAwb', {
             method: 'POST',

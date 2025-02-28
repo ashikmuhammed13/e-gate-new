@@ -361,14 +361,22 @@
                         AWB Details
                     </h3>
                     <div class="row g-4">
-                       <div class="col-md-4">
-  <label class="form-label">AWB Number</label>
-  <select class="form-select" name="awbNumber">
-    <option value="" selected disabled>Select AWB Number</option>
-    {{#each awbNumbers}}
-      <option value="{{this.awbNumber}}">{{this.awbNumber}}</option>
-    {{/each}}
-  </select>
+                        <div class="col-md-4">
+    <label class="form-label">Select Airline</label>
+    <select class="form-select" id="airlineSelect" name="airline">
+        <option value="" selected disabled>Select Airline</option>
+        {{#each airlines}}
+            <option value="{{prefix}}">{{airlineName}}</option>
+        {{/each}}
+    </select>
+</div>
+
+<div class="col-md-4" id="awbNumberContainer" style="display:none;">
+    <label class="form-label">AWB Number</label>
+    <select class="form-select" id="awbNumberSelect" name="awbNumber">
+        <option value="" selected disabled>Select AWB Number</option>
+        <!-- AWB numbers will be dynamically populated -->
+    </select>
 </div>
                         <div class="col-md-4">
                             <label class="form-label">IATA Code</label>
@@ -581,51 +589,68 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
- <script>
-  // Helper function to get a query parameter by name
-  function getParameterByName(name, url = window.location.href) {
-    name = name.replace(/[\[\]]/g, '\\$&');
-    const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-          results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-  }
-
-  document.addEventListener('DOMContentLoaded', function() {
-    // Existing form validation and floating-label code...
-    const form = document.getElementById('mawbForm');
-    form.addEventListener('submit', function(event) {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+    // Form validation and other existing code...
+    
+    // Debugging - Check if AWB numbers are being passed correctly
+    const airlineSelect = document.getElementById('airlineSelect');
+    const awbNumberContainer = document.getElementById('awbNumberContainer');
+    const awbNumberSelect = document.getElementById('awbNumberSelect');
+    
+    // Important: Make sure this matches exactly how your server sends the data
+    // Note: We're adding a console.log to check the data
+    const awbNumbersData = {{{json awbNumbers}}};
+    console.log("AWB Numbers Data:", awbNumbersData);
+    
+    airlineSelect.addEventListener('change', function() {
+      const selectedPrefix = this.value;
+      console.log("Selected airline prefix:", selectedPrefix);
+      
+      // Clear previous options
+      awbNumberSelect.innerHTML = '<option value="" selected disabled>Select AWB Number</option>';
+      
+      if (selectedPrefix) {
+        // Show the AWB number container
+        awbNumberContainer.style.display = 'block';
+        
+        // Filter AWB numbers by the selected prefix
+        const filteredAwbs = awbNumbersData.filter(awb => awb.prefix === selectedPrefix);
+        console.log("Filtered AWBs:", filteredAwbs);
+        
+        // Add options for each matching AWB number
+        filteredAwbs.forEach(awb => {
+          const option = document.createElement('option');
+          option.value = awb.awbNumber;
+          option.textContent = awb.awbNumber;
+          awbNumberSelect.appendChild(option);
+        });
+        
+        // If no AWB numbers found for this airline
+        if (filteredAwbs.length === 0) {
+          const option = document.createElement('option');
+          option.value = "";
+          option.textContent = "No AWB numbers available";
+          option.disabled = true;
+          awbNumberSelect.appendChild(option);
+        }
+      } else {
+        // Hide the AWB number container if no airline is selected
+        awbNumberContainer.style.display = 'none';
       }
-      form.classList.add('was-validated');
     });
-    const inputs = document.querySelectorAll('.form-control, .form-select');
-    inputs.forEach(input => {
-      input.addEventListener('focus', () => input.parentElement.classList.add('focused'));
-      input.addEventListener('blur', () => {
-        if (!input.value) input.parentElement.classList.remove('focused');
-      });
-    });
-
-    // Debug: log current URL
-    console.log("Current URL:", window.location.href);
-
-    // Check if the hidden input already has a value
-    const hiddenInput = document.getElementById('mawbNumberHidden');
-    console.log("Initial hidden input value:", hiddenInput.value);
-    if (!hiddenInput.value) {
-      // Extract mawbNumber from URL query parameter
-      const mawbFromURL = getParameterByName('mawbNumber');
-      console.log("Extracted mawbNumber from URL:", mawbFromURL);
-      if (mawbFromURL) {
-        hiddenInput.value = mawbFromURL;
-        console.log("Hidden input updated to:", hiddenInput.value);
-      }
+    
+    // Helper function to get a query parameter by name
+    function getParameterByName(name, url = window.location.href) {
+      name = name.replace(/[\[\]]/g, '\\$&');
+      const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
   });
+  
 </script>
 </body>
 </html>

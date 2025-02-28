@@ -9,7 +9,8 @@ const pdf = require('html-pdf');
 const bwipjs = require('bwip-js');
 const QRCode = require('qrcode');
 const handlebars = require('handlebars');
-
+const MAWB = require('../models/MAWB'); // Adjust the path as needed to your model
+const HAWB = require('../models/HAWB');
 module.exports = {
     getAwbPage: async (req, res) => {
         try {
@@ -401,224 +402,338 @@ console.log(shipment.timeline); // Check if this outputs the expected array
 },
   
 
-generatemawb:async (req, res) => {
-    try {
-        const {
-            awbNumber,
-            shipperName,
-            consigneeName,
-            carrierCode,
-            grossWeight,
-            dimensions,
-            departure,
-            destination,
-            handlingInformation,
-            prepaid,
-            totalChargesCarrier,
-            date,
-            place,
-            signature,
-            frieght,
-            iataCode,
-            routingTO1,
-            ICN,
-            SAR,
-            PP,
-            COLUMN1,
-            COLUMN2,
-            NVD,
-            NCV,
-            kiloGram,
-            RATECHARGE,
-            consolidated,
-            totalQTY,
-            QTY
-        } = req.body;
-        if (
-            !awbNumber || !shipperName || !consigneeName || !carrierCode || 
-            !grossWeight || !dimensions || !departure || !destination || 
-            !handlingInformation || !prepaid || !totalChargesCarrier || 
-            !date || !place || !signature || !frieght
-        ) {
-            return res.status(400).send('Missing required fields');
-        }
-        // Path to the template PDF
-        const templatePath = path.join(global.appRoot, 'controller', 'templates', 'MAWB_Template.pdf');
+generatemawb: async (req, res) => {
+  try {
+      const {
+          awbNumber,
+          
+          shipperName,
+          consigneeName,
+          carrierCode,
+          grossWeight,
+          dimensions,
+          departure,
+          destination,
+          handlingInformation,
+          prepaid,
+          totalChargesCarrier,
+          date,
+          place,
+          signature,
+          frieght,
+          iataCode,
+          routingTO1,
+          ICN,
+          SAR,
+          PP,
+          COLUMN1,
+          COLUMN2,
+          NVD,
+          NCV,
+          kiloGram,
+          RATECHARGE,
+          consolidated,
+          totalQTY,
+          QTY
+      } = req.body;
+      
+      if (
+          !awbNumber || !shipperName || !consigneeName || !carrierCode || 
+          !grossWeight || !dimensions || !departure || !destination || 
+          !handlingInformation || !prepaid || !totalChargesCarrier || 
+          !date || !place || !signature || !frieght
+      ) {
+          return res.status(400).send('Missing required fields');
+      }
+      
+      // First, save the MAWB data to the database
+      try {
+          // Create a new MAWB document
+          const newMAWB = new MAWB({
+              awbNumber,
+              hawbNumber:null,
+              shipperName,
+              consigneeName,
+              carrierCode,
+              grossWeight,
+              dimensions,
+              departure,
+              destination,
+              handlingInformation,
+              prepaid,
+              totalChargesCarrier,
+              date,
+              place,
+              signature,
+              frieght,
+              iataCode,
+              routingTO1,
+              ICN,
+              SAR,
+              PP,
+              COLUMN1,
+              COLUMN2,
+              NVD,
+              NCV,
+              kiloGram,
+              RATECHARGE,
+              consolidated,
+              totalQTY,
+              QTY
+          });
 
-        const result = await AWB.findOneAndUpdate(
-            { awbNumber }, // Find the record by awbNumber
-            { $set: { used: true } }, // Set `used` to true
-            { new: true } // Return the updated document
-        );
-        
-        const templateBytes = fs.readFileSync(templatePath);
-        const pdfDoc = await PDFDocument.load(templateBytes);
-        const pages = pdfDoc.getPages();
-        const firstPage = pages[0];
-        console.log('Current working directory:', process.cwd());
-        console.log('Template path:', templatePath);
-        
-        // Embed a font
-        const customFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+          // Save to database
+          await newMAWB.save();
+          console.log('MAWB saved to database:', awbNumber);
+      } catch (dbError) {
+          console.error('Error saving MAWB to database:', dbError);
+          return res.status(500).send('Error saving MAWB to database');
+      }
+      
+      // Path to the template PDF
+      const templatePath = path.join(global.appRoot, 'controller', 'templates', 'MAWB_Template.pdf');
 
+      const result = await AWB.findOneAndUpdate(
+        { awbNumber }, // Find the record by awbNumber
+        { $set: { isUsed: true } }, // Set `isUsed` to true (match your schema)
+        { new: true } // Return the updated document
+    );
+      
+      const templateBytes = fs.readFileSync(templatePath);
+      const pdfDoc = await PDFDocument.load(templateBytes);
+      const pages = pdfDoc.getPages();
+      const firstPage = pages[0];
+      console.log('Current working directory:', process.cwd());
+      console.log('Template path:', templatePath);
+      
+      // Embed a font
+      const customFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-        const fontSize = 8;
-        const maxWidth = 250; // Adjust based on your PDF template's field width
+      const fontSize = 8;
+      const maxWidth = 250; // Adjust based on your PDF template's field width
 
-        // Sanitize text input
-        const sanitizeText = (text) => text.replace(/[\r\n]+/g, ' '); // Replace newlines with spaces
+      // Sanitize text input
+      const sanitizeText = (text) => text.replace(/[\r\n]+/g, ' '); // Replace newlines with spaces
 
-        // Word wrapping function
-        const wrapText = (text, font, size, maxWidth) => {
-            const sanitizedText = sanitizeText(text);
-            const words = sanitizedText.split(' ');
-            let lines = [];
-            let currentLine = '';
+      // Word wrapping function
+      const wrapText = (text, font, size, maxWidth) => {
+          const sanitizedText = sanitizeText(text);
+          const words = sanitizedText.split(' ');
+          let lines = [];
+          let currentLine = '';
 
-            words.forEach((word) => {
-                const testLine = currentLine ? `${currentLine} ${word}` : word;
-                const textWidth = font.widthOfTextAtSize(testLine, size);
+          words.forEach((word) => {
+              const testLine = currentLine ? `${currentLine} ${word}` : word;
+              const textWidth = font.widthOfTextAtSize(testLine, size);
 
-                if (textWidth > maxWidth) {
-                    lines.push(currentLine);
-                    currentLine = word;
-                } else {
-                    currentLine = testLine;
-                }
-            });
+              if (textWidth > maxWidth) {
+                  lines.push(currentLine);
+                  currentLine = word;
+              } else {
+                  currentLine = testLine;
+              }
+          });
 
-            if (currentLine) {
-                lines.push(currentLine);
-            }
+          if (currentLine) {
+              lines.push(currentLine);
+          }
 
-            return lines;
-        };
+          return lines;
+      };
 
-        // Function to draw text with word wrapping
-        const drawText = (text, x, y) => {
-            const lines = wrapText(text, customFont, fontSize, maxWidth);
-            lines.forEach((line, index) => {
-                firstPage.drawText(line, {
-                    x,
-                    y: y - index * 10, // Adjust Y position for each line
-                    size: fontSize,
-                    font: customFont,
-                    color: rgb(0, 0, 0),
-                });
-            });
-        };
+      // Function to draw text with word wrapping
+      const drawText = (text, x, y) => {
+          const lines = wrapText(text, customFont, fontSize, maxWidth);
+          lines.forEach((line, index) => {
+              firstPage.drawText(line, {
+                  x,
+                  y: y - index * 10, // Adjust Y position for each line
+                  size: fontSize,
+                  font: customFont,
+                  color: rgb(0, 0, 0),
+              });
+          });
+      };
 
-        // Draw content
-        drawText(shipperName, 63, 740); // Shipper Address
-        drawText(consigneeName, 63, 670); // Consignee Address
-        drawText(`${signature}`, 64, 605);
-// Carrier and Transport Details
-drawText(`${awbNumber}`, 63, 780);
-drawText(`${awbNumber}`, 500, 780);
-drawText( `${iataCode}`, 63, 560);
-drawText(`${carrierCode}`, 90, 515, { size: 8 }); // Aligned with DXB
-drawText(`${routingTO1}`, 65, 515, { size: 8 }); // Adjusted to fit inside the 'To' box
-drawText(`${carrierCode}`,250 , 515); // Carrier Code
-drawText(`${ICN}`, 218, 515); 
-drawText(`${SAR}`, 320, 513); // Currency
-drawText(`${PP}`, 348, 513); // Payment method
-drawText(`${COLUMN1}`, 365, 513); // Column 1
-drawText(`${COLUMN2}`, 380, 513); // Column 2
-drawText(`${NVD}`, 450, 513); // Column 1
-drawText(`${NCV}`, 532, 513); 
+      // The rest of your PDF generation code remains the same
+      // Draw content
+      drawText(shipperName, 63, 740); // Shipper Address
+      drawText(consigneeName, 63, 670); // Consignee Address
+      drawText(`${signature}`, 64, 605);
+      // Carrier and Transport Details
+      drawText(`${awbNumber}`, 63, 780);
+      drawText(`${awbNumber}`, 500, 780);
+      drawText(`${iataCode}`, 63, 560);
+      drawText(`${carrierCode}`, 90, 515, { size: 8 }); // Aligned with DXB
+      drawText(`${routingTO1}`, 65, 515, { size: 8 }); // Adjusted to fit inside the 'To' box
+      drawText(`${carrierCode}`,250 , 515); // Carrier Code
+      drawText(`${ICN}`, 218, 515); 
+      drawText(`${SAR}`, 320, 513); // Currency
+      drawText(`${PP}`, 348, 513); // Payment method
+      drawText(`${COLUMN1}`, 365, 513); // Column 1
+      drawText(`${COLUMN2}`, 380, 513); // Column 2
+      drawText(`${NVD}`, 450, 513); // Column 1
+      drawText(`${NCV}`, 532, 513); 
 
-// Airport of Destination Box
-drawText(`${destination}`, 65, 490);
+      // Airport of Destination Box
+      drawText(`${destination}`, 65, 490);
 
-// Handling Information
-drawText(`${handlingInformation}`, 65, 460);
+      // Handling Information
+      drawText(`${handlingInformation}`, 65, 460);
 
-// Reference Number (using departure value)
-drawText(`${departure}`, 65, 535);
+      // Reference Number (using departure value)
+      drawText(`${departure}`, 65, 535);
 
-// Cargo Details
-// Cargo Details with numbers replaced by their names
-drawText(`${QTY}`, 65, 400, { size: 9 }); // Replaces '10' with 'ten'
-drawText(`${totalQTY}`, 65, 252, { size: 9 }); // Replaces '10' with 'ten'
-drawText(`${kiloGram}`, 138, 252, { size: 9 }); // Replaces "K G" with "kilogram"
+      // Cargo Details
+      // Cargo Details with numbers replaced by their names
+      drawText(`${QTY}`, 65, 400, { size: 9 }); // Replaces '10' with 'ten'
+      drawText(`${totalQTY}`, 65, 252, { size: 9 }); // Replaces '10' with 'ten'
+      drawText(`${kiloGram}`, 138, 252, { size: 9 }); // Replaces "K G" with "kilogram"
 
-drawText(`${grossWeight}`, 90, 400, { size: 9 });
-drawText(`${grossWeight}`, 218, 400, { size: 9 });
-drawText(`${grossWeight}`, 90, 252, { size: 9 });
-drawText(`${RATECHARGE}`, 280, 400, { size: 9 }); // Replaces '5.57' with a variable 
-drawText(`${prepaid}`, 348, 400, { size: 9 });
-drawText(`${consolidated}`, 450, 400, { size: 9 }); // Replaces 'CONSOLIDATED' with a variable
-drawText(`${awbNumber}`, 393, 35);
-drawText(`${dimensions}`, 450, 380, { size: 9 });
-drawText(`${kiloGram}`, 138, 400, { size: 9 });
-drawText(`${totalChargesCarrier}`, 348, 252, { size: 9 });
-// Additional Information
-drawText(`${frieght}`, 320, 605);
-drawText(`${carrierCode}`, 320, 730);
-// drawText('ORIGINAL 3 (FOR SHIPPER)', 90, 185, { size: 9 });
+      drawText(`${grossWeight}`, 90, 400, { size: 9 });
+      drawText(`${grossWeight}`, 218, 400, { size: 9 });
+      drawText(`${grossWeight}`, 90, 252, { size: 9 });
+      drawText(`${RATECHARGE}`, 280, 400, { size: 9 }); // Replaces '5.57' with a variable 
+      drawText(`${prepaid}`, 348, 400, { size: 9 });
+      drawText(`${consolidated}`, 450, 400, { size: 9 }); // Replaces 'CONSOLIDATED' with a variable
+      drawText(`${awbNumber}`, 393, 35);
+      drawText(`${dimensions}`, 450, 380, { size: 9 });
+      drawText(`${kiloGram}`, 138, 400, { size: 9 });
+      drawText(`${totalChargesCarrier}`, 348, 252, { size: 9 });
+      // Additional Information
+      drawText(`${frieght}`, 320, 605);
+      drawText(`${carrierCode}`, 320, 730);
+      // drawText('ORIGINAL 3 (FOR SHIPPER)', 90, 185, { size: 9 });
 
-// Bottom Section
-drawText(`${date}`, 271, 65, { size: 8 });
-drawText(`${place}`, 393, 65, { size: 8 });
-drawText(`${signature}`, 322, 113, { size: 9 });
-drawText(`${signature}`, 415, 65, { size: 8 });
+      // Bottom Section
+      drawText(`${date}`, 271, 65, { size: 8 });
+      drawText(`${place}`, 393, 65, { size: 8 });
+      drawText(`${signature}`, 322, 113, { size: 9 });
+      drawText(`${signature}`, 415, 65, { size: 8 });
 
-// Charges
-drawText(`${prepaid}`, 65, 223, { size: 9 });
-drawText(`${totalChargesCarrier}`, 65, 127, { size: 9 });
-        // Serialize the updated PDF to bytes
-        const pdfBytes = await pdfDoc.save();
+      // Charges
+      drawText(`${prepaid}`, 65, 223, { size: 9 });
+      drawText(`${totalChargesCarrier}`, 65, 127, { size: 9 });
 
-        // Define the output path
-        const outputPath = path.join(__dirname, 'generated', `MAWB_${Date.now()}.pdf`);
+      // Serialize the updated PDF to bytes
+      const pdfBytes = await pdfDoc.save();
 
-        // Ensure the directory exists
-        if (!fs.existsSync(path.join(__dirname, 'generated'))) {
-            fs.mkdirSync(path.join(__dirname, 'generated'));
-        }
+      // Define the output path
+      const outputPath = path.join(__dirname, 'generated', `MAWB_${Date.now()}.pdf`);
 
-        // Write the updated PDF to a file
-        fs.writeFile(outputPath, pdfBytes, (writeErr) => {
-            if (writeErr) {
-                console.error('Error writing file:', writeErr);
-                return res.status(500).send('Error generating MAWB PDF');
-            }
+      // Ensure the directory exists
+      if (!fs.existsSync(path.join(__dirname, 'generated'))) {
+          fs.mkdirSync(path.join(__dirname, 'generated'));
+      }
 
-            // Send the PDF as a downloadable file
-            res.download(outputPath, `MAWB_${awbNumber}.pdf`, (err) => {
-                if (err) {
-                    console.error('Error downloading file:', err);
-                    return res.status(500).send('Error downloading file');
-                }
+      // Write the updated PDF to a file
+      fs.writeFile(outputPath, pdfBytes, (writeErr) => {
+          if (writeErr) {
+              console.error('Error writing file:', writeErr);
+              return res.status(500).send('Error generating MAWB PDF');
+          }
 
-                // Uncomment to delete the file after successful download
-                // fs.unlinkSync(outputPath);
-            });
-        });
+          // Send the PDF as a downloadable file
+          res.download(outputPath, `MAWB_${awbNumber}.pdf`, (err) => {
+              if (err) {
+                  console.error('Error downloading file:', err);
+                  return res.status(500).send('Error downloading file');
+              }
 
-    } catch (error) {
-        console.error('Error generating MAWB:', error);
-        res.status(500).send('Error generating MAWB');
-    }
+              // Uncomment to delete the file after successful download
+              // fs.unlinkSync(outputPath);
+          });
+      });
+
+  } catch (error) {
+      console.error('Error generating MAWB:', error);
+      res.status(500).send('Error generating MAWB');
+  }
 },
-getHawb :async (req, res) => {
-    try {
-      // Fetch unused and master AWB numbers
-      const awbNumbers = await AWB.find({ used: false, awbType: 'master' }, { awbNumber: 1, _id: 0 });
-  
-      res.render("admin/hawb", { awbNumbers });
-    } catch (error) {
-      console.error('Error fetching AWB numbers:', error);
-      res.render("admin/mawb", { error: 'Failed to load AWB numbers' });
-    }
-  },
+getHawb: async (req, res) => {
+  try {
+    // Get the mawbNumber from query params if it exists
+    const mawbNumber = req.query.mawbNumber || '';
+    
+    // Fetch all airlines with their prefixes
+    const airlines = await Airline.find({}, { airlineName: 1, prefix: 1, _id: 0 });
+    
+    // Fetch unused AWB numbers of house type
+    // Make sure field names match exactly - note 'isUsed' vs 'used'
+    const awbNumbers = await AWB.find(
+      { isUsed: false, awbType: 'house' }, 
+      { awbNumber: 1, prefix: 1, _id: 0 }
+    );
+    
+    // Add console.log for debugging on server side
+    console.log("AWB Numbers for HAWB:", awbNumbers);
+    
+    res.render("admin/hawb", { 
+      airlines, 
+      awbNumbers, 
+      mawbNumber,
+      // Add helper to convert awbNumbers to JSON for the template
+      json: function(obj) {
+        return JSON.stringify(obj);
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.render("admin/hawb", { error: 'Failed to load data' });
+  }
+},
   
 
 generateHawb:async (req, res) => {
+  try {
+    const {
+        awbNumber,
+        mawbNumber,
+        shipperName,
+        consigneeName,
+        carrierCode,
+        grossWeight,
+        dimensions,
+        departure,
+        destination,
+        handlingInformation,
+        prepaid,
+        totalChargesCarrier,
+        date,
+        place,
+        signature,
+        frieght,
+        iataCode,
+        routingTO1,
+        ICN,
+        SAR,
+        PP,
+        COLUMN1,
+        COLUMN2,
+        NVD,
+        NCV,
+        kiloGram,
+        RATECHARGE,
+        consolidated,
+        totalQTY,
+        QTY
+    } = req.body;
+    
+    if (
+        !awbNumber || !shipperName || !consigneeName || !carrierCode || 
+        !grossWeight || !dimensions || !departure || !destination || 
+        !handlingInformation || !prepaid || !totalChargesCarrier || 
+        !date || !place || !signature || !frieght
+    ) {
+        return res.status(400).send('Missing required fields');
+    }
+    
+    // First, save the MAWB data to the database
     try {
-        const {
-          mawbNumber,
+        // Create a new MAWB document
+        const newHAWB = new HAWB({
             awbNumber,
+            mawbNumber,
             shipperName,
             consigneeName,
             carrierCode,
@@ -647,171 +762,172 @@ generateHawb:async (req, res) => {
             consolidated,
             totalQTY,
             QTY
-        } = req.body;
-        if (
-            !awbNumber || !shipperName || !consigneeName || !carrierCode || 
-            !grossWeight || !dimensions || !departure || !destination || 
-            !handlingInformation || !prepaid || !totalChargesCarrier || 
-            !date || !place || !signature || !frieght
-        ) {
-            return res.status(400).send('Missing required fields');
-        }
-        console.log("mawbNumber:",mawbNumber)
-        // Path to the template PDF
-        const templatePath = path.join(global.appRoot, 'controller', 'templates', 'MAWB_Template.pdf');
-
-        const result = await AWB.findOneAndUpdate(
-            { awbNumber }, // Find the record by awbNumber
-            { $set: { used: true } }, // Set `used` to true
-            { new: true } // Return the updated document
-        );
-        
-        const templateBytes = fs.readFileSync(templatePath);
-        const pdfDoc = await PDFDocument.load(templateBytes);
-        const pages = pdfDoc.getPages();
-        const firstPage = pages[0];
-        console.log('Current working directory:', process.cwd());
-        console.log('Template path:', templatePath);
-        
-        // Embed a font
-        const customFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-
-        const fontSize = 8;
-        const maxWidth = 250; // Adjust based on your PDF template's field width
-
-        // Sanitize text input
-        const sanitizeText = (text) => text.replace(/[\r\n]+/g, ' '); // Replace newlines with spaces
-
-        // Word wrapping function
-        const wrapText = (text, font, size, maxWidth) => {
-            const sanitizedText = sanitizeText(text);
-            const words = sanitizedText.split(' ');
-            let lines = [];
-            let currentLine = '';
-
-            words.forEach((word) => {
-                const testLine = currentLine ? `${currentLine} ${word}` : word;
-                const textWidth = font.widthOfTextAtSize(testLine, size);
-
-                if (textWidth > maxWidth) {
-                    lines.push(currentLine);
-                    currentLine = word;
-                } else {
-                    currentLine = testLine;
-                }
-            });
-
-            if (currentLine) {
-                lines.push(currentLine);
-            }
-
-            return lines;
-        };
-
-        // Function to draw text with word wrapping
-        const drawText = (text, x, y) => {
-            const lines = wrapText(text, customFont, fontSize, maxWidth);
-            lines.forEach((line, index) => {
-                firstPage.drawText(line, {
-                    x,
-                    y: y - index * 10, // Adjust Y position for each line
-                    size: fontSize,
-                    font: customFont,
-                    color: rgb(0, 0, 0),
-                });
-            });
-        };
-
-        // Draw content
-        drawText(shipperName, 63, 740); // Shipper Address
-        drawText(consigneeName, 63, 670); // Consignee Address
-        drawText(`${signature}`, 64, 605);
-// Carrier and Transport Details
-drawText(`${mawbNumber}`, 63, 780);
-drawText(`${awbNumber}`, 500, 780);
-drawText( `${iataCode}`, 63, 560);
-drawText(`${carrierCode}`, 90, 515, { size: 8 }); // Aligned with DXB
-drawText(`${routingTO1}`, 65, 515, { size: 8 }); // Adjusted to fit inside the 'To' box
-drawText(`${carrierCode}`,250 , 515); // Carrier Code
-drawText(`${ICN}`, 218, 515); 
-drawText(`${SAR}`, 320, 513); // Currency
-drawText(`${PP}`, 348, 513); // Payment method
-drawText(`${COLUMN1}`, 365, 513); // Column 1
-drawText(`${COLUMN2}`, 380, 513); // Column 2
-drawText(`${NVD}`, 450, 513); // Column 1
-drawText(`${NCV}`, 532, 513); 
-
-// Airport of Destination Box
-drawText(`${destination}`, 65, 490);
-
-// Handling Information
-drawText(`${handlingInformation}`, 65, 460);
-
-// Reference Number (using departure value)
-drawText(`${departure}`, 65, 535);
-
-// Cargo Details
-// Cargo Details with numbers replaced by their names
-drawText(`${QTY}`, 65, 400, { size: 9 }); // Replaces '10' with 'ten'
-drawText(`${totalQTY}`, 65, 252, { size: 9 }); // Replaces '10' with 'ten'
-drawText(`${kiloGram}`, 138, 252, { size: 9 }); // Replaces "K G" with "kilogram"
-
-drawText(`${grossWeight}`, 90, 400, { size: 9 });
-drawText(`${grossWeight}`, 218, 400, { size: 9 });
-drawText(`${grossWeight}`, 90, 252, { size: 9 });
-drawText(`${RATECHARGE}`, 280, 400, { size: 9 }); // Replaces '5.57' with a variable 
-drawText(`${prepaid}`, 348, 400, { size: 9 });
-drawText(`${consolidated}`, 450, 400, { size: 9 }); // Replaces 'CONSOLIDATED' with a variable
-drawText(`${awbNumber}`, 393, 35);
-drawText(`${dimensions}`, 450, 380, { size: 9 });
-drawText(`${kiloGram}`, 138, 400, { size: 9 });
-drawText(`${totalChargesCarrier}`, 348, 252, { size: 9 });
-// Additional Information
-drawText(`${frieght}`, 320, 605);
-drawText(`${carrierCode}`, 320, 730);
-// drawText('ORIGINAL 3 (FOR SHIPPER)', 90, 185, { size: 9 });
-
-// Bottom Section
-drawText(`${date}`, 271, 65, { size: 8 });
-drawText(`${place}`, 393, 65, { size: 8 });
-drawText(`${signature}`, 322, 113, { size: 9 });
-drawText(`${signature}`, 415, 65, { size: 8 });
-
-// Charges
-drawText(`${prepaid}`, 65, 223, { size: 9 });
-drawText(`${totalChargesCarrier}`, 65, 127, { size: 9 });
-        // Serialize the updated PDF to bytes
-        const pdfBytes = await pdfDoc.save();
-
-        // Define the output path
-        const outputPath = path.join(__dirname, 'generated', `MAWB_${Date.now()}.pdf`);
-
-        // Ensure the directory exists
-        if (!fs.existsSync(path.join(__dirname, 'generated'))) {
-            fs.mkdirSync(path.join(__dirname, 'generated'));
-        }
-
-        // Write the updated PDF to a file
-        fs.writeFile(outputPath, pdfBytes, (writeErr) => {
-            if (writeErr) {
-                console.error('Error writing file:', writeErr);
-                return res.status(500).send('Error generating MAWB PDF');
-            }
-
-            // Send the PDF as a downloadable file
-            res.download(outputPath, `MAWB_${awbNumber}.pdf`, (err) => {
-                if (err) {
-                    console.error('Error downloading file:', err);
-                    return res.status(500).send('Error downloading file');
-                }
-
-                // Uncomment to delete the file after successful download
-                // fs.unlinkSync(outputPath);
-            });
         });
 
-    } catch (error) {
+        // Save to database
+        await newHAWB.save();
+        console.log('HAWB saved to database:', awbNumber);
+    } catch (dbError) {
+        console.error('Error saving HAWB to database:', dbError);
+        return res.status(500).send('Error saving HAWB to database');
+    }
+    
+    // Path to the template PDF
+    const templatePath = path.join(global.appRoot, 'controller', 'templates', 'MAWB_Template.pdf');
+
+    const result = await AWB.findOneAndUpdate(
+        { awbNumber }, // Find the record by awbNumber
+        { $set: { isUsed: true } }, // Set `isUsed` to true (match your schema)
+        { new: true } // Return the updated document
+    );
+    
+    const templateBytes = fs.readFileSync(templatePath);
+    const pdfDoc = await PDFDocument.load(templateBytes);
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
+    console.log('Current working directory:', process.cwd());
+    console.log('Template path:', templatePath);
+    
+    // Embed a font
+    const customFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    const fontSize = 8;
+    const maxWidth = 250; // Adjust based on your PDF template's field width
+
+    // Sanitize text input
+    const sanitizeText = (text) => text.replace(/[\r\n]+/g, ' '); // Replace newlines with spaces
+
+    // Word wrapping function
+    const wrapText = (text, font, size, maxWidth) => {
+        const sanitizedText = sanitizeText(text);
+        const words = sanitizedText.split(' ');
+        let lines = [];
+        let currentLine = '';
+
+        words.forEach((word) => {
+            const testLine = currentLine ? `${currentLine} ${word}` : word;
+            const textWidth = font.widthOfTextAtSize(testLine, size);
+
+            if (textWidth > maxWidth) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = testLine;
+            }
+        });
+
+        if (currentLine) {
+            lines.push(currentLine);
+        }
+
+        return lines;
+    };
+
+    // Function to draw text with word wrapping
+    const drawText = (text, x, y) => {
+        const lines = wrapText(text, customFont, fontSize, maxWidth);
+        lines.forEach((line, index) => {
+            firstPage.drawText(line, {
+                x,
+                y: y - index * 10, // Adjust Y position for each line
+                size: fontSize,
+                font: customFont,
+                color: rgb(0, 0, 0),
+            });
+        });
+    };
+
+    // The rest of your PDF generation code remains the same
+    // Draw content
+    drawText(shipperName, 63, 740); // Shipper Address
+    drawText(consigneeName, 63, 670); // Consignee Address
+    drawText(`${signature}`, 64, 605);
+    // Carrier and Transport Details
+    drawText(`${awbNumber}`, 63, 780);
+    drawText(`${awbNumber}`, 500, 780);
+    drawText(`${iataCode}`, 63, 560);
+    drawText(`${carrierCode}`, 90, 515, { size: 8 }); // Aligned with DXB
+    drawText(`${routingTO1}`, 65, 515, { size: 8 }); // Adjusted to fit inside the 'To' box
+    drawText(`${carrierCode}`,250 , 515); // Carrier Code
+    drawText(`${ICN}`, 218, 515); 
+    drawText(`${SAR}`, 320, 513); // Currency
+    drawText(`${PP}`, 348, 513); // Payment method
+    drawText(`${COLUMN1}`, 365, 513); // Column 1
+    drawText(`${COLUMN2}`, 380, 513); // Column 2
+    drawText(`${NVD}`, 450, 513); // Column 1
+    drawText(`${NCV}`, 532, 513); 
+
+    // Airport of Destination Box
+    drawText(`${destination}`, 65, 490);
+
+    // Handling Information
+    drawText(`${handlingInformation}`, 65, 460);
+
+    // Reference Number (using departure value)
+    drawText(`${departure}`, 65, 535);
+
+    // Cargo Details
+    // Cargo Details with numbers replaced by their names
+    drawText(`${QTY}`, 65, 400, { size: 9 }); // Replaces '10' with 'ten'
+    drawText(`${totalQTY}`, 65, 252, { size: 9 }); // Replaces '10' with 'ten'
+    drawText(`${kiloGram}`, 138, 252, { size: 9 }); // Replaces "K G" with "kilogram"
+
+    drawText(`${grossWeight}`, 90, 400, { size: 9 });
+    drawText(`${grossWeight}`, 218, 400, { size: 9 });
+    drawText(`${grossWeight}`, 90, 252, { size: 9 });
+    drawText(`${RATECHARGE}`, 280, 400, { size: 9 }); // Replaces '5.57' with a variable 
+    drawText(`${prepaid}`, 348, 400, { size: 9 });
+    drawText(`${consolidated}`, 450, 400, { size: 9 }); // Replaces 'CONSOLIDATED' with a variable
+    drawText(`${awbNumber}`, 393, 35);
+    drawText(`${dimensions}`, 450, 380, { size: 9 });
+    drawText(`${kiloGram}`, 138, 400, { size: 9 });
+    drawText(`${totalChargesCarrier}`, 348, 252, { size: 9 });
+    // Additional Information
+    drawText(`${frieght}`, 320, 605);
+    drawText(`${carrierCode}`, 320, 730);
+    // drawText('ORIGINAL 3 (FOR SHIPPER)', 90, 185, { size: 9 });
+
+    // Bottom Section
+    drawText(`${date}`, 271, 65, { size: 8 });
+    drawText(`${place}`, 393, 65, { size: 8 });
+    drawText(`${signature}`, 322, 113, { size: 9 });
+    drawText(`${signature}`, 415, 65, { size: 8 });
+
+    // Charges
+    drawText(`${prepaid}`, 65, 223, { size: 9 });
+    drawText(`${totalChargesCarrier}`, 65, 127, { size: 9 });
+
+    // Serialize the updated PDF to bytes
+    const pdfBytes = await pdfDoc.save();
+
+    // Define the output path
+    const outputPath = path.join(__dirname, 'generated', `MAWB_${Date.now()}.pdf`);
+
+    // Ensure the directory exists
+    if (!fs.existsSync(path.join(__dirname, 'generated'))) {
+        fs.mkdirSync(path.join(__dirname, 'generated'));
+    }
+
+    // Write the updated PDF to a file
+    fs.writeFile(outputPath, pdfBytes, (writeErr) => {
+        if (writeErr) {
+            console.error('Error writing file:', writeErr);
+            return res.status(500).send('Error generating MAWB PDF');
+        }
+
+        // Send the PDF as a downloadable file
+        res.download(outputPath, `HAWB_${awbNumber}.pdf`, (err) => {
+            if (err) {
+                console.error('Error downloading file:', err);
+                return res.status(500).send('Error downloading file');
+            }
+
+            // Uncomment to delete the file after successful download
+            // fs.unlinkSync(outputPath);
+        });
+    });
+
+} catch (error) {
         console.error('Error generating MAWB:', error);
         res.status(500).send('Error generating MAWB');
     }
