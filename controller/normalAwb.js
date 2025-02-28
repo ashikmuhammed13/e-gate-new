@@ -9,8 +9,8 @@ const pdf = require('html-pdf');
 const bwipjs = require('bwip-js');
 const QRCode = require('qrcode');
 const handlebars = require('handlebars');
-const MAWB = require('../models/MAWB'); // Adjust the path as needed to your model
-const HAWB = require('../models/HAWB');
+const MAWB = require('../models/Mawb'); // Adjust the path as needed to your model
+const HAWB = require('../models/Hawb');
 module.exports = {
     getAwbPage: async (req, res) => {
         try {
