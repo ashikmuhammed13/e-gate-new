@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Gate Support</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+   <style>
+    /* Variables */
+    :root {
+        --primary-purple: #556270;
+        --secondary-orange: #4ECDC4;
+        --header-bg: linear-gradient(to right, #556270, #4ECDC4);
+        --text-dark: #0b0757;
+    }
+
+    /* Base Styles */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: 'TWKLausanne', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        padding-top: 76px;
+    }
+
+    /* Typography */
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        color: var(--text-dark);
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .blueOrangeGradient {
+        background: #4ECDC4;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #556270, #4ECDC4);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #556270, #4ECDC4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Layout Components */
+    .hero-section {
+        background: #4ECDC4;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #556270, #4ECDC4);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #556270, #4ECDC4);
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,229.3C672,224,768,192,864,165.3C960,139,1056,117,1152,122.7C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") bottom/cover no-repeat;
+        opacity: 0.5;
+    }
+
+    /* Navigation */
+    /* Futuristic Navbar Styles */
+    .navbar {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(15px);
+        padding: 0.7rem 1rem;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+        background: rgba(255, 255, 255, 0.98);
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-brand {
+        font-weight: 800;
+        font-size: 2rem;
+        color: var(--primary-purple);
+        position: relative;
+        letter-spacing: -0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .brand-accent {
+        color: var(--secondary-orange);
+        font-size: 2.2rem;
+    }
+
+    .navbar-brand:hover {
+        transform: translateY(-2px);
+        color: var(--primary-purple);
+    }
+
+    .navbar-nav {
+        align-items: center;
+    }
+
+    .nav-item {
+        margin: 0 0.3rem;
+    }
+
+    .nav-link {
+        color: var(--text-dark);
+        font-weight: 600;
+        padding: 0.7rem 1rem;
+        border-radius: 10px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .nav-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.1), rgba(78, 205, 196, 0.2));
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 10%;
+        width: 80%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-purple), var(--secondary-orange));
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s ease;
+        border-radius: 3px;
+    }
+
+    .nav-link:hover:before,
+    .nav-link.active:before {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+
+    .nav-link:hover {
+        color: var(--primary-purple);
+        background: rgba(78, 205, 196, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .nav-link:hover .nav-icon {
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.2), rgba(78, 205, 196, 0.4));
+    }
+
+    /* Support Page Specific Styles */
+    .support-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 80px 20px;
+    }
+
+    .support-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        height: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .support-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .support-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.1), rgba(78, 205, 196, 0.2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        color: var(--primary-purple);
+        font-size: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .support-card:hover .support-icon {
+        background: linear-gradient(135deg, var(--primary-purple), var(--secondary-orange));
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .knowledge-base-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .knowledge-base-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .knowledge-base-header {
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.05), rgba(78, 205, 196, 0.1));
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+    }
+
+    .knowledge-base-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.1), rgba(78, 205, 196, 0.2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: var(--primary-purple);
+        font-size: 1.2rem;
+    }
+
+    .knowledge-base-body {
+        padding: 20px;
+    }
+
+    .kb-article-link {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        text-decoration: none;
+        color: var(--text-dark);
+        transition: all 0.3s ease;
+    }
+
+    .kb-article-link:last-child {
+        border-bottom: none;
+    }
+
+    .kb-article-link:hover {
+        color: var(--secondary-orange);
+        transform: translateX(5px);
+    }
+
+    .kb-article-link i {
+        margin-right: 10px;
+        color: var(--secondary-orange);
+    }
+
+    .search-box {
+        padding: 20px;
+        background: linear-gradient(135deg, var(--primary-purple), var(--secondary-orange));
+        border-radius: 20px;
+        margin-bottom: 40px;
+    }
+
+    .search-form {
+        display: flex;
+        position: relative;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        font-size: 1rem;
+    }
+
+    .search-input:focus {
+        outline: none;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-btn {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        background: linear-gradient(135deg, var(--primary-purple), var(--secondary-orange));
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .search-btn:hover {
+        background: linear-gradient(135deg, var(--secondary-orange), var(--primary-purple));
+        transform: translateY(-2px);
+    }
+
+    .ticket-form-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .ticket-form-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .form-control {
+        border: 2px solid #eee;
+        padding: 0.8rem 1.2rem;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-orange);
+        box-shadow: 0 0 0 0.2rem rgba(78, 205, 196, 0.25);
+    }
+
+    .btn-gradient {
+        background: linear-gradient(to right, var(--primary-purple), var(--secondary-orange));
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(to right, var(--secondary-orange), var(--primary-purple));
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats-counter {
+        text-align: center;
+        background: white;
+        border-radius: 20px;
+        padding: 30px 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .stats-counter:hover {
+        transform: translateY(-10px);
+    }
+
+    .counter-number {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .counter-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.1), rgba(78, 205, 196, 0.2));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 1.5rem;
+        color: var(--secondary-orange);
+    }
+
+    .tab-navigation {
+        display: flex;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-item {
+        flex: 1;
+        text-align: center;
+        padding: 15px;
+        background: white;
+        color: var(--text-dark);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .tab-item:last-child {
+        border-right: none;
+    }
+
+    .tab-item.active {
+        background: linear-gradient(135deg, var(--primary-purple), var(--secondary-orange));
+        color: white;
+    }
+
+    .tab-item:hover:not(.active) {
+        background: rgba(78, 205, 196, 0.1);
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 1.2s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .step-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .step-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .step-number {
+        position: absolute;
+        top: -15px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary-purple), var(--secondary-orange));
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+    }
+
+    .live-chat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .chat-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.1), rgba(78, 205, 196, 0.2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 2rem;
+        color: var(--primary-purple);
+    }
+
+    .chat-status {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 20px;
+        background: #e6f7f5;
+        color: var(--secondary-orange);
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .chat-status i {
+        margin-right: 5px;
+    }
+
+    .chat-btn {
+        margin-top: 20px;
+        padding: 12px 30px;
+    }
+
+    @media (max-width: 991px) {
+        .support-section {
+            padding: 40px 0;
+        }
+        
+        .support-card, .ticket-form-card {
+            margin-bottom: 30px;
+        }
+
+        .stats-counter {
+            margin-bottom: 20px;
+        }
+        
+        .tab-item {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .search-input {
+            padding: 10px 15px;
+        }
+        
+        .search-btn {
+            padding: 7px 15px;
+        }
+        
+        .ticket-form-card {
+            padding: 20px;
+        }
+        
+        .support-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #1e2430;
+        color: #fff;
+        padding: 60px 0;
+    }
+   </style>
+</head>
+<body>
+    <!-- Futuristic Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-box-seam me-2"></i>E-Gate<span class="brand-accent">.</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><span class="nav-icon"><i class="bi bi-house-door"></i></span>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact"><span class="nav-icon"><i class="bi bi-telephone"></i></span>Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/support"><span class="nav-icon"><i class="bi bi-headset"></i></span>Support</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="hero-title text-white mb-3">Customer <span style="color: #f8f9ff;">Support</span></h1>
+            <p class="lead text-white mb-0">We're here to help you with any shipping concerns or questions</p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="support-container">
+            <div class="search-box fade-in">
+                <h3 class="text-white mb-3">How can we help you today?</h3>
+                <form class="search-form">
+                    <input type="text" class="search-input" placeholder="Search for shipping help, tracking issues, or FAQs...">
+                    <button type="submit" class="search-btn">
+                        <i class="bi bi-search me-2"></i>Search
+                    </button>
+                </form>
+            </div>
+
+            <!-- Support Categories -->
+            <div class="row mb-5">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="support-card fade-in">
+                        <div class="support-icon">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <h4>Shipping Help</h4>
+                        <p class="text-muted">Get assistance with package delivery, shipping rates, and service options.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="support-card fade-in" style="animation-delay: 0.2s;">
+                        <div class="support-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <h4>Tracking Issues</h4>
+                        <p class="text-muted">Troubleshoot tracking problems and get real-time updates on your shipments.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="support-card fade-in" style="animation-delay: 0.4s;">
+                        <div class="support-icon">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                        <h4>Billing Inquiries</h4>
+                        <p class="text-muted">Get help with payment issues, invoices, and financial matters.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="support-card fade-in" style="animation-delay: 0.6s;">
+                        <div class="support-icon">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                        <h4>Technical Support</h4>
+                        <p class="text-muted">Get assistance with website issues, app problems, or API connections.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Section -->
+            <div class="tab-section mb-5">
+                <h2 class="section-title text-center mb-4">How Can We <span class="blueOrangeGradient">Help You?</span></h2>
+                <div class="tab-navigation mb-4">
+                    <div class="tab-item active" data-tab="faq">
+                        <i class="bi bi-question-circle me-2"></i>FAQs
+                    </div>
+                    <div class="tab-item" data-tab="guides">
+                        <i class="bi bi-book me-2"></i>Guides
+                    </div>
+                    <div class="tab-item" data-tab="tickets">
+                        <i class="bi bi-ticket-perforated me-2"></i>Submit Ticket
+                    </div>
+                    <div class="tab-item" data-tab="chat">
+                        <i class="bi bi-chat-dots me-2"></i>Live Chat
+                    </div>
+                </div>
+
+                <!-- FAQ Tab Content -->
+                <div class="tab-content active" id="faq-tab">
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="knowledge-base-card fade-in">
+                                <div class="knowledge-base-header">
+                                    <div class="knowledge-base-icon">
+                                        <i class="bi bi-truck"></i>
+                                    </div>
+                                    <h5 class="mb-0">Shipping & Delivery</h5>
+                                </div>
+                                <div class="knowledge-base-body">
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        How do I track my package?
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        What shipping methods are available?
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        How do I schedule a pickup?
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        What do I do if my package is delayed?
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        International shipping requirements
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="knowledge-base-card fade-in" style="animation-delay: 0.2s;">
+                                <div class="knowledge-base-header">
+                                    <div class="knowledge-base-icon">
+                                        <i class="bi bi-cash-coin"></i>
+                                    </div>
+                                    <h5 class="mb-0">Billing & Payments</h5>
+                                </div>
+                                <div class="knowledge-base-body">
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        How to pay for shipping services
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        Understanding shipping rates
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        How to get a refund for failed delivery
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        Business account billing options
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        Customs fees and import taxes
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="knowledge-base-card fade-in" style="animation-delay: 0.4s;">
+                                <div class="knowledge-base-header">
+                                    <div class="knowledge-base-icon">
+                                        <i class="bi bi-box-seam"></i>
+                                    </div>
+                                    <h5 class="mb-0">Packaging & Services</h5>
+                                </div>
+                                <div class="knowledge-base-body">
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        Packaging guidelines for safe shipping
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        Express shipping options
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        Shipping fragile or valuable items
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        Special handling requirements
+                                    </a>
+                                    <a href="#" class="kb-article-link">
+                                        <i class="bi bi-file-text"></i>
+                                        Eco-friendly packaging options
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="knowledge-base-card fade-in" style="animation-delay: 0.6s;">
+                                <div class="knowledge-base-header">
+                                    <div class="knowledge-base-icon">
+                                        <i class="bi bi-gear"></i>
+                                    </div>
+                                    <h5 class="mb-0">Account & Settings</h5>
+                                </div>
+                                <div class="knowledge-base-body">
+                                    <a href="#" class="kb-article-link">
+                                        <a href="#" class="kb-article-link">
+                                            <i class="bi bi-file-text"></i>
+                                            How to create a business account
+                                        </a>
+                                        <a href="#" class="kb-article-link">
+                                            <i class="bi bi-file-text"></i>
+                                            Managing shipping preferences
+                                        </a>
+                                        <a href="#" class="kb-article-link">
+                                            <i class="bi bi-file-text"></i>
+                                            Updating contact information
+                                        </a>
+                                        <a href="#" class="kb-article-link">
+                                            <i class="bi bi-file-text"></i>
+                                            Setting up shipping notifications
+                                        </a>
+                                        <a href="#" class="kb-article-link">
+                                            <i class="bi bi-file-text"></i>
+                                            Integrating with e-commerce platforms
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Guides Tab Content -->
+                    <div class="tab-content" id="guides-tab">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="step-card">
+                                    <div class="step-number">1</div>
+                                    <h5 class="mt-3">Creating Your Shipping Label</h5>
+                                    <p>Learn how to create and print professional shipping labels for your packages, whether you're a business or individual shipper.</p>
+                                    <img src="https://placehold.co/600x300" alt="Shipping Label Guide" class="img-fluid rounded mb-3">
+                                    <a href="#" class="btn btn-sm btn-gradient">View Full Guide</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="step-card">
+                                    <div class="step-number">2</div>
+                                    <h5 class="mt-3">Packaging Best Practices</h5>
+                                    <p>Ensure your items arrive safely with our comprehensive guide to packaging different types of products securely for transit.</p>
+                                    <img src="https://placehold.co/600x300" alt="Packaging Guide" class="img-fluid rounded mb-3">
+                                    <a href="#" class="btn btn-sm btn-gradient">View Full Guide</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="step-card">
+                                    <div class="step-number">3</div>
+                                    <h5 class="mt-3">International Shipping Guide</h5>
+                                    <p>Navigate customs forms, international regulations, and shipping requirements when sending packages abroad.</p>
+                                    <img src="https://placehold.co/600x300" alt="International Shipping" class="img-fluid rounded mb-3">
+                                    <a href="#" class="btn btn-sm btn-gradient">View Full Guide</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="step-card">
+                                    <div class="step-number">4</div>
+                                    <h5 class="mt-3">Tracking & Delivery Management</h5>
+                                    <p>Master the tools to track your shipments in real-time and manage delivery preferences for maximum convenience.</p>
+                                    <img src="https://placehold.co/600x300" alt="Tracking Guide" class="img-fluid rounded mb-3">
+                                    <a href="#" class="btn btn-sm btn-gradient">View Full Guide</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Submit Ticket Tab Content -->
+                    <div class="tab-content" id="tickets-tab">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto">
+                                <div class="ticket-form-card">
+                                    <h4 class="mb-4">Submit a Support Request</h4>
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Your Name</label>
+                                            <input type="text" class="form-control" id="name" placeholder="Enter your full name">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email Address</label>
+                                            <input type="email" class="form-control" id="email" placeholder="Enter your email address">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="orderNumber" class="form-label">Order/Tracking Number (if applicable)</label>
+                                            <input type="text" class="form-control" id="orderNumber" placeholder="Enter tracking number">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="issueType" class="form-label">Issue Type</label>
+                                            <select class="form-select" id="issueType">
+                                                <option selected>Select issue type</option>
+                                                <option value="tracking">Tracking Problem</option>
+                                                <option value="delivery">Delivery Issue</option>
+                                                <option value="billing">Billing Question</option>
+                                                <option value="account">Account Help</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="message" class="form-label">Message</label>
+                                            <textarea class="form-control" id="message" rows="5" placeholder="Please describe your issue in detail"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="attachment" class="form-label">Attachments (if any)</label>
+                                            <input class="form-control" type="file" id="attachment">
+                                        </div>
+                                        <div class="form-check mb-4">
+                                            <input class="form-check-input" type="checkbox" id="emailUpdates">
+                                            <label class="form-check-label" for="emailUpdates">
+                                                Email me with updates about my support request
+                                            </label>
+                                        </div>
+                                        <button type="submit" class="btn btn-gradient">Submit Support Request</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Live Chat Tab Content -->
+                    <div class="tab-content" id="chat-tab">
+                        <div class="row">
+                            <div class="col-lg-6 mx-auto">
+                                <div class="live-chat-card">
+                                    <div class="chat-icon">
+                                        <i class="bi bi-chat-dots"></i>
+                                    </div>
+                                    <div class="chat-status">
+                                        <i class="bi bi-circle-fill text-success"></i> Agents Available
+                                    </div>
+                                    <h4>Get Instant Support</h4>
+                                    <p class="text-muted">Our customer support team is online and ready to help you with any questions or issues.</p>
+                                    <p class="mb-4">Average wait time: <strong>Under 2 minutes</strong></p>
+                                    <button class="btn btn-gradient chat-btn">
+                                        <i class="bi bi-chat-text me-2"></i>Start Live Chat
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Support Stats -->
+                <div class="row mb-5">
+                    <div class="col-12 text-center mb-4">
+                        <h2 class="section-title">Why Our Customers <span class="blueOrangeGradient">Trust Us</span></h2>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stats-counter">
+                            <div class="counter-icon">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <div class="counter-number blueOrangeGradient">5M+</div>
+                            <p>Happy Customers</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stats-counter">
+                            <div class="counter-icon">
+                                <i class="bi bi-globe"></i>
+                            </div>
+                            <div class="counter-number blueOrangeGradient">150+</div>
+                            <p>Countries Served</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stats-counter">
+                            <div class="counter-icon">
+                                <i class="bi bi-star"></i>
+                            </div>
+                            <div class="counter-number blueOrangeGradient">4.9</div>
+                            <p>Customer Rating</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stats-counter">
+                            <div class="counter-icon">
+                                <i class="bi bi-stopwatch"></i>
+                            </div>
+                            <div class="counter-number blueOrangeGradient">98%</div>
+                            <p>On-Time Delivery</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Contact Options -->
+                <div class="row">
+                    <div class="col-12 text-center mb-4">
+                        <h2 class="section-title">Other Ways to <span class="blueOrangeGradient">Reach Us</span></h2>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="support-card text-center">
+                            <div class="support-icon mx-auto">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <h4>Call Us</h4>
+                            <p class="text-muted">Our support team is available Monday-Friday, 8am-8pm</p>
+                            <p class="lead fw-bold">(800) 123-4567</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="support-card text-center">
+                            <div class="support-icon mx-auto">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <h4>Email Support</h4>
+                            <p class="text-muted">Get a response within 24 hours, 7 days a week</p>
+                            <p class="lead fw-bold">support@e-gate.com</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="support-card text-center">
+                            <div class="support-icon mx-auto">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+                            <h4>Visit Us</h4>
+                            <p class="text-muted">Stop by one of our shipping centers</p>
+                            <a href="#" class="btn btn-outline-primary rounded-pill">Find Locations</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Footer -->
+        <footer class="footer mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 mb-4 mb-lg-0">
+                        <h5 class="text-white mb-4">About E-Gate</h5>
+                        <p class="text-muted">E-Gate provides innovative logistics and shipping solutions for businesses and individuals worldwide. Our mission is to make global shipping accessible, affordable, and reliable.</p>
+                        <div class="social-icons mt-4">
+                            <a href="#" class="me-3 text-white"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="me-3 text-white"><i class="bi bi-twitter"></i></a>
+                            <a href="#" class="me-3 text-white"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="me-3 text-white"><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                        <h5 class="text-white mb-4">Quick Links</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#" class="text-muted">Track Package</a></li>
+                            <li class="mb-2"><a href="#" class="text-muted">Shipping Rates</a></li>
+                            <li class="mb-2"><a href="#" class="text-muted">Locations</a></li>
+                            <li class="mb-2"><a href="#" class="text-muted">Support</a></li>
+                            <li class="mb-2"><a href="#" class="text-muted">Career</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                        <h5 class="text-white mb-4">Resources</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#" class="text-muted">Help Center</a></li>
+                            <li class="mb-2"><a href="#" class="text-muted">Blog</a></li>
+                            <li class="mb-2"><a href="#" class="text-muted">Shipping Guide</a></li>
+                            <li class="mb-2"><a href="#" class="text-muted">Packaging Tips</a></li>
+                            <li class="mb-2"><a href="#" class="text-muted">API Documentation</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <h5 class="text-white mb-4">Subscribe to Our Newsletter</h5>
+                        <p class="text-muted">Get the latest updates, shipping tips, and exclusive offers.</p>
+                        <form class="mt-4">
+                            <div class="input-group mb-3">
+                                <input type="email" class="form-control" placeholder="Your email address" aria-label="Email" aria-describedby="subscribe-btn">
+                                <button class="btn btn-outline-light" type="button" id="subscribe-btn">Subscribe</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <hr class="my-4" style="background-color: rgba(255,255,255,0.1);">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="text-muted mb-md-0">© 2025 E-Gate Shipping. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <a href="#" class="text-muted me-3">Terms of Service</a>
+                        <a href="#" class="text-muted me-3">Privacy Policy</a>
+                        <a href="#" class="text-muted">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    
+        <!-- JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Navbar Scroll Effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+    
+            // Tab Navigation
+            const tabItems = document.querySelectorAll('.tab-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+    
+            tabItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabItems.forEach(tab => tab.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId + '-tab').classList.add('active');
+                });
+            });
+    
+            // Fade-in Animation for Elements
+            const fadeElems = document.querySelectorAll('.fade-in');
+            
+            const fadeObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+    
+            fadeElems.forEach(elem => {
+                elem.style.opacity = 0;
+                elem.style.transform = 'translateY(20px)';
+                elem.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                fadeObserver.observe(elem);
+            });
+    
+            // Animate Counter Numbers
+            function animateCounters() {
+                const counters = document.querySelectorAll('.counter-number');
+                
+                counters.forEach(counter => {
+                    const value = counter.textContent;
+                    const suffix = value.includes('+') ? '+' : '';
+                    const numeric = parseFloat(value.replace(/[^0-9.]/g, ''));
+                    let count = 0;
+                    const increment = numeric / 50;
+                    const duration = 2000;
+                    const interval = duration / 50;
+                    
+                    counter.textContent = '0' + suffix;
+                    
+                    const timer = setInterval(() => {
+                        count += increment;
+                        if (count >= numeric) {
+                            counter.textContent = value;
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = Math.floor(count) + suffix;
+                        }
+                    }, interval);
+                });
+            }
+    
+            // Trigger counter animation when stats section is visible
+            const statsSection = document.querySelector('.stats-counter');
+            
+            const statsObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    animateCounters();
+                    statsObserver.unobserve(entries[0].target);
+                }
+            }, {
+                threshold: 0.1
+            });
+    
+            if (statsSection) {
+                statsObserver.observe(statsSection);
+            }
+        </script>
+    </body>
+    </html>

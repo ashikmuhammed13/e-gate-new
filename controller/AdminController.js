@@ -7,31 +7,97 @@ const bcrypt = require('bcrypt');
 require('dotenv').config(); // Load environment variables from .env file
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
   try {
+    const { email, password, username } = req.body;
+    
+    // Input validation
+    if (!email || !password) {
+      return res.render('admin/login', { 
+        error: 'Email and password are required',
+        email: email || '' // Preserve entered email
+      });
+    }
+    
     // Fetch admin by email
     const admin = await Admin.findOne({ email }).select('+password');
+    
+    // Check if admin exists
     if (!admin) {
-      return res.status(401).send('Invalid credentials');
+      return res.render('admin/login', { 
+        error: 'Invalid email or password',
+        email: email || '' // Preserve entered email
+      });
     }
-
+    
+    // Check if account is locked
+    if (admin.lockUntil && admin.lockUntil > Date.now()) {
+      const minutesLeft = Math.ceil((admin.lockUntil - Date.now()) / (60 * 1000));
+      return res.render('admin/login', {
+        error: `Account is temporarily locked. Please try again in ${minutesLeft} minutes.`,
+        email: email || ''
+      });
+    }
+    
     // Validate password
     const isPasswordValid = await bcrypt.compare(password, admin.password);
+    
+    // Handle invalid password
     if (!isPasswordValid) {
-      return res.status(401).send('Invalid');
+      // Increment login attempts
+      admin.loginAttempts += 1;
+      
+      // Lock account after 5 failed attempts
+      if (admin.loginAttempts >= 5) {
+        admin.lockUntil = Date.now() + 30 * 60 * 1000; // Lock for 30 minutes
+        await admin.save();
+        return res.render('admin/login', { 
+          error: 'Too many failed attempts. Account locked for 30 minutes.',
+          email: email || ''
+        });
+      }
+      
+      await admin.save();
+      
+      return res.render('admin/login', { 
+        error: 'Invalid email or password',
+        email: email || ''
+      });
     }
-
+    
+    // Check if admin is active
+    if (admin.status !== 'active') {
+      return res.render('admin/login', {
+        error: 'Your account is inactive. Please contact support.',
+        email: email || ''
+      });
+    }
+    
+    // Reset login attempts on successful login
+    if (admin.loginAttempts > 0) {
+      admin.loginAttempts = 0;
+      admin.lockUntil = null;
+      await admin.save();
+    }
+    
     // Set session
     req.session.user = {
       id: admin._id,
       role: admin.role,
       name: `${admin.firstName} ${admin.lastName}`,
+      email: admin.email
     };
-
-    res.redirect('/admin/profile')
+    
+    // Redirect based on verification status
+    if (!admin.isVerified) {
+      return res.redirect('/admin/complete-profile');
+    }
+    
+    res.redirect('/admin/profile');
   } catch (error) {
     console.error('Error during login:', error);
-    res.status(500).send('Server error');
+    res.render('admin/login', {
+      error: 'An unexpected error occurred. Please try again later.'
+    });
   }
 };
 

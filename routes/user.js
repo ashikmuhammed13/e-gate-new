@@ -7,8 +7,16 @@ const { fetchShipment } = require("../controller/user");
 router.get('/', (req, res) => {
   res.render("user/index");
 });
+router.get('/support', (req, res) => {
+  res.render("user/support");
+});
+router.get('/contact', (req, res) => {
+  res.render("user/contact");
+});
 router.post("/track-shipment", fetchShipment);
-    
+router.get('/about', (req, res) => {
+  res.render("user/about");
+});    
 
 module.exports = router; // Ensure you export the router.
  

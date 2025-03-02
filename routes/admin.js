@@ -7,9 +7,18 @@ const fileStorage = require('../utils/fileStorage');
 const normalAwb = require('../controller/normalAwb')
 const sessionAuth = require('../middlewares/sessionAuth')
 const {fetchAdminProfile,addAdmin,login,addAwb,getAllAirlines,addAirline,getawb,sendOTP,verifyOTP} = require('../controller/AdminController')
-
+const { 
+    sendOTPReset, 
+    verifyOTPReset, 
+    resetPassword
+  } = require('../controller/forgetPassword');
 const { Shipment } = require('../models/Shipment');
 
+// Reset password routes
+router.get("/forget", (req, res) => res.render("admin/forget"));
+router.post('/send-otps', sendOTPReset);
+router.post('/verify-otps', verifyOTPReset);
+router.post('/reset-password', resetPassword);
 // Get shipment details
 router.get("/tracking-details", async (req, res) => {
     const { awbNumber } = req.query;
@@ -213,6 +222,86 @@ router.post('/update-timeline', async (req, res) => {
             message: 'Failed to update timeline',
             error: error.message
         });
+    }
+});
+
+// Update estimated delivery date
+router.post("/updateDeliveryDate/:awbNumber", async (req, res) => {
+    
+    const { awbNumber } = req.params;
+    const { estimatedDeliveryDate } = req.body;
+   
+    if (!awbNumber || !estimatedDeliveryDate) {
+        return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+    
+    try {
+        const shipment = await Shipment.findOne({ awbNumber });
+        if (!shipment) {
+            return res.status(404).json({ success: false, message: "Shipment not found" });
+        }
+        
+        shipment.estimatedDeliveryDate = new Date(estimatedDeliveryDate);
+        shipment.updatedAt = new Date();
+        
+        await shipment.save();
+        
+        return res.json({ 
+            success: true, 
+            message: "Delivery date updated successfully" 
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+});
+
+// Update signature information
+router.post("/updateSignature/:awbNumber", async (req, res) => {
+    const { awbNumber } = req.params;
+    const { signedBy, signedAt } = req.body;
+    console.log( awbNumber ,"update date entered the route")
+    if (!awbNumber || !signedBy || !signedAt) {
+        return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+    
+    try {
+        const shipment = await Shipment.findOne({ awbNumber });
+        if (!shipment) {
+            return res.status(404).json({ success: false, message: "Shipment not found" });
+        }
+        
+        // Update signature fields
+        shipment.signedBy = signedBy;
+        shipment.signedAt = new Date(signedAt);
+        
+        // Also update status to "Delivered" if not already
+        if (shipment.status !== "Delivered") {
+            shipment.status = "Delivered";
+            
+            // Add a timeline event for delivery
+            shipment.timeline.push({
+                location: shipment.currentLocation,
+                status: "Delivered",
+                description: `Signed by ${signedBy}`,
+                timestamp: new Date(signedAt),
+                updatedBy: "admin",
+                isCompleted: true
+            });
+        }
+        
+        shipment.updatedAt = new Date();
+        
+        await shipment.save();
+        
+        return res.json({ 
+            success: true, 
+            message: "Signature information updated successfully",
+            status: shipment.status
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: "Server error" });
     }
 });
 router.post("/addAwb",addAwb)

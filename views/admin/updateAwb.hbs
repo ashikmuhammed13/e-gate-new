@@ -459,7 +459,6 @@
             </div>
         </nav>
 
-
         <div class="tracking-container">
             <div class="tracking-grid">
                 <!-- Shipment Status Card -->
@@ -474,30 +473,53 @@
                         </button>
                     </div>
 
-                    <div class="status-info">
-                        <div class="info-item mb-4">
-                            <div class="text-muted mb-2">Expected Delivery</div>
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fas fa-clock text-primary"></i>
-                                <div>
-                                    <div class="fw-semibold" id="estimatedDelivery">{{formatDate
-                                        shipment.estimatedDeliveryDate}}</div>
-                                    <div class="small text-muted">By End of Day</div>
-                                </div>
-                            </div>
-                        </div>
+<div class="status-info">
+    <div class="info-item mb-4">
+        <div class="text-muted mb-2">Expected Delivery</div>
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-clock text-primary"></i>
+            <div>
+                <div class="d-flex align-items-center">
+                    <div class="fw-semibold" id="estimatedDelivery">{{formatDate shipment.estimatedDeliveryDate}}</div>
+                    <button class="btn-icon ms-2" >
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+                <div class="small text-muted">By End of Day</div>
+            </div>
+        </div>
+    </div>
 
-                        <div class="info-item mb-4">
-                            <div class="text-muted mb-2">Current Location</div>
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fas fa-map-marker-alt text-primary"></i>
-                                <div>
-                                    <div class="fw-semibold" id="currentLocation">{{currentLocation}}</div>
-                                    <div class="small text-muted" id="facilityType">{{facilityType}}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Add a new section for Signed By -->
+    <div class="info-item mb-4">
+        <div class="text-muted mb-2">Signed By</div>
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-signature text-primary"></i>
+            <div>
+                <div class="d-flex align-items-center">
+                    <div class="fw-semibold" id="signedBy">{{#if shipment.signedBy}}{{shipment.signedBy}}{{else}}Not signed yet{{/if}}</div>
+                    <button class="btn-icon ms-2">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+                <div class="small text-muted" id="signedDate">
+                    {{#if shipment.signedAt}}Signed on: {{formatDate shipment.signedAt}}{{else}}Pending signature{{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-item mb-4">
+        <div class="text-muted mb-2">Current Location</div>
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-map-marker-alt text-primary"></i>
+            <div>
+                <div class="fw-semibold" id="currentLocation">{{currentLocation}}</div>
+                <div class="small text-muted" id="facilityType">{{facilityType}}</div>
+            </div>
+        </div>
+    </div>
+</div>
 
                 </div>
 
@@ -585,6 +607,210 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+      // Add this to your existing JavaScript code
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to the edit buttons
+    const editEstimatedDeliveryBtn = document.querySelector('#estimatedDelivery').nextElementSibling;
+    const editSignedByBtn = document.querySelector('#signedBy').nextElementSibling;
+    
+    // Add event listeners to the buttons
+    editEstimatedDeliveryBtn.addEventListener('click', function() {
+        openEstimatedDeliveryModal();
+    });
+    
+    editSignedByBtn.addEventListener('click', function() {
+        openSignedByModal();
+    });
+    
+    // Function to create and open the Estimated Delivery modal
+    function openEstimatedDeliveryModal() {
+        const currentDate = document.getElementById('estimatedDelivery').textContent.trim();
+        
+        // Create modal HTML
+        const modalHTML = `
+        <div class="modal fade" id="estimatedDeliveryModal" tabindex="-1" aria-labelledby="estimatedDeliveryModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="estimatedDeliveryModalLabel">Update Estimated Delivery</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="estimatedDeliveryForm">
+                            <div class="mb-3">
+                                <label for="deliveryDate" class="form-label">Estimated Delivery Date</label>
+                                <input type="date" class="form-control" id="deliveryDate" value="${currentDate}" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveEstimatedDelivery">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        
+        // Add modal to the document
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Initialize and show the modal
+        const modal = new bootstrap.Modal(document.getElementById('estimatedDeliveryModal'));
+        modal.show();
+        
+        // Add event listener to the save button
+        document.getElementById('saveEstimatedDelivery').addEventListener('click', function() {
+            const newDeliveryDate = document.getElementById('deliveryDate').value;
+            updateEstimatedDelivery(newDeliveryDate);
+            modal.hide();
+            
+            // Remove modal from DOM after hiding
+            document.getElementById('estimatedDeliveryModal').addEventListener('hidden.bs.modal', function() {
+                this.remove();
+            });
+        });
+    }
+    
+    // Function to create and open the Signed By modal
+    function openSignedByModal() {
+        const currentSignedBy = document.getElementById('signedBy').textContent.trim();
+        const signedDate = document.getElementById('signedDate').textContent.includes('Signed on:') ? 
+                          document.getElementById('signedDate').textContent.replace('Signed on:', '').trim() : '';
+        
+        // Create modal HTML
+        const modalHTML = `
+        <div class="modal fade" id="signedByModal" tabindex="-1" aria-labelledby="signedByModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="signedByModalLabel">Update Signature Information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="signedByForm">
+                            <div class="mb-3">
+                                <label for="signatureName" class="form-label">Signed By</label>
+                                <input type="text" class="form-control" id="signatureName" value="${currentSignedBy === 'Not signed yet' ? '' : currentSignedBy}" placeholder="Enter name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="signatureDate" class="form-label">Signature Date</label>
+                                <input type="date" class="form-control" id="signatureDate" value="${signedDate}">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveSignedBy">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        
+        // Add modal to the document
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Initialize and show the modal
+        const modal = new bootstrap.Modal(document.getElementById('signedByModal'));
+        modal.show();
+        
+        // Add event listener to the save button
+        document.getElementById('saveSignedBy').addEventListener('click', function() {
+            const newSignedBy = document.getElementById('signatureName').value;
+            const newSignedDate = document.getElementById('signatureDate').value;
+            updateSignedBy(newSignedBy, newSignedDate);
+            modal.hide();
+            
+            // Remove modal from DOM after hiding
+            document.getElementById('signedByModal').addEventListener('hidden.bs.modal', function() {
+                this.remove();
+            });
+        });
+    }
+    
+    // Function to update Estimated Delivery
+    async function updateEstimatedDelivery(newDate) {
+        const awbNumber = document.getElementById('awbNumber').textContent.replace('#', '');
+        
+        try {
+            const response = await fetch(`/admin/updateDeliveryDate/${awbNumber}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    estimatedDeliveryDate: newDate
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Server responded with error');
+            }
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update UI
+                document.getElementById('estimatedDelivery').textContent = formatDate(newDate);
+                alert('Estimated delivery date updated successfully!');
+            } else {
+                alert(data.message || 'Failed to update estimated delivery date');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while updating estimated delivery date');
+        }
+    }
+    
+    // Function to update Signed By
+    async function updateSignedBy(name, date) {
+        const awbNumber = document.getElementById('awbNumber').textContent.replace('#', '');
+        
+        try {
+            const response = await fetch(`/admin/updateSignature/${awbNumber}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    signedBy: name,
+                    signedAt: date
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Server responded with error');
+            }
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update UI
+                document.getElementById('signedBy').textContent = name || 'Not signed yet';
+                document.getElementById('signedDate').textContent = date ? `Signed on: ${formatDate(date)}` : 'Pending signature';
+                alert('Signature information updated successfully!');
+            } else {
+                alert(data.message || 'Failed to update signature information');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while updating signature information');
+        }
+    }
+    
+    // Helper function to format dates
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+    }
+});
         window.trackingSystem = {
             toggleAddLocationForm: function () {
                 console.log("Toggle button clicked");

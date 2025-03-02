@@ -107,7 +107,8 @@ const shipmentSchema = new mongoose.Schema({
   serviceType: String,
   specialInstructions: String,
   estimatedDeliveryDate: Date,
-  
+  signedBy: String,
+    signedAt: Date,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

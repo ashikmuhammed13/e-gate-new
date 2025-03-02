@@ -117,6 +117,19 @@
             transform: translateY(-50%);
             color: rgba(255, 255, 255, 0.6);
         }
+        .alert-danger {
+        background: rgba(220, 53, 69, 0.2);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        color: #ff6b7e;
+        border-radius: 12px;
+        padding: 12px;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
         .btn-login {
             background: linear-gradient(45deg, #4F46E5, #06B6D4);
@@ -193,18 +206,24 @@
                     </div>
                     <h4 class="welcome-text">Welcome to the Future of Logistics</h4>
                     <form method="POST" action="/admin/login">
-                        <div class="form-group">
-                            <i class="fas fa-user form-icon"></i>
-                            <input type="text" class="form-control" name="username"  placeholder="Username" required>
-                        </div>
-                        <div class="form-group">
-                            <i class="fas fa-envelope form-icon"></i>
-                            <input type="email" class="form-control" name="email"  placeholder="Email Address" required>
-                        </div>
-                        <div class="form-group">
-                            <i class="fas fa-lock form-icon"></i>
-                            <input type="password" class="form-control" name="password"  placeholder="Password" required>
-                        </div>
+                        {{#if error}}
+    <div class="alert alert-danger mb-3" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>{{error}}
+    </div>
+    {{/if}}
+    
+    <div class="form-group">
+        <i class="fas fa-user form-icon"></i>
+        <input type="text" class="form-control" name="username" placeholder="Username" required>
+    </div>
+    <div class="form-group">
+        <i class="fas fa-envelope form-icon"></i>
+        <input type="email" class="form-control" name="email" value="{{email}}" placeholder="Email Address" required>
+    </div>
+    <div class="form-group">
+        <i class="fas fa-lock form-icon"></i>
+        <input type="password" class="form-control" name="password" placeholder="Password" required>
+    </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="rememberMe">
                             <label class="form-check-label" for="rememberMe">Remember me</label>
@@ -214,7 +233,7 @@
                         </button>
                     </form>
                     <div class="text-center mt-3">
-                        <a href="#" class="forgot-password">Forgot Password?</a>
+                        <a href="/admin/forget" class="forgot-password">Forgot Password?</a>
                     </div>
                     <div class="loading-bar"></div>
                 </div>

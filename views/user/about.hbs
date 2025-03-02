@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About E-Gate - Global Shipping & Logistics</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+    /* Variables */
+    :root {
+        --primary-purple: #556270;
+        --secondary-orange: #4ECDC4;
+        --header-bg: linear-gradient(to right, #556270, #4ECDC4);
+        --text-dark: #0b0757;
+        --light-bg: #f8f9fa;
+    }
+
+    /* Base Styles */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: 'TWKLausanne', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        padding-top: 76px;
+        color: #333;
+    }
+
+    /* Typography */
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        color: var(--text-dark);
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .blueOrangeGradient {
+        background: #4ECDC4;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #556270, #4ECDC4);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #556270, #4ECDC4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Layout Components */
+    .hero-section {
+        background: #4ECDC4;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #556270, #4ECDC4);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #556270, #4ECDC4);
+        padding: 120px 0 80px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,229.3C672,224,768,192,864,165.3C960,139,1056,117,1152,122.7C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") bottom/cover no-repeat;
+        opacity: 0.5;
+    }
+
+    /* Navigation */
+    /* Futuristic Navbar Styles */
+    .navbar {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(15px);
+        padding: 0.7rem 1rem;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+        background: rgba(255, 255, 255, 0.98);
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-brand {
+        font-weight: 800;
+        font-size: 2rem;
+        color: var(--primary-purple);
+        position: relative;
+        letter-spacing: -0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .brand-accent {
+        color: var(--secondary-orange);
+        font-size: 2.2rem;
+    }
+
+    .navbar-brand:hover {
+        transform: translateY(-2px);
+        color: var(--primary-purple);
+    }
+
+    .navbar-nav {
+        align-items: center;
+    }
+
+    .nav-item {
+        margin: 0 0.3rem;
+    }
+
+    .nav-link {
+        color: var(--text-dark);
+        font-weight: 600;
+        padding: 0.7rem 1rem;
+        border-radius: 10px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .nav-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.1), rgba(78, 205, 196, 0.2));
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 10%;
+        width: 80%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-purple), var(--secondary-orange));
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s ease;
+        border-radius: 3px;
+    }
+
+    .nav-link:hover:before,
+    .nav-link.active:before {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+
+    .nav-link:hover {
+        color: var(--primary-purple);
+        background: rgba(78, 205, 196, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .nav-link:hover .nav-icon {
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.2), rgba(78, 205, 196, 0.4));
+    }
+
+    /* About Page Specific Styles */
+    .about-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 80px 20px;
+    }
+
+    .about-section {
+        padding: 80px 0;
+    }
+
+    .about-section.bg-light {
+        background-color: var(--light-bg);
+    }
+
+    .about-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        height: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .about-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .about-img-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .about-img {
+        transition: transform 0.5s ease;
+        width: 100%;
+        border-radius: 20px;
+    }
+
+    .about-img-wrapper:hover .about-img {
+        transform: scale(1.05);
+    }
+
+    .timeline {
+        position: relative;
+        padding: 0;
+        list-style: none;
+    }
+
+    .timeline:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 3px;
+        margin-left: -1.5px;
+        background: linear-gradient(to bottom, var(--primary-purple), var(--secondary-orange));
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 50px;
+        display: flex;
+        align-items: center;
+    }
+
+    .timeline-item:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+    .timeline-content {
+        width: 45%;
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .timeline-content:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .timeline-year {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--primary-purple), var(--secondary-orange));
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.25rem;
+        z-index: 1;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .value-card {
+        text-align: center;
+        background: white;
+        border-radius: 20px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        height: 100%;
+    }
+
+    .value-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .value-icon {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, rgba(85, 98, 112, 0.1), rgba(78, 205, 196, 0.2));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 2.5rem;
+        color: var(--primary-purple);
+        transition: all 0.3s ease;
+    }
+
+    .value-card:hover .value-icon {
+        background: linear-gradient(135deg, var(--primary-purple), var(--secondary-orange));
+        color: white;
+        transform: scale(1.1) rotate(10deg);
+    }
+
+    .team-card {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .team-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .team-img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+
+    .team-card:hover .team-img {
+        transform: scale(1.1);
+    }
+
+    .team-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        color: white;
+        padding: 30px 20px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .team-card:hover .team-info {
+        padding-bottom: 40px;
+    }
+
+    .team-social {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(5px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        opacity: 0.7;
+    }
+
+    .social-icon:hover {
+        background: white;
+        color: var(--primary-purple);
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .stats-card {
+        text-align: center;
+        padding: 30px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats-number {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+    }
+
+    .stats-icon {
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, var(--primary-purple), var(--secondary-orange));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+    }
+
+    .parallax-section {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .parallax-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .parallax-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+        padding: 0 15px;
+    }
+
+    .parallax-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(to right, var(--primary-purple), var(--secondary-orange));
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(to right, var(--secondary-orange), var(--primary-purple));
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 1.2s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #1e2430;
+        color: #fff;
+        padding: 60px 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .timeline:before {
+            left: 30px;
+        }
+        
+        .timeline-item {
+            flex-direction: row !important;
+        }
+        
+        .timeline-content {
+            width: calc(100% - 80px);
+            margin-left: 80px;
+        }
+        
+        .timeline-year {
+            left: 30px;
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .about-card {
+            padding: 25px;
+        }
+        
+        .about-img-wrapper {
+            margin-bottom: 30px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <!-- Futuristic Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-box-seam me-2"></i>E-Gate<span class="brand-accent">.</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><span class="nav-icon"><i class="bi bi-house-door"></i></span>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><span class="nav-icon"><i class="bi bi-building"></i></span>About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html"><span class="nav-icon"><i class="bi bi-telephone"></i></span>Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="support.html"><span class="nav-icon"><i class="bi bi-headset"></i></span>Support</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="hero-title text-white mb-3">Our <span style="color: #f8f9ff;">Story</span></h1>
+            <p class="lead text-white mb-4">Revolutionizing global shipping with innovative logistics solutions since 2010</p>
+            <a href="#mission" class="btn btn-light rounded-pill px-4 py-2">
+                <i class="bi bi-arrow-down me-2"></i>Discover Our Mission
+            </a>
+        </div>
+    </section>
+
+    <!-- Who We Are Section -->
+    <section class="about-section" id="mission">
+        <div class="about-container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="about-img-wrapper fade-in">
+                        <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="E-Gate Headquarters" class="about-img">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="fade-in" style="animation-delay: 0.2s;">
+                        <h6 class="text-uppercase fw-bold text-primary mb-2">Who We Are</h6>
+                        <h2 class="section-title mb-4">Redefining <span class="blueOrangeGradient">Global Logistics</span></h2>
+                        <p class="lead mb-4">E-Gate is a leading global shipping and logistics company that connects businesses and individuals to opportunities around the world.</p>
+                        <p class="mb-4">Founded in 2010, we've grown from a small regional shipping service to an international logistics powerhouse operating in over 150 countries. Our mission is to make global shipping accessible, affordable, and reliable for everyone.</p>
+                        <p>With cutting-edge technology and exceptional customer service, we ensure that your packages arrive safely and on time, no matter the destination. We're not just moving packages – we're moving possibilities.</p>
+                        <div class="d-flex mt-4">
+                            <div class="me-4">
+                                <h3 class="fw-bold mb-0">150+</h3>
+                                <p class="text-muted">Countries Served</p>
+                            </div>
+                            <div class="me-4">
+                                <h3 class="fw-bold mb-0">5M+</h3>
+                                <p class="text-muted">Happy Customers</p>
+                            </div>
+                            <div>
+                                <h3 class="fw-bold mb-0">98%</h3>
+                                <p class="text-muted">On-Time Delivery</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our History Section -->
+    <section class="about-section bg-light">
+        <div class="about-container">
+            <div class="text-center mb-5 fade-in">
+                <h6 class="text-uppercase fw-bold text-primary mb-2">Our Journey</h6>
+                <h2 class="section-title">The <span class="blueOrangeGradient">E-Gate Story</span></h2>
+                <p class="lead w-75 mx-auto">From humble beginnings to global impact – our journey of innovation and growth</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2010</div>
+                    <div class="timeline-content fade-in">
+                        <h4>The Beginning</h4>
+                        <p>E-Gate was founded with a simple mission: to make shipping easier and more accessible. We started with just 5 employees and a small office in San Francisco.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2013</div>
+                    <div class="timeline-content fade-in" style="animation-delay: 0.2s;">
+                        <h4>Regional Expansion</h4>
+                        <p>After initial success, E-Gate expanded operations across North America, establishing shipping centers in major cities and building our first technology platform.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2016</div>
+                    <div class="timeline-content fade-in" style="animation-delay: 0.4s;">
+                        <h4>Going Global</h4>
+                        <p>E-Gate went international, opening offices in Europe and Asia. Our team grew to over 500 employees worldwide, serving thousands of businesses globally.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2019</div>
+                    <div class="timeline-content fade-in" style="animation-delay: 0.6s;">
+                        <h4>Digital Revolution</h4>
+                        <p>We launched our AI-powered logistics platform, revolutionizing package tracking and delivery optimization while reducing our carbon footprint by 40%.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2022</div>
+                    <div class="timeline-content fade-in" style="animation-delay: 0.8s;">
+                        <h4>Eco-Initiative</h4>
+                        <p>E-Gate introduced our eco-friendly packaging and carbon-neutral shipping options, setting new industry standards for sustainable logistics.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2025</div>
+                    <div class="timeline-content fade-in" style="animation-delay: 1s;">
+                        <h4>Today</h4>
+                        <p>E-Gate continues to lead the industry with innovative solutions, serving millions of customers across 150+ countries with reliability and excellence.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax Quote Section -->
+    <section class="parallax-section" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content">
+            <h2 class="parallax-title">"Connecting the world, one package at a time"</h2>
+            <p class="lead mb-4">Our vision is to create a seamless global shipping network that brings people and businesses closer together.</p>
+            <a href="#" class="btn btn-light rounded-pill px-4 py-2">Join Our Mission</a>
+        </div>
+    </section>
+
+    <!-- Our Values Section -->
+    <section class="about-section">
+        <div class="about-container">
+            <div class="text-center mb-5 fade-in">
+                <h6 class="text-uppercase fw-bold text-primary mb-2">Our Principles</h6>
+                <h2 class="section-title">Core <span class="blueOrangeGradient">Values</span></h2>
+                <p class="lead w-75 mx-auto">The principles that guide our decisions and shape our company culture</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="value-card fade-in">
+                        <div class="value-icon">
+                            <i class="bi bi-lightning-charge"></i>
+                        </div>
+                        <h4>Innovation</h4>
+                        <p>We constantly push boundaries to create better shipping solutions and experiences for our customers.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="value-card fade-in" style="animation-delay: 0.2s;">
+                        <div class="value-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h4>Reliability</h4>
+                        <p>We deliver on our promises, ensuring packages arrive on time, every time, wherever they're going.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="value-card fade-in" style="animation-delay: 0.4s;">
+                        <div class="value-icon">
+                            <i class="bi bi-heart"></i>
+                        </div>
+                        <h4>Customer-First</h4>
+                        <p>Our customers are at the heart of everything we do, driving our decisions and innovations.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="value-card fade-in" style="animation-delay: 0.6s;">
+                        <div class="value-icon">
+                            <i class="bi bi-globe"></i>
+                        </div>
+                        <h4>Global Perspective</h4>
+                        <p>We embrace diversity and think globally while acting locally to serve our worldwide community.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="value-card fade-in" style="animation-delay: 0.8s;">
+                        <div class="value-icon">
+                            <i class="bi bi-tree"></i>
+                        </div>
+                        <h4>Sustainability</h4>
+                        <p>We're committed to reducing our environmental impact and creating eco-friendly shipping solutions.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="value-card fade-in" style="animation-delay: 1s;">
+                        <div class="value-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h4>Team Excellence</h4>
+                        <p>We foster a culture of collaboration, growth, and excellence among our diverse global team.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Team Section -->
+    <section class="about-section bg-light">
+        <div class="about-container">
+            <div class="text-center mb-5 fade-in">
+                <h6 class="text-uppercase fw-bold text-primary mb-2">Meet Our Team</h6>
+                <h2 class="section-title">Leadership <span class="blueOrangeGradient">Vision</span></h2>
+                <p class="lead w-75 mx-auto">The innovative minds driving E-Gate's global success</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="team-card fade-in">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="CEO" class="team-img">
+                        <div class="team-info">
+                            <h4>Michael Chen</h4>
+                            <p class="mb-0">Chief Executive Officer</p>
+                        </div>
+                        <div class="team-social">
+                            <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
+                            <a href="#" class="social-icon"><i class="bi bi-twitter"></i>
+                                <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
+                            <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="team-card fade-in" style="animation-delay: 0.2s;">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="COO" class="team-img">
+                        <div class="team-info">
+                            <h4>Sarah Johnson</h4>
+                            <p class="mb-0">Chief Operations Officer</p>
+                        </div>
+                        <div class="team-social">
+                            <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
+                            <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="team-card fade-in" style="animation-delay: 0.4s;">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="CTO" class="team-img">
+                        <div class="team-info">
+                            <h4>Daniel Rivera</h4>
+                            <p class="mb-0">Chief Technology Officer</p>
+                        </div>
+                        <div class="team-social">
+                            <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
+                            <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Impact Section -->
+    <section class="about-section">
+        <div class="about-container">
+            <div class="text-center mb-5 fade-in">
+                <h6 class="text-uppercase fw-bold text-primary mb-2">Making A Difference</h6>
+                <h2 class="section-title">Our Global <span class="blueOrangeGradient">Impact</span></h2>
+                <p class="lead w-75 mx-auto">How we're changing the world through innovative logistics</p>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="stats-card fade-in">
+                        <div class="stats-icon"><i class="bi bi-box-seam"></i></div>
+                        <div class="stats-number blueOrangeGradient">1.2B</div>
+                        <h5>Packages Delivered</h5>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="stats-card fade-in" style="animation-delay: 0.2s;">
+                        <div class="stats-icon"><i class="bi bi-building"></i></div>
+                        <div class="stats-number blueOrangeGradient">150+</div>
+                        <h5>Countries Served</h5>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="stats-card fade-in" style="animation-delay: 0.4s;">
+                        <div class="stats-icon"><i class="bi bi-people"></i></div>
+                        <div class="stats-number blueOrangeGradient">12K+</div>
+                        <h5>Team Members</h5>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="stats-card fade-in" style="animation-delay: 0.6s;">
+                        <div class="stats-icon"><i class="bi bi-tree"></i></div>
+                        <div class="stats-number blueOrangeGradient">40%</div>
+                        <h5>Carbon Reduction</h5>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="fade-in">
+                        <h3 class="mb-4">Sustainability Commitment</h3>
+                        <p class="mb-4">At E-Gate, we're committed to reducing our environmental footprint while expanding our global reach. Our eco-initiatives include:</p>
+                        <ul class="list-unstyled">
+                            <li class="d-flex mb-3">
+                                <i class="bi bi-check-circle-fill text-primary me-2 mt-1"></i>
+                                <span>Carbon-neutral shipping options across all major routes</span>
+                            </li>
+                            <li class="d-flex mb-3">
+                                <i class="bi bi-check-circle-fill text-primary me-2 mt-1"></i>
+                                <span>100% recyclable packaging materials</span>
+                            </li>
+                            <li class="d-flex mb-3">
+                                <i class="bi bi-check-circle-fill text-primary me-2 mt-1"></i>
+                                <span>Electric vehicle fleet for last-mile delivery</span>
+                            </li>
+                            <li class="d-flex mb-3">
+                                <i class="bi bi-check-circle-fill text-primary me-2 mt-1"></i>
+                                <span>Solar-powered distribution centers</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="btn btn-gradient mt-3">Learn More About Our Initiatives</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0">
+                    <div class="about-img-wrapper fade-in" style="animation-delay: 0.3s;">
+                        <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sustainability" class="about-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="about-section bg-light">
+        <div class="about-container">
+            <div class="text-center mb-5 fade-in">
+                <h6 class="text-uppercase fw-bold text-primary mb-2">Client Success</h6>
+                <h2 class="section-title">What People <span class="blueOrangeGradient">Say</span></h2>
+                <p class="lead w-75 mx-auto">Hear from businesses and customers who rely on E-Gate</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="about-card fade-in">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="text-warning me-2">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <div class="ms-auto">
+                                <i class="bi bi-quote fs-1 text-primary opacity-25"></i>
+                            </div>
+                        </div>
+                        <p class="mb-4">"E-Gate revolutionized our supply chain management. With their reliable global shipping network, we've reduced delivery times by 30% and expanded to 15 new markets."</p>
+                        <div class="d-flex align-items-center">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" alt="Testimonial" class="rounded-circle" width="60">
+                            <div class="ms-3">
+                                <h5 class="mb-0">Robert Thompson</h5>
+                                <p class="text-muted mb-0">CEO, GlobalTech Solutions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="about-card fade-in" style="animation-delay: 0.2s;">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="text-warning me-2">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <div class="ms-auto">
+                                <i class="bi bi-quote fs-1 text-primary opacity-25"></i>
+                            </div>
+                        </div>
+                        <p class="mb-4">"As a small business owner, I needed an affordable yet reliable shipping partner. E-Gate provided exactly that, with intuitive tracking and exceptional customer service."</p>
+                        <div class="d-flex align-items-center">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" alt="Testimonial" class="rounded-circle" width="60">
+                            <div class="ms-3">
+                                <h5 class="mb-0">Emily Rodriguez</h5>
+                                <p class="text-muted mb-0">Founder, Artisan Crafts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="about-card fade-in" style="animation-delay: 0.4s;">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="text-warning me-2">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <div class="ms-auto">
+                                <i class="bi bi-quote fs-1 text-primary opacity-25"></i>
+                            </div>
+                        </div>
+                        <p class="mb-4">"E-Gate's sustainable shipping options aligned perfectly with our company values. Their carbon-neutral delivery helps us meet our environmental goals without sacrificing efficiency."</p>
+                        <div class="d-flex align-items-center">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" alt="Testimonial" class="rounded-circle" width="60">
+                            <div class="ms-3">
+                                <h5 class="mb-0">James Wilson</h5>
+                                <p class="text-muted mb-0">Sustainability Director, EcoGoods</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="parallax-section" style="background-image: url('https://images.unsplash.com/photo-1484242857719-4b9144542727?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content">
+            <h2 class="parallax-title">Ready to Experience the E-Gate Difference?</h2>
+            <p class="lead mb-4">Join thousands of businesses and millions of customers who trust us with their shipping needs.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#" class="btn btn-gradient">Get Started</a>
+                <a href="contact.html" class="btn btn-outline-light rounded-pill px-4 py-2">Contact Sales</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="about-section">
+        <div class="about-container">
+            <div class="text-center mb-5 fade-in">
+                <h6 class="text-uppercase fw-bold text-primary mb-2">Trusted Partnerships</h6>
+                <h2 class="section-title">Our Global <span class="blueOrangeGradient">Network</span></h2>
+                <p class="lead w-75 mx-auto">Working with leading brands and organizations worldwide</p>
+            </div>
+            
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-2 col-4 mb-4 text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1024px-Amazon_logo.svg.png" alt="Partner" class="img-fluid" style="max-height: 60px; opacity: 0.7;">
+                </div>
+                <div class="col-md-2 col-4 mb-4 text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png" alt="Partner" class="img-fluid" style="max-height: 60px; opacity: 0.7;">
+                </div>
+                <div class="col-md-2 col-4 mb-4 text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png" alt="Partner" class="img-fluid" style="max-height: 60px; opacity: 0.7;">
+                </div>
+                <div class="col-md-2 col-4 mb-4 text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1024px-Microsoft_logo.svg.png" alt="Partner" class="img-fluid" style="max-height: 60px; opacity: 0.7;">
+                </div>
+                <div class="col-md-2 col-4 mb-4 text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Alibaba_Group_logo.svg/1280px-Alibaba_Group_logo.svg.png" alt="Partner" class="img-fluid" style="max-height: 60px; opacity: 0.7;">
+                </div>
+                <div class="col-md-2 col-4 mb-4 text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/1280px-Samsung_Logo.svg.png" alt="Partner" class="img-fluid" style="max-height: 60px; opacity: 0.7;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <a class="d-block text-decoration-none mb-4" href="#">
+                        <h3 class="text-white">E-Gate<span style="color: var(--secondary-orange);">.</span></h3>
+                    </a>
+                    <p class="text-white-50 mb-4">Revolutionizing global shipping with innovative logistics solutions since 2010.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50 fs-5"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white-50 fs-5"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-white-50 fs-5"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white-50 fs-5"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-5 mb-md-0">
+                    <h5 class="text-white mb-4">Company</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Services</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Careers</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Press</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-5 mb-md-0">
+                    <h5 class="text-white mb-4">Services</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Global Shipping</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">E-Commerce</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Business Solutions</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Tracking</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Eco Shipping</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h5 class="text-white mb-4">Contact Us</h5>
+                    <ul class="list-unstyled text-white-50">
+                        <li class="mb-3"><i class="bi bi-geo-alt me-2"></i> 123 Shipping Lane, San Francisco, CA 94107</li>
+                        <li class="mb-3"><i class="bi bi-telephone me-2"></i> +1 (555) 123-4567</li>
+                        <li class="mb-3"><i class="bi bi-envelope me-2"></i> contact@egateshipping.com</li>
+                    </ul>
+                    <div class="mt-4">
+                        <h6 class="text-white mb-3">Subscribe to our newsletter</h6>
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Your email">
+                            <button class="btn btn-gradient" type="button">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5 border-secondary">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-white-50 mb-0">© 2025 E-Gate. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <a href="#" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
+                    <a href="#" class="text-white-50 text-decoration-none me-3">Terms of Service</a>
+                    <a href="#" class="text-white-50 text-decoration-none">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
