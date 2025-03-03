@@ -406,7 +406,8 @@ generatemawb: async (req, res) => {
   try {
       const {
           awbNumber,
-          
+          By,
+          firstcarrier,
           shipperName,
           consigneeName,
           carrierCode,
@@ -452,6 +453,8 @@ generatemawb: async (req, res) => {
           const newMAWB = new MAWB({
               awbNumber,
               hawbNumber:null,
+              By,
+              firstcarrier,
               shipperName,
               consigneeName,
               carrierCode,
@@ -566,14 +569,14 @@ generatemawb: async (req, res) => {
       drawText(`${iataCode}`, 63, 560);
       drawText(`${carrierCode}`, 90, 515, { size: 8 }); // Aligned with DXB
       drawText(`${routingTO1}`, 65, 515, { size: 8 }); // Adjusted to fit inside the 'To' box
-      drawText(`${carrierCode}`,250 , 515); // Carrier Code
+      drawText(`${firstcarrier}`,250 , 515); // Carrier Code
       drawText(`${ICN}`, 218, 515); 
-      drawText(`${SAR}`, 320, 513); // Currency
+      drawText(`SAR`, 320, 513); // Currency
       drawText(`${PP}`, 348, 513); // Payment method
       drawText(`${COLUMN1}`, 365, 513); // Column 1
       drawText(`${COLUMN2}`, 380, 513); // Column 2
-      drawText(`${NVD}`, 450, 513); // Column 1
-      drawText(`${NCV}`, 532, 513); 
+      drawText(`NVD`, 450, 513); // Column 1
+      drawText(`NCV`, 532, 513); 
 
       // Airport of Destination Box
       drawText(`${destination}`, 65, 490);
@@ -588,7 +591,7 @@ generatemawb: async (req, res) => {
       // Cargo Details with numbers replaced by their names
       drawText(`${QTY}`, 65, 400, { size: 9 }); // Replaces '10' with 'ten'
       drawText(`${totalQTY}`, 65, 252, { size: 9 }); // Replaces '10' with 'ten'
-      drawText(`${kiloGram}`, 138, 252, { size: 9 }); // Replaces "K G" with "kilogram"
+      drawText(`K G`, 138, 252, { size: 9 }); // Replaces "K G" with "kilogram"
 
       drawText(`${grossWeight}`, 90, 400, { size: 9 });
       drawText(`${grossWeight}`, 218, 400, { size: 9 });
@@ -598,11 +601,11 @@ generatemawb: async (req, res) => {
       drawText(`${consolidated}`, 450, 400, { size: 9 }); // Replaces 'CONSOLIDATED' with a variable
       drawText(`${awbNumber}`, 393, 35);
       drawText(`${dimensions}`, 450, 380, { size: 9 });
-      drawText(`${kiloGram}`, 138, 400, { size: 9 });
+      drawText(`K G`, 138, 400, { size: 9 });
       drawText(`${totalChargesCarrier}`, 348, 252, { size: 9 });
       // Additional Information
       drawText(`${frieght}`, 320, 605);
-      drawText(`${carrierCode}`, 320, 730);
+      drawText(`${By}`, 320, 730);
       // drawText('ORIGINAL 3 (FOR SHIPPER)', 90, 185, { size: 9 });
 
       // Bottom Section

@@ -18,6 +18,8 @@ const HAWBSchema = new Schema({
     type: Number,
     min: 0
   },
+  By: String,
+              firstcarrier: String,
   dimensions: {
     type: String
   },

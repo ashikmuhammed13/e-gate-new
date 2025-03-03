@@ -396,11 +396,11 @@ margin-left: var(--sidebar-width);
 
 
                         <div class="col-md-4">
-                            <label class="form-label">IATA Code</label>
+                            <label class="form-label">Agents IATA Code</label>
                             <input type="text" class="form-control" name="iataCode">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Carrier Code</label>
+                            <label class="form-label">Issued By</label>
                             <input type="text" class="form-control" name="carrierCode">
                         </div>
                     </div>
@@ -441,6 +441,10 @@ margin-left: var(--sidebar-width);
                                     Save to address book
                                 </label>
                             </div>
+                            <div class="col-md-3">
+                            <label class="form-label">Accounting Info</label>
+                            <input type="text" class="form-control" name="frieght">
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -465,7 +469,7 @@ margin-left: var(--sidebar-width);
                             <input type="text" class="form-control" name="routingTO1">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">ICN</label>
+                            <label class="form-label">Routing TO2</label>
                             <input type="text" class="form-control" name="ICN">
                         </div>
                     </div>
@@ -482,9 +486,9 @@ margin-left: var(--sidebar-width);
                             <label class="form-label">Gross Weight</label>
                             <input type="text" class="form-control" name="grossWeight">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Kilo Gram</label>
-                            <input type="text" class="form-control" name="kiloGram">
+                         <div class="col-md-4">
+                            <label class="form-label">Nature and Quantity of Goods</label>
+                            <input type="text" class="form-control" name="consolidated">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Dimensions</label>
@@ -494,16 +498,7 @@ margin-left: var(--sidebar-width);
                             <label class="form-label">Handling Information</label>
                             <textarea class="form-control" name="handlingInformation" rows="3"></textarea>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Charges -->
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <i class="bi bi-currency-dollar"></i>
-                        Charges & Payment
-                    </h3>
-                    <div class="row g-4">
+                        <div class="row g-4">
                         <div class="col-md-3">
                             <label class="form-label">Prepaid</label>
                             <input type="text" class="form-control" name="prepaid">
@@ -516,10 +511,8 @@ margin-left: var(--sidebar-width);
                             <label class="form-label">Total Charges Carrier</label>
                             <input type="text" class="form-control" name="totalChargesCarrier">
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Freight</label>
-                            <input type="text" class="form-control" name="frieght">
-                        </div>
+                        
+                       
                         <div class="col-md-3">
                             <label class="form-label">Total QTY</label>
                             <input type="text" class="form-control" name="totalQTY">
@@ -529,7 +522,11 @@ margin-left: var(--sidebar-width);
                             <input type="text" class="form-control" name="QTY">
                         </div>
                     </div>
+                    </div>
                 </div>
+
+                
+               
 
                 <!-- Additional Information -->
                 <div class="form-section">
@@ -538,34 +535,30 @@ margin-left: var(--sidebar-width);
                         Additional Information
                     </h3>
                     <div class="row g-4">
-                        <div class="col-md-4">
-                            <label class="form-label">SAR</label>
-                            <input type="text" class="form-control" name="SAR">
-                        </div>
+
+                       
                         <div class="col-md-4">
                             <label class="form-label">PP</label>
                             <input type="text" class="form-control" name="PP">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Consolidated</label>
-                            <input type="text" class="form-control" name="consolidated">
-                        </div>
+                        
                         <div class="col-md-3">
-                            <label class="form-label">COLUMN1</label>
+                            <label class="form-label">PPD</label>
                             <input type="text" class="form-control" name="COLUMN1">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">COLUMN2</label>
+                            <label class="form-label">COLL</label>
                             <input type="text" class="form-control" name="COLUMN2">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">NVD</label>
-                            <input type="text" class="form-control" name="NVD">
+                            <label class="form-label">By</label>
+                            <input type="text" class="form-control" name="By">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">NCV</label>
-                            <input type="text" class="form-control" name="NCV">
+                            <label class="form-label">By First Carrier</label>
+                            <input type="text" class="form-control" name="firstcarrier">
                         </div>
+                       
                     </div>
                 </div>
 

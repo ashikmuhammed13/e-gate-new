@@ -46,10 +46,7 @@ const MAWBSchema = new Schema({
   COLUMN2: String,
   NVD: String,
   NCV: String,
-  kiloGram: {
-    type: Number,
-    min: 0
-  },
+  kiloGram: String,
   RATECHARGE: Number,
   consolidated:String,
   totalQTY: {
