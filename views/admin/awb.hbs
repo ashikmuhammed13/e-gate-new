@@ -451,8 +451,7 @@
                             <th>AWB Number</th>
                             <th>Status</th>
                             <th>Usage</th>
-                            <th>Origin</th>
-                            <th>Destination</th>
+                            
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -497,10 +496,20 @@
 
                         </div>
                         <!-- AWB Number -->
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">AWB Number</label>
-                            <input type="text" class="form-control" name="awbNumber" placeholder="Enter AWB number" required>
-                        </div>
+                        <!-- AWB Number field in the modal form -->
+<div class="col-md-6 mb-3">
+    <label class="form-label">AWB Number</label>
+    <input type="text" 
+           class="form-control" 
+           name="awbNumber" 
+           placeholder="Enter AWB number (8 digits only)" 
+           pattern="[0-9]{8}" 
+           maxlength="8" 
+           oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);" 
+           title="Please enter exactly 8 digits" 
+           required>
+    <div class="form-text">Enter exactly 8 digits (numbers only)</div>
+</div>
                         <!-- AWB Type -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label">AWB Type</label>
@@ -511,20 +520,7 @@
                             </select>
                         </div>
                         <!-- Origin -->
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Origin</label>
-                            <input type="text" class="form-control" name="origin" placeholder="Enter origin" required>
-                        </div>
-                        <!-- Destination -->
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Destination</label>
-                            <input type="text" class="form-control" name="destination" placeholder="Enter destination" required>
-                        </div>
-                        <!-- Carrier -->
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Carrier</label>
-                            <input type="text" class="form-control" name="carrier" placeholder="Enter carrier name">
-                        </div>
+                       
                         <!-- Status -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Status</label>

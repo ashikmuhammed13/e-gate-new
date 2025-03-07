@@ -248,10 +248,14 @@
   <img src="{{{qrCode}}}" alt="QR Code" style="width:100px; height:100px;" />
 </div>
 
-            <div class="shipment-details">
+          <div class="shipment-details">
   <div class="detail-row">
       <span class="bold-text">WEIGHT:</span>
       <span>{{shipment.weight}}</span>
+  </div>
+  <div class="detail-row">
+      <span class="bold-text">DIMENSIONS:</span>
+      <span>{{shipment.dimensions}}</span>
   </div>
   <div class="detail-row">
       <span class="bold-text">PIECES:</span>
@@ -260,10 +264,6 @@
   <div class="detail-row">
       <span class="bold-text">SERVICE:</span>
       <span>{{shipment.service}}</span>
-  </div>
-  <div class="detail-row">
-      <span class="bold-text">COD:</span>
-      <span>{{shipment.cod}}</span>
   </div>
 </div>
 

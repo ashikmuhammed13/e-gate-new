@@ -43,6 +43,10 @@ const packageSchema = new mongoose.Schema({
     length: Number,
     width: Number,
     height: Number
+  },
+  description: {
+    type: String,
+    default: ''
   }
 });
 
@@ -84,6 +88,7 @@ const shipmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  
 
   // Shipment Status and Tracking
   status: {

@@ -369,7 +369,17 @@
    <div class="main-content">
         <div class="container mt-5">
             <h1 class="page-title">Shipment Tracking</h1>
-            <div class="row g-4">
+            <!-- Add this right after your page-title -->
+<div class="search-container mb-4">
+    <div class="input-group">
+        <span class="input-group-text bg-transparent border-end-0">
+            <i class="bi bi-search text-white-50"></i>
+        </span>
+        <input type="text" id="searchInput" class="form-control bg-transparent text-white border-start-0" 
+               placeholder="Search by AWB, location, status, or address...">
+    </div>
+</div>
+            <div class="row g-4" id="shipmentsContainer">
                 {{#each shipments}}
                 <div class="col-lg-4 col-md-6">  <!-- Changed from col-lg-3 to col-lg-4 -->
                     <div class="awb-box box-{{@index}}">
@@ -417,6 +427,97 @@
         box.style.setProperty('--hue', index * 0.2 % 1);
     });
 });
+// Real-time search functionality
+const searchInput = document.getElementById('searchInput');
+const shipmentsContainer = document.getElementById('shipmentsContainer');
+
+searchInput.addEventListener('input', debounce(function() {
+    const searchTerm = this.value.trim();
+    
+    fetch(`/admin/fetchShipment?search=${encodeURIComponent(searchTerm)}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        shipmentsContainer.innerHTML = '';
+        
+        if (data.shipments.length === 0) {
+            shipmentsContainer.innerHTML = `
+                <div class="col-12 text-center">
+                    <div class="awb-box" style="--hue: 0.6">
+                        <div class="p-4">No shipments found matching your search.</div>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+        
+        data.shipments.forEach((shipment, index) => {
+            const boxHtml = `
+                <div class="col-lg-4 col-md-6">
+                    <div class="awb-box box-${index % 4}" style="--hue: ${index * 0.2 % 1}">
+                        <div class="awb-number">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18-.21 0-.41-.06-.57-.18l-7.9-4.44A.991.991 0 013 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18.21 0 .41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9zM12 4.15L6.04 7.5 12 10.85l5.96-3.35L12 4.15z"/>
+                            </svg>
+                            ${shipment.awbNumber}
+                        </div>
+                        <div class="address">
+                            <strong>From:</strong> ${shipment.sender.addressDetails.city}, ${shipment.sender.addressDetails.country}<br>
+                            <strong>To:</strong> ${shipment.receiver.addressDetails.city}, ${shipment.receiver.addressDetails.country}
+                        </div>
+                        <div class="location">
+                            <strong>Current Location:</strong> 
+                            ${shipment.currentLocation}
+                        </div>
+                        <div class="status" data-status="${shipment.status}">${shipment.status}</div>
+                    </div>
+                </div>
+            `;
+            shipmentsContainer.innerHTML += boxHtml;
+        });
+        
+        // Reattach click events to the newly created boxes
+        attachBoxClickEvents();
+    })
+    .catch(error => {
+        console.error('Error fetching search results:', error);
+        shipmentsContainer.innerHTML = `
+            <div class="col-12 text-center">
+                <div class="awb-box" style="--hue: 0">
+                    <div class="p-4">Error loading results. Please try again.</div>
+                </div>
+            </div>
+        `;
+    });
+}, 300));
+
+// Helper function to debounce search input
+function debounce(func, wait = 300) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func.apply(this, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Function to attach click events to boxes
+function attachBoxClickEvents() {
+    const boxes = document.querySelectorAll(".awb-box");
+    
+    boxes.forEach(box => {
+        box.addEventListener("click", () => {
+            const awbNumber = box.querySelector(".awb-number").textContent.trim();
+            window.location.href = `/admin/tracking-details?awbNumber=${encodeURIComponent(awbNumber)}`;
+        });
+    });
+}
 </script>
 
 </body>

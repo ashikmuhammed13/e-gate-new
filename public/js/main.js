@@ -3,6 +3,9 @@ class ShipmentForm {
         this.initializeElements();
         this.attachEventListeners();
         this.currentPackageCount = 1;
+        
+        // Add description field to the initial package
+        this.addDescriptionToInitialPackage();
     }
   
     initializeElements() {
@@ -25,6 +28,23 @@ class ShipmentForm {
   
         // Setup postal code lookup
         this.setupPostalCodeInputs();
+    }
+    
+    // Add a method to add description to the initial package
+    addDescriptionToInitialPackage() {
+        const initialPackage = this.packagesContainer.querySelector('.package-form');
+        if (initialPackage && !initialPackage.querySelector('.package-description')) {
+            const row = initialPackage.querySelector('.row');
+            const descriptionRow = document.createElement('div');
+            descriptionRow.className = 'row mt-3';
+            descriptionRow.innerHTML = `
+                <div class="col-12">
+                    <label class="form-label">Package Description</label>
+                    <textarea class="form-control package-description" placeholder="Describe the contents of this package" rows="2"></textarea>
+                </div>
+            `;
+            row.insertAdjacentElement('afterend', descriptionRow);
+        }
     }
   
     async handlePostalCodeLookup(postalCode, section) {
@@ -138,52 +158,6 @@ class ShipmentForm {
             }
         });
     }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     attachEventListeners() {
         if (this.addPackageBtn) {
@@ -242,8 +216,6 @@ class ShipmentForm {
             saveReceiverAddress: document.getElementById('receiverSaveAddressCheck').checked,
             packages: this.getPackagesData()
           };
-      
-        //   console.log('Submitting form data:', formData);
 
           const response = await fetch('/admin/createAwb', {
             method: 'POST',
@@ -321,7 +293,8 @@ class ShipmentForm {
                 length: parseFloat(pkg.querySelector('input[placeholder="Length"]').value) || 0,
                 width: parseFloat(pkg.querySelector('input[placeholder="Width"]').value) || 0,
                 height: parseFloat(pkg.querySelector('input[placeholder="Height"]').value) || 0
-            }
+            },
+            description: pkg.querySelector('.package-description')?.value || ''
         }));
     }
   
@@ -364,6 +337,12 @@ class ShipmentForm {
                             <span class="input-group-text">×</span>
                             <input type="number" class="form-control" placeholder="Height">
                         </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label class="form-label">Package Description</label>
+                        <textarea class="form-control package-description" placeholder="Describe the contents of this package" rows="2"></textarea>
                     </div>
                 </div>
             </div>
@@ -417,13 +396,11 @@ class ShipmentForm {
             shipmentDateInput.value = today;
         }
     }
-  }
+}
   
-  // Initialize the form handler when the document is ready
-  document.addEventListener('DOMContentLoaded', function() {
+// Initialize the form handler when the document is ready
+document.addEventListener('DOMContentLoaded', function() {
     window.shipmentForm = new ShipmentForm();
-  });
+});
 
-  
-
-  let debounceTimer;
+let debounceTimer;

@@ -651,6 +651,104 @@
     }
   });
   
+  // Add visual feedback for form interactions
+document.querySelectorAll('.form-control, .form-select').forEach(input => {
+  // Add "floating" effect on focus
+  input.addEventListener('focus', () => {
+    input.style.transform = 'translateY(-2px)';
+  });
+  
+  input.addEventListener('blur', () => {
+    input.style.transform = '';
+  });
+  
+  // Add validation styling on change
+  input.addEventListener('change', () => {
+    if (input.value) {
+      input.classList.add('is-valid');
+    } else {
+      input.classList.remove('is-valid');
+    }
+  });
+});
+
+// Improve cargo item functionality
+function createCargoItem(count) {
+  const newCargoRow = document.createElement('div');
+  newCargoRow.className = 'cargo-item';
+  newCargoRow.dataset.cargoId = count;
+  
+  newCargoRow.innerHTML = `
+    <div class="cargo-title">Cargo Item #${count}</div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <label class="form-label">Gross Weight</label>
+        <input type="text" class="form-control" name="grossWeight_${count}" placeholder="Enter weight">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Nature and Quantity</label>
+        <input type="text" class="form-control" name="consolidated_${count}" placeholder="Description">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Dimensions</label>
+        <input type="text" class="form-control" name="dimensions_${count}" placeholder="LxWxH">
+      </div>
+      <div class="col-md-3 mt-3">
+        <label class="form-label">QTY</label>
+        <input type="text" class="form-control" name="QTY_${count}" placeholder="Quantity">
+      </div>
+      <div class="col-md-3 mt-3">
+        <label class="form-label">Rate Charge</label>
+        <input type="text" class="form-control" name="RATECHARGE_${count}" placeholder="Rate">
+      </div>
+      <div class="col-md-6 mt-4 text-end">
+        <button type="button" class="btn btn-danger remove-cargo-btn" data-cargo-id="${count}">
+          <i class="bi bi-trash"></i> Remove Item
+        </button>
+      </div>
+    </div>
+  `;
+  
+  return newCargoRow;
+}
+
+// Replace your current cargo item creation with this enhanced version
+document.addEventListener('DOMContentLoaded', function() {
+  const addCargoBtn = document.createElement('button');
+  addCargoBtn.type = 'button';
+  addCargoBtn.className = 'btn btn-primary mt-4';
+  addCargoBtn.innerHTML = '<i class="bi bi-plus-circle"></i> Add Cargo Item';
+  
+  const cargoSection = document.querySelector('.form-section:nth-of-type(4)');
+  cargoSection.appendChild(addCargoBtn);
+  
+  let cargoCount = 1;
+  
+  addCargoBtn.addEventListener('click', function() {
+    cargoCount++;
+    const newCargoRow = createCargoItem(cargoCount);
+    cargoSection.insertBefore(newCargoRow, addCargoBtn);
+    
+    newCargoRow.querySelector('.remove-cargo-btn').addEventListener('click', function() {
+      const cargoId = this.dataset.cargoId;
+      document.querySelector(`.cargo-item[data-cargo-id="${cargoId}"]`).remove();
+      updateCargoNumbering();
+    });
+  });
+});
+    
+  
+  
+  // Function to update cargo item numbering
+  function updateCargoNumbering() {
+    const cargoItems = document.querySelectorAll('.cargo-item');
+    cargoItems.forEach((item, index) => {
+      const cargoNum = index + 2; // Start from 2 since the first one is the default
+      item.dataset.cargoId = cargoNum;
+      item.querySelector('.cargo-title').textContent = `Cargo Item #${cargoNum}`;
+      item.querySelector('.remove-cargo-btn').dataset.cargoId = cargoNum;
+    });
+  }
 </script>
 </body>
 </html>

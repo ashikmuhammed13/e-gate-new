@@ -17,15 +17,7 @@ const awbSchema = new mongoose.Schema({
     type: String,
     required: true
 },
-  origin: {
-    type: String,
-    required: true
-  },
-  destination: {
-    type: String,
-    required: true
-  },
-  carrier: String,
+ 
   status: {
     type: String,
     enum: ['active', 'inactive'],

@@ -5,9 +5,10 @@ const HAWBSchema = new Schema({
   awbNumber: {
     type: String,
     required: true,
-    
+    unique: true,
+    index: true
   },
-  mawbNumber: {
+  hawbNumber: {
     type: String
    
   },
@@ -18,8 +19,6 @@ const HAWBSchema = new Schema({
     type: Number,
     min: 0
   },
-  By: String,
-              firstcarrier: String,
   dimensions: {
     type: String
   },
@@ -47,16 +46,23 @@ const HAWBSchema = new Schema({
   COLUMN2: String,
   NVD: String,
   NCV: String,
-  kiloGram: {
-    type: Number,
-    min: 0
-  },
+  kiloGram: String,
   RATECHARGE: Number,
   consolidated:String,
   totalQTY: {
     type: Number,
     min: 0
   },
+  cargoItems: [{
+    QTY: String,
+    grossWeight: String,
+    dimensions: String,
+    RATECHARGE: String,
+    consolidated: String
+  }],
+  
+  // Keep totalQTY as a separate field for the grand total
+  totalQTY: String,
   QTY: {
     type: Number,
     min: 0

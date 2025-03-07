@@ -257,7 +257,7 @@ const verifyOTP = async (req, res) => {
 
 addAwb = async (req, res) => {
   try {
-    const { awbNumber, awbType, origin, destination, carrier, status, notes, prefix } = req.body;
+    const { awbNumber, awbType,  status, notes, prefix } = req.body;
     console.log(req.body)
     // Check if the AWB number already exists and has been used
     const existingAwb = await AWB.findOne({ awbNumber });
@@ -273,9 +273,7 @@ addAwb = async (req, res) => {
     const newAwb = new AWB({
       awbNumber,
       awbType,
-      origin,
-      destination,
-      carrier,
+     
       status,
       prefix,
       notes,

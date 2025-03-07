@@ -257,12 +257,14 @@ router.post("/updateDeliveryDate/:awbNumber", async (req, res) => {
 });
 
 // Update signature information
+// Update signature information
+// Update signature information
 router.post("/updateSignature/:awbNumber", async (req, res) => {
     const { awbNumber } = req.params;
     const { signedBy, signedAt } = req.body;
-    console.log( awbNumber ,"update date entered the route")
-    if (!awbNumber || !signedBy || !signedAt) {
-        return res.status(400).json({ success: false, message: "Missing required fields" });
+    
+    if (!awbNumber) {
+        return res.status(400).json({ success: false, message: "AWB number is required" });
     }
     
     try {
@@ -271,23 +273,23 @@ router.post("/updateSignature/:awbNumber", async (req, res) => {
             return res.status(404).json({ success: false, message: "Shipment not found" });
         }
         
-        // Update signature fields
-        shipment.signedBy = signedBy;
-        shipment.signedAt = new Date(signedAt);
-        
-        // Also update status to "Delivered" if not already
+        // Check if shipment status is "Delivered"
         if (shipment.status !== "Delivered") {
-            shipment.status = "Delivered";
-            
-            // Add a timeline event for delivery
-            shipment.timeline.push({
-                location: shipment.currentLocation,
-                status: "Delivered",
-                description: `Signed by ${signedBy}`,
-                timestamp: new Date(signedAt),
-                updatedBy: "admin",
-                isCompleted: true
+            return res.status(400).json({ 
+                success: false, 
+                message: "Cannot add signature - shipment has not been delivered yet" 
             });
+        }
+        
+        // Update signature fields with both name and timestamp
+        shipment.signedBy = signedBy || "";
+        
+        // Ensure we have a valid date for signedAt
+        if (signedAt) {
+            shipment.signedAt = new Date(signedAt);
+        } else {
+            // If no specific time provided, use current time
+            shipment.signedAt = new Date();
         }
         
         shipment.updatedAt = new Date();
@@ -297,7 +299,8 @@ router.post("/updateSignature/:awbNumber", async (req, res) => {
         return res.json({ 
             success: true, 
             message: "Signature information updated successfully",
-            status: shipment.status
+            status: shipment.status,
+            signedAt: shipment.signedAt // Return the timestamp for UI update
         });
     } catch (err) {
         console.error(err);
