@@ -5,6 +5,7 @@ const NodeCache = require('node-cache');
 const cache = new NodeCache();
 const fileStorage = require('../utils/fileStorage');
 const normalAwb = require('../controller/normalAwb')
+const addressForMawb = require('../controller/addressForMawb')
 const sessionAuth = require('../middlewares/sessionAuth')
 const {fetchAdminProfile,addAdmin,login,addAwb,getAllAirlines,addAirline,getawb,sendOTP,verifyOTP} = require('../controller/AdminController')
 const { 
@@ -225,6 +226,80 @@ router.post('/update-timeline', async (req, res) => {
     }
 });
 
+router.post('/delete-timeline', async (req, res) => {
+    const { id, awbNumber } = req.body;
+    
+    console.log('Delete timeline request:', { id, awbNumber });
+    
+    try {
+        // Find the shipment
+        const shipment = await Shipment.findOne({ awbNumber });
+        
+        if (!shipment) {
+            console.error(`Shipment not found for AWB: ${awbNumber}`);
+            return res.status(404).json({
+                success: false,
+                message: 'Shipment not found'
+            });
+        }
+        
+        // Find the timeline item index
+        const timelineItemIndex = shipment.timeline.findIndex(item => 
+            item._id.toString() === id
+        );
+        
+        if (timelineItemIndex === -1) {
+            console.error(`Timeline item ${id} not found in shipment ${awbNumber}`);
+            return res.status(404).json({
+                success: false,
+                message: 'Timeline item not found'
+            });
+        }
+        
+        // Remove the timeline item
+        shipment.timeline.splice(timelineItemIndex, 1);
+        
+        // If we're deleting the current location timeline entry,
+        // update the current location to the last timeline entry (if exists)
+        if (shipment.timeline.length > 0) {
+            // Sort timeline by timestamp to get the latest entry
+            const sortedTimeline = [...shipment.timeline].sort((a, b) => 
+                new Date(b.timestamp) - new Date(a.timestamp)
+            );
+            
+            // Update status and current location from the latest timeline entry
+            shipment.status = sortedTimeline[0].status;
+            shipment.currentLocation = sortedTimeline[0].location;
+        }
+        
+        // Save the updated shipment
+        await shipment.save();
+        
+        // Find the timeline entry that matches the current location for facility type
+        const currentLocationEntry = shipment.timeline.find(entry => 
+            entry.location === shipment.currentLocation
+        );
+        
+        const facilityType = currentLocationEntry?.description || "N/A";
+        
+        res.json({
+            success: true,
+            message: 'Timeline item deleted successfully',
+            timeline: shipment.timeline,
+            status: shipment.status,
+            currentLocation: shipment.currentLocation,
+            facilityType: facilityType
+        });
+        
+    } catch (error) {
+        console.error('Error deleting timeline item:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete timeline item',
+            error: error.message
+        });
+    }
+});
 // Update estimated delivery date
 router.post("/updateDeliveryDate/:awbNumber", async (req, res) => {
     
@@ -329,7 +404,9 @@ router.get("/airlines",getAllAirlines)
 router.post('/add-airline', upload.single('airlineImage'), addAirline);
 router.get("/getawb",getawb)
 router.get('/downloadPdf/:pdfFile',normalAwb.downloadPdf);
-  
+  // Add these to your routes file
+router.post('/save-address',  addressForMawb.saveAddress);
+router.get('/search-addresses', addressForMawb.searchAddresses);
 
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {

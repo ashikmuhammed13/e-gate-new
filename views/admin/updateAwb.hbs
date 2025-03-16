@@ -414,6 +414,22 @@
         .btn-icon.delete:hover {
             background: var(--danger);
         }
+        .delete-timeline-btn {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        background: none;
+        border: none;
+        padding: 5px;
+        cursor: pointer;
+    }
+    
+    .timeline-item:hover .delete-timeline-btn {
+        opacity: 1;
+    }
+    
+    .btn-icon i {
+        font-size: 14px;
+    }
     </style>
 
 <body>
@@ -465,7 +481,7 @@
                 <div class="status-card">
                     <div class="status-header">
                         <div>
-                            <span class="status-badge">In Transit</span>
+                            <span class="status-badge">{{shipment.status}}</span>
                             <div class="tracking-number mt-2" id="awbNumber">#{{shipment.awbNumber}}</div>
                         </div>
                         <button class="btn-icon" onclick="window.trackingSystem.refresh()">
@@ -574,29 +590,32 @@
                             <div class="timeline-progress" id="progressLine"></div>
                             {{#each timeline}}
                             <div class="timeline-item" data-timeline-id="{{this._id}}" data-status="{{this.status}}"
-                                data-completed="{{this.isCompleted}}">
-                                <div
-                                    class="timeline-marker {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                                <div
-                                    class="timeline-content {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
-                                    <div class="location-info">
-                                        <h5>{{this.location}}</h5>
-                                        <p class="location-address mb-2">
-                                            <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{this.description}}
-                                        </p>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <span class="location-timestamp">
-                                                <i class="far fa-clock me-2"></i>{{formatDate this.timestamp}}
-                                            </span>
-                                            <span class="status-badge">
-                                                {{this.status}}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    data-completed="{{this.isCompleted}}">
+    <div class="timeline-marker {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
+        <i class="fas fa-check"></i>
+    </div>
+    <div class="timeline-content {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
+        <div class="location-info">
+            <h5>{{this.location}}</h5>
+            <p class="location-address mb-2">
+                <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{this.description}}
+            </p>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="location-timestamp">
+                        <i class="far fa-clock me-2"></i>{{formatDate this.timestamp}}
+                    </span>
+                    <span class="status-badge">
+                        {{this.status}}
+                    </span>
+                </div>
+                <button class="btn-icon delete-timeline-btn" data-timeline-id="{{this._id}}">
+                    <i class="fas fa-trash-alt text-danger"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
                             {{/each}}
                         </div>
                     </div>
@@ -1046,6 +1065,71 @@ async function updateSignedBy(name, dateTime, modal) {
         // Re-initialize everything from scratch
         this.initializeTimeline();
     }
+     async deleteTimelineItem(timelineId) {
+    try {
+        if (!confirm('Are you sure you want to delete this timeline item?')) {
+            return;
+        }
+        
+        const awbNumber = document.getElementById('awbNumber').textContent.replace('#', '');
+        
+        const response = await fetch('/admin/delete-timeline', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: timelineId,
+                awbNumber: awbNumber
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Server error response:', errorText);
+            throw new Error(`Server request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.message);
+        }
+        
+        // Find and remove the timeline item from DOM
+        const timelineItem = document.querySelector(`.timeline-item[data-timeline-id="${timelineId}"]`);
+        if (timelineItem) {
+            timelineItem.remove();
+        }
+        
+        // Update status badge
+        const statusBadge = document.querySelector('.status-badge');
+        if (statusBadge && data.status) {
+            statusBadge.textContent = data.status;
+        }
+        
+        // Update current location
+        const currentLocationElement = document.getElementById('currentLocation');
+        if (currentLocationElement && data.currentLocation) {
+            currentLocationElement.textContent = data.currentLocation;
+        }
+        
+        // Update facility type
+        const facilityTypeElement = document.getElementById('facilityType');
+        if (facilityTypeElement && data.facilityType) {
+            facilityTypeElement.textContent = data.facilityType;
+        }
+
+        // Update progress line
+        this.updateProgressLine();
+        
+        alert('Timeline item deleted successfully!');
+
+    } catch (error) {
+        console.error('Timeline deletion error:', error);
+        alert(`Error deleting timeline item: ${error.message}`);
+    }
+}
 
     initializeTimeline() {
         this.timelineItems = document.querySelectorAll('.timeline-item');
@@ -1055,19 +1139,32 @@ async function updateSignedBy(name, dateTime, modal) {
     }
 
     bindEvents() {
-        this.timelineItems.forEach(item => {
-            const marker = item.querySelector('.timeline-marker');
-            if (marker) {
-                marker.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const timelineId = item.dataset.timelineId;
-                    if (timelineId) {
-                        this.handleTimelineUpdate(item);
-                    }
-                });
-            }
-        });
-    }
+    this.timelineItems.forEach(item => {
+        const marker = item.querySelector('.timeline-marker');
+        if (marker) {
+            marker.addEventListener('click', (e) => {
+                e.preventDefault();
+                const timelineId = item.dataset.timelineId;
+                if (timelineId) {
+                    this.handleTimelineUpdate(item);
+                }
+            });
+        }
+        
+        // Add event listener for delete button
+        const deleteBtn = item.querySelector('.delete-timeline-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Prevent event bubbling to parent elements
+                const timelineId = deleteBtn.dataset.timelineId;
+                if (timelineId) {
+                    this.deleteTimelineItem(timelineId);
+                }
+            });
+        }
+    });
+}
 
    async handleTimelineUpdate(timelineItem) {
     try {
@@ -1161,14 +1258,14 @@ async function updateSignedBy(name, dateTime, modal) {
             (completedItems.length / this.timelineItems.length) * 100 : 0;
         this.progressLine.style.height = `${progressHeight}%`;
     }
-}
-
-          
+}     
 
         // Initialize timeline system
         document.addEventListener('DOMContentLoaded', () => {
             window.timelineSystem = new TimelineSystem();
         });
+
+       
     </script>
 </body>
 

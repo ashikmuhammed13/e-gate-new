@@ -206,6 +206,42 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
         }
 
+        /* Add this to your CSS */
+.search-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.search-results {
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  display: none;
+}
+
+.search-result-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.search-result-item:hover {
+  background-color: #f8f9fa;
+}
+
+.no-results {
+  padding: 8px 12px;
+  color: #6c757d;
+  font-style: italic;
+}
+
         /* Enhanced Section Title */
         .section-title {
             font-size: 1.6rem;
@@ -942,6 +978,146 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+// Add this to your existing JavaScript code
+document.addEventListener('DOMContentLoaded', function() {
+  // Get elements
+  const shipperSearchInput = document.querySelector('input[placeholder="Search shipper in address book"]');
+  const consigneeSearchInput = document.querySelector('input[placeholder="Search consignee in address book"]');
+  const shipperTextarea = document.querySelector('textarea[name="shipperName"]');
+  const consigneeTextarea = document.querySelector('textarea[name="consigneeName"]');
+  const saveShipperCheckbox = document.getElementById('saveShipperAddress');
+  const saveConsigneeCheckbox = document.getElementById('saveConsigneeAddress');
+  const saveShipperBtn = document.getElementById('saveShipperBtn');
+  const saveConsigneeBtn = document.getElementById('saveConsigneeBtn');
+  
+  // Create search result containers
+  const shipperResultsContainer = document.createElement('div');
+  shipperResultsContainer.className = 'search-results';
+  shipperSearchInput.parentNode.appendChild(shipperResultsContainer);
+  
+  const consigneeResultsContainer = document.createElement('div');
+  consigneeResultsContainer.className = 'search-results';
+  consigneeSearchInput.parentNode.appendChild(consigneeResultsContainer);
+  
+  // Function to handle search
+  async function handleSearch(input, type, resultsContainer, targetTextarea) {
+    const query = input.value.trim();
+    
+    if (query.length < 2) {
+      resultsContainer.innerHTML = '';
+      resultsContainer.style.display = 'none';
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/admin/search-addresses?query=${encodeURIComponent(query)}&type=${type}`);
+      const data = await response.json();
+      
+      if (data.success && data.addresses.length > 0) {
+        resultsContainer.innerHTML = '';
+        
+        data.addresses.forEach(address => {
+          const resultItem = document.createElement('div');
+          resultItem.className = 'search-result-item';
+          resultItem.textContent = address.name;
+          
+          resultItem.addEventListener('click', () => {
+            targetTextarea.value = address.address;
+            resultsContainer.innerHTML = '';
+            resultsContainer.style.display = 'none';
+            input.value = '';
+          });
+          
+          resultsContainer.appendChild(resultItem);
+        });
+        
+        resultsContainer.style.display = 'block';
+      } else {
+        resultsContainer.innerHTML = '<div class="no-results">No results found</div>';
+        resultsContainer.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Error searching addresses:', error);
+    }
+  }
+  
+  // Add event listeners for search inputs
+  shipperSearchInput.addEventListener('input', () => {
+    handleSearch(shipperSearchInput, 'shipper', shipperResultsContainer, shipperTextarea);
+  });
+  
+  consigneeSearchInput.addEventListener('input', () => {
+    handleSearch(consigneeSearchInput, 'consignee', consigneeResultsContainer, consigneeTextarea);
+  });
+  
+  // Click outside to close results
+  document.addEventListener('click', (e) => {
+    if (!shipperSearchInput.contains(e.target) && !shipperResultsContainer.contains(e.target)) {
+      shipperResultsContainer.style.display = 'none';
+    }
+    
+    if (!consigneeSearchInput.contains(e.target) && !consigneeResultsContainer.contains(e.target)) {
+      consigneeResultsContainer.style.display = 'none';
+    }
+  });
+  
+  // Function to save address
+  async function saveAddress(type, address) {
+    if (!address) return { success: false, message: 'Please enter an address' };
+    
+    try {
+      const response = await fetch('/admin/save-address', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: type,
+          address: address
+        })
+      });
+      return await response.json();
+    } catch (error) {
+      console.error(`Error saving ${type} address:`, error);
+      return { success: false, message: 'Error saving address' };
+    }
+  }
+  
+  // Save button event listeners
+  if (saveShipperBtn) {
+    saveShipperBtn.addEventListener('click', async function() {
+      const shipperAddress = shipperTextarea.value.trim();
+      const result = await saveAddress('shipper', shipperAddress);
+      alert(result.message || 'Address saved successfully');
+    });
+  }
+  
+  if (saveConsigneeBtn) {
+    saveConsigneeBtn.addEventListener('click', async function() {
+      const consigneeAddress = consigneeTextarea.value.trim();
+      const result = await saveAddress('consignee', consigneeAddress);
+      alert(result.message || 'Address saved successfully');
+    });
+  }
+  
+  // Add form submission handler to save addresses if checkboxes are checked
+  const mawbForm = document.getElementById('mawbForm');
+  if (mawbForm) {
+    mawbForm.addEventListener('submit', async function(event) {
+      // Save shipper address if checkbox is checked
+      if (saveShipperCheckbox && saveShipperCheckbox.checked) {
+        const shipperAddress = shipperTextarea.value.trim();
+        await saveAddress('shipper', shipperAddress);
+      }
+      
+      // Save consignee address if checkbox is checked
+      if (saveConsigneeCheckbox && saveConsigneeCheckbox.checked) {
+        const consigneeAddress = consigneeTextarea.value.trim();
+        await saveAddress('consignee', consigneeAddress);
+      }
+    });
+  }
+});
 </script>
 </body>
 </html>
